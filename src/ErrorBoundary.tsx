@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import error from './assets/error.svg'
+
 interface State {
     error: string | null
     errorInfo: any
@@ -10,8 +12,11 @@ interface Props {
     children?: any
 }
 
-class ErrorBoundary extends React.Component<Props, State> {
-    state: State = { error: null, errorInfo: null }
+export class ErrorBoundary extends React.Component<Props, State> {
+    state: State = {
+        error: null,
+        errorInfo: null,
+    }
 
     componentDidCatch(error: any, errorInfo: any) {
         this.setState({
@@ -26,7 +31,7 @@ class ErrorBoundary extends React.Component<Props, State> {
             return (
                 <Container>
                     <Content>
-                        <img src={require('./assets/error.svg').default} alt="" />
+                        <img src={error} alt="" />
                         <h2>Something went wrong.</h2>
                         <Details>
                             {this.state.error && this.state.error.toString()}
@@ -40,8 +45,6 @@ class ErrorBoundary extends React.Component<Props, State> {
         return children
     }
 }
-
-export default ErrorBoundary
 
 const Container = styled.div`
     width: 100%;

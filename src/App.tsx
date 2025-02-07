@@ -1,65 +1,108 @@
-import i18next from 'i18next'
 import { Suspense } from 'react'
-import { I18nextProvider } from 'react-i18next'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import { ThemeProvider } from 'styled-components'
-import ErrorBoundary from './ErrorBoundary'
-import GlobalStyle from './GlobalStyle'
-import Web3ReactManager from './components/Web3ReactManager'
-import Safes from './containers/Safes'
-import SafeDetails from './containers/Safes/SafeDetails'
-import Shared from './containers/Shared'
-import { useStoreState } from './store'
-import { Theme } from './utils/interfaces'
-import { darkTheme } from './utils/themes/dark'
+import i18next from 'i18next'
+import { I18nextProvider } from 'react-i18next'
+import { ApolloProvider } from '@apollo/client'
 
-import Splash from './containers/Splash'
-import GoogleTagManager from './components/Analytics/GoogleTagManager'
-import Privacy from './containers/Privacy'
-import CreateSafe from './containers/Safes/CreateSafe'
-import Auctions from './containers/Auctions'
-import Analytics from './containers/Analytics'
+import type { Theme } from '~/types'
+import { ChainId, NETWORK_ID, client, VITE_FLAGSMITH_API_KEY } from '~/utils'
+import { VelodromePriceProvider } from './providers/VelodromePriceProvider'
+import { AnalyticsProvider } from '~/providers/AnalyticsProvider'
+import { EffectsProvider } from './providers/EffectsProvider'
+import { ClaimsProvider } from './providers/ClaimsProvider'
+
+import { GlobalStyle } from '~/styles'
+import { ErrorBoundary } from '~/ErrorBoundary'
+import { Shared } from '~/containers/Shared'
+import { Splash } from '~/containers/Splash'
+import { Auctions } from '~/containers/Auctions'
+import { Analytics } from '~/containers/Analytics'
+import { Earn } from '~/containers/Earn'
+import { Vaults } from '~/containers/Vaults'
+import { Contracts } from '~/containers/Contracts'
+import { Learn } from './containers/Learn'
+import { VaultExplorer } from './containers/Vaults/Explore'
+import { TestClaim } from './containers/TestClaim'
+import { TestClaimVelo } from './containers/TestClaimVelo'
+import flagsmith from 'flagsmith'
+import { FlagsmithProvider } from 'flagsmith/react'
 
 declare module 'styled-components' {
     export interface DefaultTheme extends Theme {}
 }
 
 const App = () => {
-    const { settingsModel: settingsState } = useStoreState((state) => state)
-
-    const { bodyOverflow } = settingsState
-
     return (
-        <I18nextProvider i18n={i18next}>
-            <ThemeProvider theme={darkTheme}>
-                <GlobalStyle bodyOverflow={bodyOverflow} />
+        <FlagsmithProvider
+            options={{
+                environmentID: VITE_FLAGSMITH_API_KEY,
+            }}
+            flagsmith={flagsmith}
+        >
+            <I18nextProvider i18n={i18next}>
+                <GlobalStyle />
                 <ErrorBoundary>
-                    <Shared>
-                        <Suspense fallback={null}>
-                            <Route component={GoogleTagManager} />
-                            <Web3ReactManager>
-                                <>
-                                    <Switch>
-                                        <Route exact strict component={Splash} path={'/'} />
-                                        <Route exact strict component={Privacy} path={'/privacy'} />
-                                        <Route exact strict component={Auctions} path={'/auctions'} />
-                                        <Route exact strict component={Analytics} path={'/analytics'} />
-                                        <Route exact strict component={CreateSafe} path={'/safes/create'} />
-                                        <Route exact strict component={SafeDetails} path={'/safes/:id/deposit'} />
-                                        <Route exact strict component={SafeDetails} path={'/safes/:id/withdraw'} />
-                                        <Route exact component={SafeDetails} path={'/safes/:id'} />
-                                        <Route exact strict component={Safes} path={'/safes'} />
-                                        <Route exact strict component={Safes} path={'/:address'} />
+                    <ApolloProvider client={client}>
+                        <VelodromePriceProvider>
+                            <AnalyticsProvider>
+                                <EffectsProvider>
+                                    <ClaimsProvider>
+                                        <Shared>
+                                            <Suspense fallback={null}>
+                                                <Route />
+                                                <>
+                                                    <Switch>
+                                                        {NETWORK_ID === ChainId.OPTIMISM_SEPOLIA && (
+                                                            <Route
+                                                                exact
+                                                                strict
+                                                                component={TestClaim}
+                                                                path={'/test/claim'}
+                                                            />
+                                                        )}
+                                                        {NETWORK_ID === ChainId.OPTIMISM_SEPOLIA && (
+                                                            <Route
+                                                                exact
+                                                                strict
+                                                                component={TestClaimVelo}
+                                                                path={'/test/claim-velo'}
+                                                            />
+                                                        )}
+                                                        <Route exact strict component={Splash} path={'/'} />
+                                                        <Route exact strict component={Auctions} path={'/auctions'} />
+                                                        <Route exact strict component={Analytics} path={'/analytics'} />
+                                                        <Route exact strict component={Contracts} path={'/contracts'} />
+                                                        <Route exact strict component={Learn} path={'/learn'} />
+                                                        <Route exact strict component={Earn} path={'/earn'} />
+                                                        <Route
+                                                            exact
+                                                            strict
+                                                            component={VaultExplorer}
+                                                            path={'/vaults/explore'}
+                                                        />
+                                                        <Route
+                                                            exact
+                                                            strict
+                                                            component={Vaults}
+                                                            path={'/vaults/manage'}
+                                                        />
+                                                        <Route exact strict component={Vaults} path={'/vaults/open'} />
+                                                        <Route exact component={Vaults} path={'/vaults/:idOrOwner'} />
+                                                        <Route exact strict component={Vaults} path={'/vaults'} />
 
-                                        <Redirect from="*" to="/" />
-                                    </Switch>
-                                </>
-                            </Web3ReactManager>
-                        </Suspense>
-                    </Shared>
+                                                        <Redirect from="*" to="/" />
+                                                    </Switch>
+                                                </>
+                                            </Suspense>
+                                        </Shared>
+                                    </ClaimsProvider>
+                                </EffectsProvider>
+                            </AnalyticsProvider>
+                        </VelodromePriceProvider>
+                    </ApolloProvider>
                 </ErrorBoundary>
-            </ThemeProvider>
-        </I18nextProvider>
+            </I18nextProvider>
+        </FlagsmithProvider>
     )
 }
 

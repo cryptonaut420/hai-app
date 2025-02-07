@@ -1,15 +1,14 @@
 import { useMemo } from 'react'
 import { Contract } from '@ethersproject/contracts'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { JsonRpcSigner, Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
 
-import { EMPTY_ADDRESS, MULTICALL2_ADDRESSES } from '../utils/constants'
-import ERC20_BYTES32_ABI from '../abis/erc20_bytes32.json'
-import MULTICALL_ABI from '../abis/multicall.json'
-import { Multicall } from '../abis/Multicall'
-import { useActiveWeb3React } from '~/hooks'
-import { isAddress } from '../utils/helper'
-import ERC20_ABI from '../abis/erc20.json'
-import { Erc20 } from '../abis/Erc20'
+import { EMPTY_ADDRESS, NETWORK_ID, isAddress } from '~/utils'
+import { useEthersSigner, usePublicProvider } from '~/hooks'
+
+import ERC20_BYTES32_ABI from '~/abis/erc20_bytes32.json'
+import ERC20_ABI from '~/abis/erc20.json'
+import MERKLE_DISTRIBUTOR_ABI from '~/abis/MerkleDistributor.json'
+import { Erc20 } from '~/abis/Erc20'
 
 // account is not optional
 export function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
@@ -22,12 +21,12 @@ export function getProviderOrSigner(library: Web3Provider, account?: string): We
 }
 
 // account is optional
-export function getContract(address: string, ABI: any, library: Web3Provider, account?: string): Contract {
+export function getContract(address: string, ABI: any, signerOrProvider: JsonRpcSigner | JsonRpcProvider): Contract {
     if (!isAddress(address) || address === EMPTY_ADDRESS) {
         throw Error(`Invalid 'address' parameter '${address}'.`)
     }
 
-    return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
+    return new Contract(address, ABI, signerOrProvider)
 }
 
 // returns null on errors
@@ -36,31 +35,32 @@ export function useContract<T extends Contract = Contract>(
     ABI: any,
     withSignerIfPossible = true
 ): T | null {
-    const { library, account, chainId } = useActiveWeb3React()
+    const provider = usePublicProvider()
+    const signer = useEthersSigner()
 
     return useMemo(() => {
-        if (!addressOrAddressMap || !ABI || !library || !chainId) return null
+        if (!addressOrAddressMap || !ABI || !provider) return null
         let address: string | undefined
         if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap
-        else address = addressOrAddressMap[chainId]
+        else address = addressOrAddressMap[NETWORK_ID]
         if (!address) return null
         try {
-            return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+            return getContract(address, ABI, signer || (provider as JsonRpcProvider))
         } catch (error) {
             console.error('Failed to get contract', error)
             return null
         }
-    }, [addressOrAddressMap, ABI, library, chainId, withSignerIfPossible, account]) as T
+    }, [addressOrAddressMap, ABI, provider, signer, withSignerIfPossible]) as T
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean) {
     return useContract<Erc20>(tokenAddress, ERC20_ABI, withSignerIfPossible)
 }
 
-export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-    return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
+export function useDistributorContract(tokenAddress?: string, withSignerIfPossible?: boolean) {
+    return useContract(tokenAddress, MERKLE_DISTRIBUTOR_ABI, withSignerIfPossible)
 }
 
-export function useMulticall2Contract() {
-    return useContract<Multicall>(MULTICALL2_ADDRESSES, MULTICALL_ABI, false) as Multicall
+export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+    return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
 }

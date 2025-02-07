@@ -1,34 +1,37 @@
 import React from 'react'
-import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import ReactDOM from 'react-dom'
-import { HashRouter } from 'react-router-dom'
-import { StoreProvider } from 'easy-peasy'
-import './index.css'
-import App from './App'
-import store from './store'
-import { NetworkContextName } from './utils/constants'
-import getLibrary from './utils/getLibrary'
+import { BrowserRouter } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
+import { StoreProvider } from 'easy-peasy'
+import { Analytics } from '@vercel/analytics/react'
+import { WagmiConfig } from 'wagmi'
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import '@rainbow-me/rainbowkit/styles.css'
 
-const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
+import { chains, wagmiConfig } from './utils/wallet'
+import { store } from '~/store'
+import { HaiThemeProvider } from '~/providers/HaiThemeProvider'
 
-if ('ethereum' in window) {
-    ;(window.ethereum as any).autoRefreshOnNetworkChange = false
-}
+import { haiTheme } from '~/styles/themes'
+import App from '~/App'
+import { CustomAvatar } from '~/components/CustomAvatar'
 
 ReactDOM.render(
     <React.StrictMode>
-        <HelmetProvider>
-            <HashRouter>
-                <Web3ReactProvider getLibrary={getLibrary}>
-                    <Web3ProviderNetwork getLibrary={getLibrary}>
-                        <StoreProvider store={store}>
-                            <App />
-                        </StoreProvider>
-                    </Web3ProviderNetwork>
-                </Web3ReactProvider>
-            </HashRouter>
-        </HelmetProvider>
+        <Analytics />
+        <HaiThemeProvider>
+            <WagmiConfig config={wagmiConfig}>
+                <RainbowKitProvider avatar={CustomAvatar} theme={haiTheme} chains={chains}>
+                    <HelmetProvider>
+                        <BrowserRouter>
+                            <StoreProvider store={store}>
+                                <App />
+                            </StoreProvider>
+                        </BrowserRouter>
+                    </HelmetProvider>
+                </RainbowKitProvider>
+            </WagmiConfig>
+        </HaiThemeProvider>
     </React.StrictMode>,
     document.getElementById('root')
 )

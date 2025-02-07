@@ -1,23 +1,14 @@
-const INITIAL_STATE = [
-    require('../assets/brand-white.svg').default,
-    require('../assets/dark-arrow.svg').default,
-    require('../assets/connectors/walletConnectIcon.svg').default,
-    require('../assets/connectors/coinbaseWalletIcon.svg').default,
-    require('../assets/cookie.svg').default,
-    require('../assets/caret.png').default,
-    require('../assets/caret-up.svg').default,
-    require('../assets/arrow-up.svg').default,
-    require('../assets/LogoIcon.png').default,
-    require('../assets/arrow.svg').default,
-    require('../assets/uniswap-icon.svg').default,
-    require('../assets/logo192.png').default,
-    require('../assets/connectors/metamask.png').default,
-    require('../assets/account-img.png').default,
-    require('../assets/wallet-img.png').default,
-    require('../assets/safe-img.png').default,
-]
+import logoIcon from '~/assets/LogoIcon.png'
+import popout from '~/assets/popout.svg'
+import border from '~/assets/border-image.png'
+import uniswapIcon from '~/assets/uniswap-icon.svg'
+import velodromeIcon from '~/assets/velodrome-img.svg'
+import haiLogo from '~/assets/logo.png'
+import logo192 from '~/assets/logo192.png'
 
-const ImagePreloader = () => {
+const INITIAL_STATE = [logoIcon, popout, border, uniswapIcon, velodromeIcon, haiLogo, logo192]
+
+export function ImagePreloader() {
     return (
         <div style={{ display: 'none' }}>
             {INITIAL_STATE.map((img: string, i: number) => (
@@ -26,5 +17,3 @@ const ImagePreloader = () => {
         </div>
     )
 }
-
-export default ImagePreloader

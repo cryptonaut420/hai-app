@@ -1,170 +1,188 @@
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
+import type { AuctionEventType, TokenKey } from '~/types'
+import { useAuctionsData, useMediaQuery } from '~/hooks'
 
-import { useActiveWeb3React, useAuctions } from '~/hooks'
-import { useStoreActions, useStoreState } from '~/store'
-import AuctionBlock from '~/components/AuctionBlock'
-import Pagination from '~/components/Pagination'
-import { SideLabel } from '../Safes/CreateSafe'
-import { IPaging, TOKEN_LOGOS } from '~/utils'
-import Dropdown from '~/components/Dropdown'
-import { AuctionEventType } from '~/types'
-import Button from '~/components/Button'
-import Loader from '~/components/Loader'
+import styled, { css } from 'styled-components'
+import { Flex, Text } from '~/styles'
+import { NavContainer } from '~/components/NavContainer'
+import { CheckboxButton } from '~/components/CheckboxButton'
+import { BrandedDropdown, DropdownOption } from '~/components/BrandedDropdown'
+import { AuctionTable } from './AuctionTable'
+import { SortByDropdown } from '~/components/SortByDropdown'
+import { CollateralDropdown } from '~/components/CollateralDropdown'
+import { Status, capitalizeName } from '~/utils'
+import { CyclingTokenArray, TokenArray } from '~/components/TokenArray'
+import { StatusLabel } from '~/components/StatusLabel'
 
-export type Item = {
-    name: string
-    icon: string
-    symbol: string
-    href?: string
-    isExternal?: boolean
-    [U: string]: boolean | number | string | undefined
+type AuctionTypeFilter = {
+    type: AuctionEventType | 'All'
+    icon?: TokenKey | 'All'
 }
+const auctionFilters: AuctionTypeFilter[] = [
+    { type: 'All' },
+    {
+        type: 'COLLATERAL',
+        icon: 'All',
+    },
+    {
+        type: 'DEBT',
+        icon: 'HAI',
+    },
+    {
+        type: 'SURPLUS',
+        icon: 'KITE',
+    },
+]
 
-interface Props {
-    type: AuctionEventType
-    selectedItem: string
-    setSelectedItem: (item: string) => void
+type AuctionsListProps = {
+    isLoading: boolean
+    error?: string
 }
-const AuctionsList = ({ type, selectedItem, setSelectedItem }: Props) => {
-    const { t } = useTranslation()
-    const { account } = useActiveWeb3React()
-    const [paging, setPaging] = useState<IPaging>({ from: 0, to: 5 })
-    const { popupsModel: popupsActions } = useStoreActions((state) => state)
+export function AuctionsList({ isLoading, error }: AuctionsListProps) {
+    const {
+        headers,
+        rows,
+        sorting,
+        setSorting,
+        filterMyBids,
+        setFilterMyBids,
+        typeFilter,
+        setTypeFilter,
+        statusFilter,
+        setStatusFilter,
+        saleAssetsFilter,
+        setSaleAssetsFilter,
+    } = useAuctionsData()
 
-    const { auctionModel: auctionsState, connectWalletModel: connectWalletState } = useStoreState((state) => state)
-
-    // internalbalance = user's HAI balance in the protocol
-    // protInternalBalance = user's KITE balance in the protocol
-    const { internalBalance, protInternalBalance } = auctionsState
-
-    const { proxyAddress, tokensData } = connectWalletState
-
-    // auctions list
-    const auctions = useAuctions(type, selectedItem)
-
-    // handle clicking to claim
-    const handleClick = (modalType: string) => {
-        if (!account) {
-            popupsActions.setIsConnectorsWalletOpen(true)
-            return
-        }
-
-        if (!proxyAddress) {
-            popupsActions.setIsProxyModalOpen(true)
-            popupsActions.setReturnProxyFunction((storeActions: any) => {
-                storeActions.popupsModel.setAuctionOperationPayload({
-                    isOpen: true,
-                    type: modalType,
-                    auctionType: type,
-                })
-            })
-            return
-        }
-
-        popupsActions.setAuctionOperationPayload({
-            isOpen: true,
-            type: modalType,
-            auctionType: type,
-        })
-    }
-
-    const collaterals = tokensData && Object.values(tokensData).filter((token) => token.isCollateral)
-    const collateralsDropdown = collaterals?.map((collateral) => {
-        return { name: collateral.symbol, icon: TOKEN_LOGOS[collateral.symbol] }
-    })
-
-    const dropdownSelected = collateralsDropdown?.find((item) => item.name === selectedItem)!
+    const isUpToMedium = useMediaQuery('upToMedium')
 
     return (
-        <Container>
-            {type === 'COLLATERAL' && collateralsDropdown && dropdownSelected && (
-                <DropdownContainer>
-                    <SideLabel>{`Select Collateral Type`}</SideLabel>
-                    <Dropdown
-                        items={collateralsDropdown!}
-                        itemSelected={dropdownSelected!}
-                        getSelectedItem={setSelectedItem}
-                    />
-                </DropdownContainer>
-            )}
-            <InfoBox>
-                <Box>
-                    <Title>{type.toLowerCase()} Auctions</Title>
-                    {account &&
-                    auctions &&
-                    auctions.length &&
-                    (Number(internalBalance) >= 0.0001 || Number(protInternalBalance) >= 0.0001) ? (
-                        <Button text={t('claim_tokens')} onClick={() => handleClick('claim_tokens')} />
-                    ) : null}
-                </Box>
-            </InfoBox>
-            {!auctions ? (
-                <Loader text="Loading..." />
-            ) : auctions.length > 0 ? (
-                <>
-                    {auctions.slice(paging.from, paging.to).map((auction, i: number) => (
-                        <AuctionBlock key={auction.auctionId} {...{ ...auction, isCollapsed: i !== 0 }} />
-                    ))}
-                    <Pagination items={auctions} perPage={5} handlePagingMargin={setPaging} />
-                </>
-            ) : (
-                <NoData>
-                    {t('no_auctions', {
-                        type: type.toLowerCase(),
-                    })}
-                </NoData>
-            )}
-        </Container>
+        <NavContainer
+            navItems={[`All Auctions (${rows.length.toLocaleString()})`]}
+            selected={0}
+            onSelect={() => 0}
+            stackHeader={isUpToMedium}
+            compactQuery="upToMedium"
+            headerContent={
+                <HeaderContainer $flexWrap>
+                    <CheckboxButton checked={filterMyBids} toggle={() => setFilterMyBids((f) => !f)}>
+                        Only Show My Bids
+                    </CheckboxButton>
+                    {isUpToMedium && <SortByDropdown headers={headers} sorting={sorting} setSorting={setSorting} />}
+                    <BrandedDropdown
+                        label={
+                            <Text $fontWeight={400} $textAlign="left">
+                                Type: <strong>{typeFilter || 'All'}</strong>
+                            </Text>
+                        }
+                    >
+                        {auctionFilters.map(({ type, icon }) => (
+                            <Option
+                                key={type}
+                                $pad={!!icon}
+                                $active={type === 'All' ? !typeFilter : typeFilter === type}
+                                onClick={() => {
+                                    // e.stopPropagation()
+                                    setTypeFilter(type === 'All' ? undefined : type)
+                                }}
+                            >
+                                {!icon ? null : icon === 'All' ? (
+                                    <CyclingTokenArray />
+                                ) : (
+                                    <TokenArray tokens={[icon as TokenKey]} hideLabel />
+                                )}
+                                {capitalizeName(type.toLowerCase())}
+                            </Option>
+                        ))}
+                    </BrandedDropdown>
+                    <BrandedDropdown
+                        label={
+                            <Text $fontWeight={400} $textAlign="left">
+                                Status: <strong>{statusFilter || 'All'}</strong>
+                            </Text>
+                        }
+                    >
+                        <Option $active={!statusFilter} onClick={() => setStatusFilter(undefined)}>
+                            All
+                        </Option>
+                        <Option $active={statusFilter === Status.LIVE} onClick={() => setStatusFilter(Status.LIVE)}>
+                            <StatusLabel status={Status.LIVE} background="transparent" unpadded />
+                        </Option>
+                        <Option
+                            $active={statusFilter === Status.COMPLETED}
+                            onClick={() => setStatusFilter(Status.COMPLETED)}
+                        >
+                            <StatusLabel status={Status.COMPLETED} background="transparent" unpadded />
+                        </Option>
+                        <Option
+                            $active={statusFilter === Status.SETTLING}
+                            onClick={() => setStatusFilter(Status.SETTLING)}
+                        >
+                            <StatusLabel status={Status.SETTLING} background="transparent" unpadded />
+                        </Option>
+                        <Option
+                            $active={statusFilter === Status.RESTARTING}
+                            onClick={() => setStatusFilter(Status.RESTARTING)}
+                        >
+                            <StatusLabel status={Status.RESTARTING} background="transparent" unpadded />
+                        </Option>
+                    </BrandedDropdown>
+                    {(!typeFilter || typeFilter === 'COLLATERAL') && (
+                        <CollateralDropdown
+                            label="For Sale Asset"
+                            selectedAsset={saleAssetsFilter}
+                            onSelect={setSaleAssetsFilter}
+                        />
+                    )}
+                </HeaderContainer>
+            }
+        >
+            <AuctionTable
+                headers={headers}
+                rows={rows}
+                sorting={sorting}
+                setSorting={setSorting}
+                isLoading={isLoading}
+                error={error}
+            />
+        </NavContainer>
     )
 }
 
-export default AuctionsList
-
-const Container = styled.div`
-    margin-top: 40px;
-    padding: 30px 20px;
-    border-radius: 15px;
-    background: ${(props) => props.theme.colors.colorSecondary};
+const HeaderContainer = styled(Flex).attrs((props) => ({
+    $justify: 'flex-end',
+    $align: 'center',
+    $gap: 24,
+    ...props,
+}))`
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+        flex-direction: column;
+        justify-content: center;
+        gap: 12px;
+        & > * {
+            width: 100%;
+            &:nth-child(1) {
+                z-index: 5;
+            }
+            &:nth-child(2) {
+                z-index: 4;
+            }
+            &:nth-child(3) {
+                z-index: 3;
+            }
+            &:nth-child(4) {
+                z-index: 2;
+            }
+            &:nth-child(5) {
+                z-index: 1;
+            }
+        }
+    `}
 `
 
-const Title = styled.div`
-    font-size: ${(props) => props.theme.font.default};
-    font-weight: bold;
-    text-transform: capitalize !important;
-`
-
-const Box = styled.div`
-    display: flex;
-    align-items: center;
-`
-
-const InfoBox = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    button {
-        min-width: 100px;
-        padding: 4px 12px;
-        margin-left: 30px;
-    }
-    margin-bottom: 20px;
-    span {
-        margin-right: 20px;
-        font-size: 12px;
-    }
-`
-
-const NoData = styled.div`
-    border-radius: 15px;
-    margin-bottom: 15px;
-    background: ${(props) => props.theme.colors.background};
-    padding: 2rem 20px;
-    text-align: center;
-    font-size: ${(props) => props.theme.font.small};
-`
-const DropdownContainer = styled.div`
-    margin-bottom: 20px;
+const Option = styled(DropdownOption)<{ $pad?: boolean }>`
+    ${({ $pad }) =>
+        !!$pad &&
+        css`
+            padding-left: 8px;
+        `}
 `

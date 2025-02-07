@@ -1,13 +1,15 @@
-import React, { useEffect, useMemo } from 'react'
-import { toast } from 'react-toastify'
-import ToastPayload from '../components/ToastPayload'
-import { useActiveWeb3React } from '../hooks'
-import store, { useStoreState } from '../store'
+import { useEffect, useMemo } from 'react'
+import { useNetwork } from 'wagmi'
 
-export function shouldCheck(
-    lastBlockNumber: number,
-    tx: { addedTime: number; receipt?: {}; lastCheckedBlockNumber?: number }
-): boolean {
+import { useStoreActions, useStoreState } from '~/store'
+import { useEthersProvider } from '~/hooks'
+
+type CheckTransaction = {
+    addedTime: number
+    receipt?: any
+    lastCheckedBlockNumber?: number
+}
+export function shouldCheck(lastBlockNumber: number, tx: CheckTransaction): boolean {
     if (tx.receipt) return false
     if (!tx.lastCheckedBlockNumber) return true
     const blocksSinceCheck = lastBlockNumber - tx.lastCheckedBlockNumber
@@ -25,26 +27,28 @@ export function shouldCheck(
     }
 }
 
-export default function TransactionUpdater(): null {
-    const toastId = 'transactionId'
-    const { chainId, library } = useActiveWeb3React()
+export function TransactionUpdater(): null {
+    const { chain } = useNetwork()
+    const chainId = chain?.id
+    const provider = useEthersProvider()
     const { transactionsModel: state, connectWalletModel: connectedWalletState } = useStoreState((state) => state)
+    const { transactionsModel: transactionsActions } = useStoreActions((actions) => actions)
 
     const lastBlockNumber = chainId ? connectedWalletState.blockNumber[chainId] : null
 
     const transactions = useMemo(() => (chainId ? state.transactions ?? {} : {}), [chainId, state])
 
     useEffect(() => {
-        if (!chainId || !library || !lastBlockNumber) return
+        if (!chainId || !provider || !lastBlockNumber) return
 
         Object.keys(transactions)
             .filter((hash) => shouldCheck(lastBlockNumber, transactions[hash]))
             .forEach((hash) => {
-                library
+                provider
                     .getTransactionReceipt(hash)
                     .then((receipt) => {
                         if (receipt) {
-                            store.dispatch.transactionsModel.finalizeTransaction({
+                            transactionsActions.finalizeTransaction({
                                 ...transactions[hash],
                                 receipt: {
                                     blockHash: receipt.blockHash,
@@ -58,25 +62,8 @@ export default function TransactionUpdater(): null {
                                 },
                                 confirmedTime: new Date().getTime(),
                             })
-                            toast(
-                                <ToastPayload
-                                    icon={receipt.status === 1 ? 'Check' : 'AlertTriangle'}
-                                    iconColor={receipt.status === 1 ? 'green' : 'red'}
-                                    text={
-                                        receipt.status === 1
-                                            ? transactions[hash].summary || 'Transaction Confirmed'
-                                            : 'Transaction Failed'
-                                    }
-                                    payload={{
-                                        type: 'transaction',
-                                        value: hash,
-                                        chainId,
-                                    }}
-                                />,
-                                { toastId }
-                            )
                         } else {
-                            store.dispatch.transactionsModel.checkTransaction({
+                            transactionsActions.checkTransaction({
                                 tx: transactions[hash],
                                 blockNumber: lastBlockNumber,
                             })
@@ -86,7 +73,7 @@ export default function TransactionUpdater(): null {
                         console.error(`failed to check transaction hash: ${hash}`, error)
                     })
             })
-    }, [chainId, library, transactions, lastBlockNumber])
+    }, [chainId, provider, transactions, lastBlockNumber])
 
     return null
 }
