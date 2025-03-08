@@ -1,6 +1,6 @@
 import numeral from 'numeral'
 import { BigNumber } from 'ethers'
-import { TokenData } from '@hai-on-op/sdk'
+import { TokenData } from '@parisii-inc/parys-sdk'
 
 import type { QueryUniswapPair } from './types'
 import { stringsExistAndAreEqual } from '../validations'

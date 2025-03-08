@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useState } from 'react'
 import { formatEther } from 'ethers/lib/utils'
-import { fetchAnalyticsData } from '@hai-on-op/sdk'
+import { fetchAnalyticsData } from '@parisii-inc/parys-sdk'
 import { useNetwork } from 'wagmi'
 
 import type { SummaryItemValue, TokenAnalyticsData } from '~/types'

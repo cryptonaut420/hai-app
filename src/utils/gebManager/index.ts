@@ -6,7 +6,7 @@ import {
     fetchLiquidationData,
     fetchUserSafes,
     utils,
-} from '@hai-on-op/sdk'
+} from '@parisii-inc/parys-sdk'
 import type { ILiquidationResponse, IUserVaultList } from '~/types'
 
 type UserListConfig = {

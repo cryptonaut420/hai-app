@@ -1,5 +1,5 @@
 import { BigNumber, utils } from 'ethers'
-import { ISurplusAuction as SDKAuction, ICollateralAuction, utils as gebUtils } from '@hai-on-op/sdk'
+import { ISurplusAuction as SDKAuction, ICollateralAuction, utils as gebUtils } from '@parisii-inc/parys-sdk'
 
 import type { IAuction, IAuctionBidder } from '~/types'
 import { floatsTypes } from '../constants'

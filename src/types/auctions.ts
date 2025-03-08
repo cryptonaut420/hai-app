@@ -1,5 +1,5 @@
 import { JsonRpcSigner } from '@ethersproject/providers'
-import { ICollateralAuction as SDKCollateralAuction } from '@hai-on-op/sdk'
+import { ICollateralAuction as SDKCollateralAuction } from '@parisii-inc/parys-sdk'
 
 import { Status } from '~/utils/constants'
 

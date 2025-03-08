@@ -1,6 +1,6 @@
 import type { IAuction } from '~/types'
 import { Status } from '../constants'
-import { type AuctionData } from '@hai-on-op/sdk'
+import { type AuctionData } from '@parisii-inc/parys-sdk'
 import { type QueryEnglishAuction } from '../graphql'
 
 type AuctionStatusProps = {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Geb } from '@hai-on-op/sdk'
+import { Geb } from '@parisii-inc/parys-sdk'
 import { useAccount } from 'wagmi'
 
 import { EMPTY_ADDRESS, getNetworkName, formatNumber, NETWORK_ID } from '~/utils'

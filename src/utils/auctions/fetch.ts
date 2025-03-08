@@ -1,4 +1,4 @@
-import { Geb, IDebtAuction, ICollateralAuction, ISurplusAuction } from '@hai-on-op/sdk'
+import { Geb, IDebtAuction, ICollateralAuction, ISurplusAuction } from '@parisii-inc/parys-sdk'
 import { COLLATERAL_BATCH_SIZE, DEBT_BATCH_SIZE, SURPLUS_BATCH_SIZE } from '../constants'
 
 async function fetchAuctions(

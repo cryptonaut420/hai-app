@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { parseEther } from 'ethers/lib/utils'
-import { utils as gebUtils } from '@hai-on-op/sdk'
+import { utils as gebUtils } from '@parisii-inc/parys-sdk'
 import { useAccount } from 'wagmi'
 
 import type { IAuction } from '~/types'

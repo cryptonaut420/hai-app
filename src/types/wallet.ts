@@ -1,5 +1,5 @@
 import { type TransactionResponse } from '@ethersproject/providers'
-import { Geb } from '@hai-on-op/sdk'
+import { Geb } from '@parisii-inc/parys-sdk'
 
 import { ChainId } from '~/utils'
 

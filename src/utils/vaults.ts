@@ -1,5 +1,5 @@
 import numeral from 'numeral'
-import { type TokenData, utils as gebUtils } from '@hai-on-op/sdk'
+import { type TokenData, utils as gebUtils } from '@parisii-inc/parys-sdk'
 import { BigNumber } from 'ethers'
 
 import type { CollateralLiquidationData, ILiquidationData, IVault, IVaultData } from '~/types'

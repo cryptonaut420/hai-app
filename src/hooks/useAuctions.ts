@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { BigNumber } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
-import { radToFixed, wadToFixed, type ICollateralAuction as SDKCollateralAuction } from '@hai-on-op/sdk'
+import { radToFixed, wadToFixed, type ICollateralAuction as SDKCollateralAuction } from '@parisii-inc/parys-sdk'
 import { useAccount } from 'wagmi'
 
 import type { AuctionEventType, IAuction } from '~/types'

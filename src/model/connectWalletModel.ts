@@ -1,5 +1,5 @@
 import { type Action, type Thunk, action, thunk } from 'easy-peasy'
-import { type TokenData, type TokenFetchData, fetchTokenData } from '@hai-on-op/sdk'
+import { type TokenData, type TokenFetchData, fetchTokenData } from '@parisii-inc/parys-sdk'
 
 import { fetchFiatPrice } from '~/services/api'
 import type { IBlockNumber, IFetchTokensDataPayload, ITokenBalance } from '~/types'

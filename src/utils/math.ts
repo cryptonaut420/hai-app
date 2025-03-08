@@ -1,6 +1,6 @@
 import { utils } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { utils as gebUtils } from '@hai-on-op/sdk'
+import { utils as gebUtils } from '@parisii-inc/parys-sdk'
 
 import { floatsTypes } from './constants'
 import { formatNumber, toFixedString, toPercentage } from './formatting'

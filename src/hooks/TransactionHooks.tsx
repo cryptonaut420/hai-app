@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { type TransactionResponse, type TransactionRequest } from '@ethersproject/providers'
 import { JsonRpcSigner } from '@ethersproject/providers/lib/json-rpc-provider'
-import { utils as gebUtils } from '@hai-on-op/sdk'
+import { utils as gebUtils } from '@parisii-inc/parys-sdk'
 import { BigNumber } from 'ethers'
 import { useAccount, useNetwork } from 'wagmi'
 

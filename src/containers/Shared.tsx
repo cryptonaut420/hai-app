@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { utils } from 'ethers'
 import { useAccount, useNetwork } from 'wagmi'
-import { getTokenList } from '@hai-on-op/sdk'
+import { getTokenList } from '@parisii-inc/parys-sdk'
 
 import type { ReactChildren } from '~/types'
 import {

@@ -7,7 +7,7 @@ import {
     type ICollateralAuction,
     fetchAuctionData,
     fetchCollateralAuctionData,
-} from '@hai-on-op/sdk'
+} from '@parisii-inc/parys-sdk'
 
 import type { IAuctionBid, IAuction, AuctionEventType, LoadingAuctionsData } from '~/types/auctions'
 import {

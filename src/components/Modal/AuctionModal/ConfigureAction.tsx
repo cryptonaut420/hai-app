@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BigNumber, constants } from 'ethers'
 import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils'
-import { utils as gebUtils } from '@hai-on-op/sdk'
+import { utils as gebUtils } from '@parisii-inc/parys-sdk'
 
 import type { IAuction } from '~/types'
 import { Status, formatNumberWithStyle, sanitizeDecimals, toFixedString } from '~/utils'

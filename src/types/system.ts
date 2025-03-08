@@ -1,4 +1,4 @@
-import { type AnalyticsData } from '@hai-on-op/sdk'
+import { type AnalyticsData } from '@parisii-inc/parys-sdk'
 import { TOKEN_LOGOS } from '~/utils/tokens'
 import { SummaryCurrency, SummaryItemValue } from './vaults'
 

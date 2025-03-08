@@ -1,5 +1,5 @@
 import { JsonRpcSigner } from '@ethersproject/providers/lib/json-rpc-provider'
-import { Geb, type TokenData } from '@hai-on-op/sdk'
+import { Geb, type TokenData } from '@parisii-inc/parys-sdk'
 
 import type { SystemSate } from './system'
 import type { FormattedBalance } from './wallet'

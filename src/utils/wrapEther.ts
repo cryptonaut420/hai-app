@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import { JsonRpcSigner } from '@ethersproject/providers'
-import { Geb } from '@hai-on-op/sdk'
+import { Geb } from '@parisii-inc/parys-sdk'
 
 import { getNetworkName } from './constants'
 
