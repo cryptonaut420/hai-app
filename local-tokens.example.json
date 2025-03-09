@@ -1,0 +1,35 @@
+{
+  "WETH": {
+    "address": "0x1234567890123456789012345678901234567890",
+    "decimals": 18,
+    "symbol": "WETH",
+    "label": "WETH",
+    "bytes32String": "0x5745544800000000000000000000000000000000000000000000000000000000",
+    "collateralJoin": "0x1234567890123456789012345678901234567890",
+    "collateralAuctionHouse": "0x1234567890123456789012345678901234567890",
+    "isCollateral": true,
+    "hasRewards": true
+  },
+  "HAI": {
+    "address": "0x1234567890123456789012345678901234567890",
+    "decimals": 18,
+    "symbol": "HAI",
+    "label": "HAI",
+    "bytes32String": "0x4841490000000000000000000000000000000000000000000000000000000000",
+    "collateralJoin": "",
+    "collateralAuctionHouse": "",
+    "isCollateral": false,
+    "hasRewards": false
+  },
+  "KITE": {
+    "address": "0x1234567890123456789012345678901234567890",
+    "decimals": 18,
+    "symbol": "KITE",
+    "label": "KITE",
+    "bytes32String": "0x4b49544500000000000000000000000000000000000000000000000000000000",
+    "collateralJoin": "",
+    "collateralAuctionHouse": "",
+    "isCollateral": false,
+    "hasRewards": false
+  }
+} 

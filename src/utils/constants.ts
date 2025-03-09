@@ -16,6 +16,7 @@ export enum ChainId {
     MAINNET = 10,
     OPTIMISM_GOERLI = 420,
     OPTIMISM_SEPOLIA = 11155420,
+    LOCAL = 31337, // Anvil default chain ID
 }
 
 export const NETWORK_ID = parseInt(VITE_NETWORK_ID ?? '11155420')
@@ -28,6 +29,8 @@ export const getNetworkName = (chainId: ChainId | number) => {
             return 'optimism-goerli'
         case ChainId.OPTIMISM_SEPOLIA:
             return 'optimism-sepolia'
+        case ChainId.LOCAL:
+            return 'localnet'
         default:
             return 'mainnet'
     }

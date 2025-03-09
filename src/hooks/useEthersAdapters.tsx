@@ -4,7 +4,7 @@ import { createPublicClient, http, type HttpTransport } from 'viem'
 import { optimism, optimismSepolia } from 'viem/chains'
 import { type PublicClient, type WalletClient, useNetwork, usePublicClient, useWalletClient } from 'wagmi'
 
-import { NETWORK_ID, VITE_MAINNET_PUBLIC_RPC, VITE_TESTNET_PUBLIC_RPC } from '~/utils'
+import { NETWORK_ID, VITE_MAINNET_PUBLIC_RPC, VITE_TESTNET_PUBLIC_RPC, ChainId } from '~/utils'
 
 export const useCustomPublicClient = (): PublicClient => {
     const { chain } = useNetwork()
@@ -18,8 +18,13 @@ export const useCustomPublicClient = (): PublicClient => {
         chain: optimism,
         transport: http(VITE_MAINNET_PUBLIC_RPC, { batch: true }),
     })
+    const localClient = createPublicClient({
+        chain: { id: ChainId.LOCAL, name: 'Local Anvil' },
+        transport: http('http://localhost:8545', { batch: true }),
+    })
 
-    if (chainId === 10) return mainnetClient as PublicClient
+    if (chainId === ChainId.MAINNET) return mainnetClient as PublicClient
+    if (chainId === ChainId.LOCAL) return localClient as PublicClient
     return testnetClient as PublicClient
 }
 
