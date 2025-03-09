@@ -29,7 +29,6 @@ import { Header } from './Header'
 import { WaitingModal } from '~/components/Modal/WaitingModal'
 import { ClaimModal } from '~/components/Modal/ClaimModal'
 import { IntentionHeader } from '~/components/IntentionHeader'
-import { HaiAlert } from '~/components/HaiAlert'
 import { StartAuction } from './Auctions/StartAuction'
 
 type Props = {
@@ -231,15 +230,6 @@ export function Shared({ children }: Props) {
         networkChecker()
     }, [networkChecker])
 
-    // const {
-    //     data: { priceDiff },
-    // } = useAnalytics()
-    // const haiAlertActive = useMemo(() => {
-    //     // TODO: determine diff threshold
-    //     return priceDiff > 0
-    // }, [priceDiff])
-    const [haiAlertActive, setHaiAlertActive] = useState(true)
-
     return (
         <Container>
             <TransactionUpdater />
@@ -275,14 +265,13 @@ export function Shared({ children }: Props) {
             ) : (
                 <Content
                     $padTop={!isSplash}
-                    $padBottom={!isSplash ? (haiAlertActive ? '240px' : '168px') : undefined}
+                    $padBottom={!isSplash ? '168px' : undefined}
                     $maxWidth={!isSplash ? 'min(1200px, calc(100vw - 48px))' : undefined}
                 >
                     <IntentionHeader>{location.pathname === '/auctions' && <StartAuction />}</IntentionHeader>
                     {children}
                 </Content>
             )}
-            {!isSplash && <HaiAlert active={haiAlertActive} setActive={setHaiAlertActive} />}
             <ImagePreloader />
         </Container>
     )

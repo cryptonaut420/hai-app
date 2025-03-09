@@ -94,11 +94,6 @@ export function Header({ tickerActive = false }: HeaderProps) {
         <>
             {wrapEthActive && <WrapETHModal onClose={() => setWrapEthActive(false)} />}
             <Container $tickerActive={tickerActive} $withBg={!isSplash || headerBgActive}>
-                {tickerActive && (
-                    <Ticker>
-                        <Marquee text={tickerText} />
-                    </Ticker>
-                )}
                 <Inner $blur={!isSplash || headerBgActive}>
                     <LeftSide>
                         {isSplash ? (
@@ -202,7 +197,6 @@ export function Header({ tickerActive = false }: HeaderProps) {
                                 showWrapEth={() => setWrapEthActive(true)}
                             />
                         )}
-                        <MusicButton />
                         {isSplash ? (
                             <Link href="/vaults" $textDecoration="none">
                                 <HaiButton $variant="yellowish">
