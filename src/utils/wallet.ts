@@ -42,8 +42,11 @@ const getChain = () => {
     }
 }
 
+// Include all possible chains in the configureChains call
+// This ensures RainbowKit knows about all supported chains
 const { chains, publicClient } = configureChains(
-    [getChain()],
+    // Add all supported chains here, including localChain
+    [optimism, optimismGoerli, optimismSepolia, localChain],
     [
         alchemyProvider({ apiKey: VITE_ALCHEMY_KEY! }),
         jsonRpcProvider({

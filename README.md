@@ -38,9 +38,38 @@ To have the app default to a different network when a wallet is not connected:
 2. Change `VITE_MAINNET_PUBLIC_RPC` to e.g. `"https://opt-mainnet.g.alchemy.com/v2/{YOUR_ALCHEMY_KEY}"`
 3. Change `VITE_TESTNET_PUBLIC_RPC` to e.g. `"https://opt-sepolia.g.alchemy.com/v2/{YOUR_ALCHEMY_KEY}"`
 4. Change `VITE_ALCHEMY_KEY` to e.g. `"YOUR_ALCHEMY_KEY"`
-4. Change `VITE_WALLETCONNECT_ID` to e.g. `"YOUR_WALLETCONNECT_API_KEY"`
-4. Change `VITE_GRAPH_API_KEY` to e.g. `"YOUR_GRAPH_API_KEY"`
+5. Change `VITE_WALLETCONNECT_ID` to e.g. `"YOUR_WALLETCONNECT_API_KEY"`
+6. Change `VITE_GRAPH_API_KEY` to e.g. `"YOUR_GRAPH_API_KEY"`
 
+### Local Development with Anvil
+
+For local development with Anvil:
+
+1. Start your local Anvil chain:
+   ```bash
+   anvil
+   ```
+
+2. Set up environment variables for local development:
+   ```
+   # Set to Anvil's default chain ID
+   VITE_NETWORK_ID=31337
+   
+   # Point to your contract configuration files
+   LOCAL_CONTRACTS_PATH=./data/31337-contracts.json
+   LOCAL_TOKENS_PATH=./data/31337-tokens.json
+   ```
+
+3. Create contract configuration files in the `data` directory:
+   - `31337-contracts.json` - Contains contract addresses
+   - `31337-tokens.json` - Contains token definitions
+
+4. Start the application:
+   ```bash
+   yarn start
+   ```
+
+See [LOCAL_DEV.md](./LOCAL_DEV.md) for detailed instructions.
 
 ## Testing
 
