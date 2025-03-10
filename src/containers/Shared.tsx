@@ -38,7 +38,8 @@ export function Shared({ children }: Props) {
     const { address: account } = useAccount()
     const previousAccount = usePrevious(account)
     const { chain } = useNetwork()
-    const networkName = getNetworkName(NETWORK_ID)
+    const effectiveNetworkId = chain?.id || NETWORK_ID
+    const networkName = getNetworkName(effectiveNetworkId)
     const signer = useEthersSigner()
     const publicGeb = usePublicGeb()
     const geb = useGeb()
@@ -46,6 +47,11 @@ export function Shared({ children }: Props) {
     const history = useHistory()
     const location = useLocation()
     const isSplash = location.pathname === '/'
+
+    useEffect(() => {
+        console.log(`Connected network ID: ${effectiveNetworkId}, Network name: ${networkName}`)
+        console.log(`Environment variables: LOCAL_TOKENS_PATH=${(window as any).LOCAL_TOKENS_PATH}`)
+    }, [effectiveNetworkId, networkName])
 
     const tokenList = getTokenList(networkName)
     const coinTokenContract = useTokenContract(tokenList.HAI?.address)

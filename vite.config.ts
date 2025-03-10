@@ -34,11 +34,46 @@ const envVars = {
   ...parseEnvFile(localEnvPath)
 }
 
+// Generate both prefixed and non-prefixed versions of environment variables
+const generateEnvDefinitions = () => {
+  const definitions: Record<string, string> = {}
+  
+  // Process all environment variables
+  Object.keys(envVars).forEach(key => {
+    const value = JSON.stringify(envVars[key])
+    
+    // For VITE_ prefixed variables
+    if (key.startsWith('VITE_')) {
+      // Define under import.meta.env
+      definitions[`import.meta.env.${key}`] = value
+      
+      // Also define under process.env 
+      definitions[`process.env.${key}`] = value
+      
+      // And add to window for global access
+      definitions[`window.${key}`] = value
+      
+      // If it's a path variable, also create a non-prefixed version
+      if (key.endsWith('_PATH')) {
+        const nonPrefixedKey = key.replace('VITE_', '')
+        definitions[`process.env.${nonPrefixedKey}`] = value
+        definitions[`window.${nonPrefixedKey}`] = value
+      }
+    }
+  })
+  
+  return definitions
+}
+
 export default defineConfig(() => ({
     resolve: {
-        dedupe: ['buffer', 'bn.js', 'keccak', 'ethers'],
+        dedupe: ['buffer', 'bn.js', 'keccak', 'ethers']
     },
-    plugins: [react(), vercel(), tsConfigPaths()],
+    plugins: [
+        react(), 
+        vercel(), 
+        tsConfigPaths()
+    ],
     vercel: {
         expiration: 25,
         additionalEndpoints: [
@@ -83,16 +118,12 @@ export default defineConfig(() => ({
         // css: true,
     },
     define: {
-        // Explicitly define environment variables for the client
-        'process.env.LOCAL_CONTRACTS_PATH': JSON.stringify(envVars.VITE_LOCAL_CONTRACTS_PATH || ''),
-        'process.env.LOCAL_TOKENS_PATH': JSON.stringify(envVars.VITE_LOCAL_TOKENS_PATH || ''),
-        'process.env.VITE_LOCAL_CONTRACTS_PATH': JSON.stringify(envVars.VITE_LOCAL_CONTRACTS_PATH || ''),
-        'process.env.VITE_LOCAL_TOKENS_PATH': JSON.stringify(envVars.VITE_LOCAL_TOKENS_PATH || ''),
+        // Dynamically generate all environment variable definitions
+        ...generateEnvDefinitions(),
         
-        // Also expose to window for direct access
-        'window.LOCAL_CONTRACTS_PATH': JSON.stringify(envVars.VITE_LOCAL_CONTRACTS_PATH || ''),
-        'window.LOCAL_TOKENS_PATH': JSON.stringify(envVars.VITE_LOCAL_TOKENS_PATH || ''),
-        'window.VITE_LOCAL_CONTRACTS_PATH': JSON.stringify(envVars.VITE_LOCAL_CONTRACTS_PATH || ''),
-        'window.VITE_LOCAL_TOKENS_PATH': JSON.stringify(envVars.VITE_LOCAL_TOKENS_PATH || '')
+        // Also define the environment mode
+        'import.meta.env.MODE': JSON.stringify(process.env.NODE_ENV || 'development'),
+        'import.meta.env.DEV': process.env.NODE_ENV !== 'production',
+        'import.meta.env.PROD': process.env.NODE_ENV === 'production'
     }
 }))

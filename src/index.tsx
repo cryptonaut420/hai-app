@@ -11,10 +11,14 @@ import '@rainbow-me/rainbowkit/styles.css'
 import { chains, wagmiConfig } from './utils/wallet'
 import { store } from '~/store'
 import { HaiThemeProvider } from '~/providers/HaiThemeProvider'
+import { initializeEnvironment } from '~/utils/environment'
 
 import { haiTheme } from '~/styles/themes'
 import App from '~/App'
 import { CustomAvatar } from '~/components/CustomAvatar'
+
+// Initialize environment variables
+initializeEnvironment();
 
 ReactDOM.render(
     <React.StrictMode>
