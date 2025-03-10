@@ -159,7 +159,7 @@ export function Confirm({ onClose }: ConfirmProps) {
                             value: {
                                 current: summary.debt.current?.formatted,
                                 after: summary.debt.after.formatted,
-                                label: 'HAI',
+                                label: 'PARYS',
                             },
                         },
                         {

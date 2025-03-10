@@ -67,13 +67,13 @@ export function useAuctionsData() {
             }
             case 'DEBT': {
                 temp = [...debtAuctions]
-                // don't filter by sale asset as all debt auctions are selling KITE
+                // don't filter by sale asset as all debt auctions are selling AGREE
                 tokenFilter = undefined
                 break
             }
             case 'SURPLUS': {
                 temp = [...surplusAuctions]
-                // don't filter by sale asset as all surplus auctions are selling HAI
+                // don't filter by sale asset as all surplus auctions are selling PARYS
                 tokenFilter = undefined
                 break
             }

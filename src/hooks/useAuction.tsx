@@ -79,16 +79,16 @@ export function useAuction(auction: IAuction, timeEl?: HTMLElement | null) {
 
     const sellUsdPrice = useMemo(() => {
         switch (sellToken) {
-            case 'HAI':
+            case 'PARYS':
                 return liquidationData?.currentRedemptionPrice || '0'
-            case 'KITE':
-                return prices?.KITE.raw || '0'
+            case 'AGREE':
+                return prices?.AGREE.raw || '0'
             default:
                 return liquidationData?.collateralLiquidationData[sellToken]?.currentPrice.value || '0'
         }
     }, [
         sellToken,
-        prices?.KITE.raw,
+        prices?.AGREE.raw,
         liquidationData?.currentRedemptionPrice,
         liquidationData?.collateralLiquidationData,
     ])

@@ -108,22 +108,22 @@ export function StartAuction() {
                 <Stats
                     stats={[
                         {
-                            header: `${formatNumberWithStyle(systemSurplus)} HAI`,
+                            header: `${formatNumberWithStyle(systemSurplus)} PARYS`,
                             label: 'System Surplus',
                             tooltip: `Total surplus accrued in the protocol's balance sheet. This is used to cover potential bad debt and for surplus auctions. The surplus must exceed ${
                                 surplusRequiredToAuction.total
                                     ? formatNumberWithStyle(surplusRequiredToAuction.total)
                                     : '--'
-                            } HAI before auction may begin`,
+                            } PARYS before auction may begin`,
                         },
                         {
-                            header: `${formatNumberWithStyle(surplusAmountToSell)} HAI`,
+                            header: `${formatNumberWithStyle(surplusAmountToSell)} PARYS`,
                             label: 'Surplus Amount to Sell',
-                            tooltip: `Amount of HAI sold in Surplus Auction. System surplus must exceed ${
+                            tooltip: `Amount of PARYS sold in Surplus Auction. System surplus must exceed ${
                                 surplusRequiredToAuction.total
                                     ? formatNumberWithStyle(surplusRequiredToAuction.total)
                                     : '--'
-                            } HAI before auction may begin`,
+                            } PARYS before auction may begin`,
                         },
                         {
                             header: (
@@ -170,18 +170,18 @@ export function StartAuction() {
                 <Stats
                     stats={[
                         {
-                            header: `${formatNumberWithStyle(systemDebt)} HAI`,
+                            header: `${formatNumberWithStyle(systemDebt)} PARYS`,
                             label: 'System Debt',
                             tooltip: 'Amount of uncovered or bad debt in protocol',
                         },
                         {
-                            header: `${formatNumberWithStyle(debtAmountToSell)} HAI`,
+                            header: `${formatNumberWithStyle(debtAmountToSell)} PARYS`,
                             label: 'Debt Amount to Sell',
-                            tooltip: `Amount of HAI raised per Debt Auction.  If needed, multiple Debt Auctions may run simultaneously.`,
+                            tooltip: `Amount of PARYS raised per Debt Auction.  If needed, multiple Debt Auctions may run simultaneously.`,
                         },
 
                         {
-                            header: `${formatNumberWithStyle(protocolTokensOffered)} KITE`,
+                            header: `${formatNumberWithStyle(protocolTokensOffered)} AGREE`,
                             label: 'Protocol Tokens to be Offered',
                             tooltip: `Maximum number of protocol tokens to be minted and sold during a Debt Auction`,
                             button: (

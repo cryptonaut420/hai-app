@@ -67,13 +67,13 @@ export function useMyActiveAuctions() {
                 case 'DEBT':
                     return total + parseFloat(buyAmount) * parseFloat(currentRedemptionPrice)
                 case 'SURPLUS':
-                    return total + parseFloat(buyAmount) * parseFloat(prices?.KITE.raw || '0')
+                    return total + parseFloat(buyAmount) * parseFloat(prices?.AGREE.raw || '0')
                 default:
                     return total
             }
         }, 0)
         return formatSummaryValue(value.toString(), { style: 'currency' })!
-    }, [activeBids, liquidationData, prices?.KITE.raw])
+    }, [activeBids, liquidationData, prices?.AGREE.raw])
 
     const claimableAuctions: FormattedQueryAuctionBid[] = useMemo(() => {
         return (
@@ -92,7 +92,7 @@ export function useMyActiveAuctions() {
             const { currentRedemptionPrice = '0' } = liquidationData || {}
             switch (auction.englishAuctionType) {
                 case 'DEBT':
-                    return total + parseFloat(sellAmount) * parseFloat(prices?.KITE.raw || '0')
+                    return total + parseFloat(sellAmount) * parseFloat(prices?.AGREE.raw || '0')
                 case 'SURPLUS':
                     return total + parseFloat(sellAmount) * parseFloat(currentRedemptionPrice)
                 default:
@@ -100,7 +100,7 @@ export function useMyActiveAuctions() {
             }
         }, 0)
         return formatSummaryValue(winnings.toString(), { style: 'currency' })!
-    }, [claimableAuctions, liquidationData, prices?.KITE.raw])
+    }, [claimableAuctions, liquidationData, prices?.AGREE.raw])
 
     return {
         bids: formattedAuctionBids,

@@ -37,7 +37,7 @@ export function TokenArray({ tokens, size = 32, label, hideLabel = false }: Toke
 
     return (
         <Flex $align="center" $gap={12} $grow={0}>
-            {(tokens[0] == 'MOO-VELO-V2-OP-VELO' || tokens[0] == 'HAIVELO') && (
+            {(tokens[0] == 'MOO-VELO-V2-OP-VELO' || tokens[0] == 'PARYSVELO') && (
                 <div style={{ position: 'absolute' }}>
                     <div style={{ position: 'absolute', top: -20, left: -10, opacity: 0.65 }}>
                         <BlockBanner text="EXPERIMENTAL" $justify="flex-start" $fontSize=".5rem">
@@ -106,7 +106,7 @@ export const IconContainer = styled(CenteredFlex)<{ $size: number; $isKite?: boo
         border: ${({ theme }) => theme.border.thin};
         background-color: ${({ theme }) => theme.colors.greenish};
 
-        &.token-KITE {
+        &.token-AGREE {
             background-color: #eecabc;
         }
 
@@ -164,13 +164,13 @@ export function CyclingTokenArray({ size = 32, tokens, includeProtocolTokens = f
     const icons = tokens
         ? tokens.map((token) => ({
               icon: TOKEN_LOGOS[token],
-              bg: token === 'KITE' ? '#eecabc' : 'greenish',
+              bg: token === 'AGREE' ? '#eecabc' : 'greenish',
           }))
         : Object.values(tokensData || {})
               .filter(({ isCollateral }) => includeProtocolTokens || isCollateral)
               .map(({ symbol }) => ({
                   icon: TOKEN_LOGOS[symbol as TokenKey],
-                  bg: symbol === 'KITE' ? '#eecabc' : 'greenish',
+                  bg: symbol === 'AGREE' ? '#eecabc' : 'greenish',
               }))
 
     return <IconCycler size={size} icons={icons} />

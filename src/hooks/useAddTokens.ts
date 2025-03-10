@@ -5,17 +5,17 @@ import { ActionState, addTokensToMetamask } from '~/utils'
 import { useStoreActions, useStoreState } from '~/store'
 
 const hostedTokenImages = {
-    HAI: 'https://i.postimg.cc/QdVYkNcp/hai-logo.jpg',
-    KITE: 'https://i.postimg.cc/Z5g7fkLX/kite-logo.jpg',
-    HAIVELO: 'https://i.postimg.cc/66YBwPjp/hai-velo.png',
+    PARYS: 'https://i.postimg.cc/QdVYkNcp/hai-logo.jpg',
+    AGREE: 'https://i.postimg.cc/Z5g7fkLX/kite-logo.jpg',
+    PARYSVELO: 'https://i.postimg.cc/66YBwPjp/hai-velo.png',
 }
 
 export function useAddTokens({ isHaiVelo = false }: { isHaiVelo?: boolean } = {}) {
     const { address } = useAccount()
 
     const tokenImages = isHaiVelo
-        ? { HAIVELO: hostedTokenImages['HAIVELO'] }
-        : { HAI: hostedTokenImages['HAI'], KITE: hostedTokenImages['KITE'] }
+        ? { PARYSVELO: hostedTokenImages['PARYSVELO'] }
+        : { PARYS: hostedTokenImages['PARYS'], AGREE: hostedTokenImages['AGREE'] }
 
     const {
         connectWalletModel: { tokensData },

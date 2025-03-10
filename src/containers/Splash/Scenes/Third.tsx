@@ -134,11 +134,11 @@ export function Third({ zIndex }: ZoomSceneProps) {
                         $lineHeight={isUpToSmall ? '1.2' : '1.4'}
                     />
                     <Text $lineHeight="1.6">
-                        $HAI is more stable than other stables, automatically.&nbsp;
+                        $PARYS is more stable than other stables, automatically.&nbsp;
                         <strong>
                             Learn more about the&nbsp;
                             <Link href={`${LINK_TO_DOCS}detailed/modules/pid_controller.html`}>
-                                $HAI PID controller nerd stuff →
+                                $PARYS PID controller nerd stuff →
                             </Link>
                         </strong>
                     </Text>
@@ -148,7 +148,7 @@ export function Third({ zIndex }: ZoomSceneProps) {
                         <IconContainer>
                             <HaiFace filled />
                         </IconContainer>
-                        <Text>HAI</Text>
+                        <Text>PARYS</Text>
                         <Text ref={priceText} $fontWeight={700} style={{ width: '48px' }}>
                             $1.00
                         </Text>
@@ -166,7 +166,7 @@ export function Third({ zIndex }: ZoomSceneProps) {
             <FloatingElements clouds={clouds} />
             <FlyingElfContainer>
                 <HaiCoin
-                    variant="KITE"
+                    variant="AGREE"
                     width="66%"
                     rotateOnAxis={65}
                     style={{

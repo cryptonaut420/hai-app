@@ -22,14 +22,14 @@ export enum VaultInfoError {
     NO_WALLET,
     NO_PROXY,
     INSUFFICIENT_COLLATERAL,
-    INSUFFICIENT_HAI,
+    INSUFFICIENT_PARYS,
     WITHDRAW_EXCEEDS_COLLATERAL,
     REPAY_EXCEEDS_OWED,
     ZERO_AMOUNT,
     DEBT_TOTAL,
     COLLATERAL_RATIO,
     GLOBAL_DEBT_CEILING,
-    HAI_DEBT_CEILING,
+    PARYS_DEBT_CEILING,
     INDIVIDUAL_DEBT_CEILING,
     MINIMUM_MINT,
 }
@@ -37,13 +37,13 @@ export const vaultInfoErrors: Record<number, string> = {
     [VaultInfoError.NO_WALLET]: `Connect a valid wallet to continue`,
     [VaultInfoError.NO_PROXY]: `Create a proxy contract to continue`,
     [VaultInfoError.INSUFFICIENT_COLLATERAL]: `Insufficient collateral balance`,
-    [VaultInfoError.INSUFFICIENT_HAI]: `Insufficient $HAI balance`,
+    [VaultInfoError.INSUFFICIENT_PARYS]: `Insufficient $PARYS balance`,
     [VaultInfoError.WITHDRAW_EXCEEDS_COLLATERAL]: `Withdraw amount cannot exceed collateral balance`,
-    [VaultInfoError.REPAY_EXCEEDS_OWED]: `Repay amount cannot exceed $HAI debt balance`,
-    [VaultInfoError.ZERO_AMOUNT]: `Please enter a non-zero amount of collateral and/or $HAI`,
+    [VaultInfoError.REPAY_EXCEEDS_OWED]: `Repay amount cannot exceed $PARYS debt balance`,
+    [VaultInfoError.ZERO_AMOUNT]: `Please enter a non-zero amount of collateral and/or $PARYS`,
     [VaultInfoError.GLOBAL_DEBT_CEILING]: `Cannot exceed global debt ceiling`,
-    [VaultInfoError.HAI_DEBT_CEILING]: `Cannot exceed HAI debt ceiling`,
-    [VaultInfoError.MINIMUM_MINT]: `You must mint at least 1 $HAI to create a Vault`,
+    [VaultInfoError.PARYS_DEBT_CEILING]: `Cannot exceed PARYS debt ceiling`,
+    [VaultInfoError.MINIMUM_MINT]: `You must mint at least 1 $PARYS to create a Vault`,
 }
 
 export const DEFAULT_VAULT_DATA: IVaultData = {
@@ -271,10 +271,10 @@ export const returnTotalDebtPlusInterest = (
     const safetyPriceRay = BigNumber.from(BigNumber.from(toFixedString(safetyPrice, 'RAY')))
     const collateralBN = BigNumber.from(toFixedString(collateral, 'WAD'))
     const accumulatedRateBN = BigNumber.from(toFixedString(accumulatedRate, 'RAY'))
-    const owedHAI = collateralBN.mul(safetyPriceRay).mul(accumulatedRateBN).div(gebUtils.RAY).div(gebUtils.RAY)
+    const owedPARYS = collateralBN.mul(safetyPriceRay).mul(accumulatedRateBN).div(gebUtils.RAY).div(gebUtils.RAY)
 
-    if (!beautify) return owedHAI
-    return formatNumber(gebUtils.wadToFixed(owedHAI).toString()).toString()
+    if (!beautify) return owedPARYS
+    return formatNumber(gebUtils.wadToFixed(owedPARYS).toString()).toString()
 }
 
 export const riskStateToStatus: Record<RiskState | number, Status> = {

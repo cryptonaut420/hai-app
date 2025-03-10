@@ -28,7 +28,7 @@ export function WrapperAd({
     heading,
     status = 'NOW LIVE',
     description,
-    cta = 'Get HAI to Earn',
+    cta = 'Get PARYS to Earn',
     tokenImages,
     bgVariant = 0,
 }: WrapperAdProps) {

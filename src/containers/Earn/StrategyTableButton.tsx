@@ -42,7 +42,7 @@ export function StrategyTableButton({ earnPlatform, earnLink = '/vaults' }: Prop
                     ) : (
                         <HaiFace size={28} filled style={{ marginLeft: '-4px' }} />
                     )}
-                    <Text $fontSize="0.9em">{(earnPlatform || 'HAI').toUpperCase()}</Text>
+                    <Text $fontSize="0.9em">{(earnPlatform || 'PARYS').toUpperCase()}</Text>
                 </Flex>
             </EarnButton>
         </Link>

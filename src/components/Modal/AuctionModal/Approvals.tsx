@@ -36,7 +36,7 @@ export function Approvals({ previousStep, nextStep, auction, method }: Approvals
     const addTransaction = useTransactionAdder()
     const tokenContract = useTokenContract(geb?.contracts[method]?.address)
 
-    const token = method === 'systemCoin' ? 'HAI' : 'KITE'
+    const token = method === 'systemCoin' ? 'PARYS' : 'AGREE'
     const [status, setStatus] = useState({
         title: `${token} Allowance`,
         text: `Allow your account to manage your ${token}`,

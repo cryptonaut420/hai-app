@@ -54,8 +54,8 @@ export function Shared({ children }: Props) {
     }, [effectiveNetworkId, networkName])
 
     const tokenList = getTokenList(networkName)
-    const coinTokenContract = useTokenContract(tokenList.HAI?.address)
-    const protTokenContract = useTokenContract(tokenList.KITE?.address)
+    const coinTokenContract = useTokenContract(tokenList.PARYS?.address)
+    const protTokenContract = useTokenContract(tokenList.AGREE?.address)
 
     const {
         connectWalletModel: connectWalletState,
@@ -94,13 +94,13 @@ export function Shared({ children }: Props) {
 
     useEffect(() => {
         if (!connectWalletState) return
-        const { HAI, KITE } = connectWalletState.tokensFetchedData
+        const { PARYS, AGREE } = connectWalletState.tokensFetchedData
 
-        if (!HAI?.balanceE18 || !KITE?.balanceE18) return
+        if (!PARYS?.balanceE18 || !AGREE?.balanceE18) return
 
         setCoinBalances({
-            hai: utils.formatEther(HAI.balanceE18),
-            kite: utils.formatEther(KITE.balanceE18),
+            hai: utils.formatEther(PARYS.balanceE18),
+            kite: utils.formatEther(AGREE.balanceE18),
         })
     }, [connectWalletState, setCoinBalances])
 

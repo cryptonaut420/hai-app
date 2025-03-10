@@ -68,8 +68,8 @@ export function useEarnStrategies() {
 
     const prices = useMemo(() => {
         return {
-            HAI: parseFloat(liquidationData?.currentRedemptionPrice || '0'),
-            KITE: parseFloat(veloPrices?.KITE.raw || '0'),
+            PARYS: parseFloat(liquidationData?.currentRedemptionPrice || '0'),
+            AGREE: parseFloat(veloPrices?.AGREE.raw || '0'),
             VELO: parseFloat(veloPrices?.VELO.raw || '0'),
             OP: parseFloat(liquidationData?.collateralLiquidationData['OP']?.currentPrice.value || '0'),
             WETH: parseFloat(liquidationData?.collateralLiquidationData['WETH']?.currentPrice.value || '0'),
@@ -88,9 +88,9 @@ export function useEarnStrategies() {
                         Object.values(tokenAssets).find(({ name }) => name.toLowerCase() === cType.id.toLowerCase()) ||
                         {}
                     const rewards = REWARDS.vaults[symbol as keyof typeof REWARDS.vaults] || REWARDS.default
-                    const apy = calculateAPY(parseFloat(cType.debtAmount) * prices.HAI, prices, rewards)
+                    const apy = calculateAPY(parseFloat(cType.debtAmount) * prices.PARYS, prices, rewards)
                     return {
-                        pair: [symbol || 'HAI'],
+                        pair: [symbol || 'PARYS'],
                         rewards: Object.entries(rewards).map(([token, emission]) => ({ token, emission })),
                         tvl: cType.debtAmount,
                         strategyType: 'borrow',
@@ -114,7 +114,7 @@ export function useEarnStrategies() {
             if (!rewards) continue // sanity check
 
             const tvl =
-                parseFloat(formatUnits(pool.inputTokenBalances[0], 18)) * prices.HAI +
+                parseFloat(formatUnits(pool.inputTokenBalances[0], 18)) * prices.PARYS +
                 parseFloat(formatUnits(pool.inputTokenBalances[1], 18)) * prices.WETH
             const apy = calculateAPY(tvl, prices, rewards)
             temp.push({
@@ -130,7 +130,7 @@ export function useEarnStrategies() {
                         const posETH =
                             parseFloat(formatUnits(cumulativeDepositTokenAmounts[1], 18)) -
                             parseFloat(formatUnits(cumulativeWithdrawTokenAmounts[1], 18))
-                        return total + (posHai * prices.HAI + posETH * prices.WETH)
+                        return total + (posHai * prices.PARYS + posETH * prices.WETH)
                     }, 0)
                     .toString(),
                 earnPlatform: 'uniswap',
@@ -194,7 +194,7 @@ export function useEarnStrategies() {
         return temp
     }, [veloData, veloPrices, veloPositions, prices, tokensData])
 
-    const haiBalance = useBalance('HAI')
+    const haiBalance = useBalance('PARYS')
     const analytics = useAnalytics()
     const {
         data: { erc20Supply, annualRate },
@@ -204,7 +204,7 @@ export function useEarnStrategies() {
 
     const specialStrategies = [
         {
-            pair: ['HAI'],
+            pair: ['PARYS'],
             rewards: [],
             tvl: erc20Supply.raw,
             apy: rRateApy,
@@ -285,13 +285,13 @@ export function useEarnStrategies() {
 
 const calculateAPY = (
     tvl: number,
-    prices: { KITE: number; OP: number },
-    rewards: { KITE: number; OP: number } = REWARDS.default
+    prices: { AGREE: number; OP: number },
+    rewards: { AGREE: number; OP: number } = REWARDS.default
 ) => {
     if (!tvl) return 0
-    if (!prices.KITE || !prices.OP) return 0
+    if (!prices.AGREE || !prices.OP) return 0
 
     // ((kite-daily-emission * kite-price + op-daily-emission * op-price) * 365) / (hai-debt-per-collateral * hai-redemption-price)
-    const nominal = (365 * (rewards.KITE * prices.KITE + rewards.OP * prices.OP)) / tvl
+    const nominal = (365 * (rewards.AGREE * prices.AGREE + rewards.OP * prices.OP)) / tvl
     return nominal === Infinity ? 0 : Math.pow(1 + nominal / 12, 12) - 1
 }

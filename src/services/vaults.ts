@@ -19,7 +19,7 @@ export const fetchUserVaults = async (config: IFetchVaultsPayload) => {
     const userVaults = formatUserVault(vaultsResponse.vaults, liquidationData, config.tokensData)
     return {
         userVaults,
-        availableHAI: vaultsResponse.erc20Balances?.length ? vaultsResponse.erc20Balances[0].balance : '0',
+        availablePARYS: vaultsResponse.erc20Balances?.length ? vaultsResponse.erc20Balances[0].balance : '0',
         liquidationData,
     }
 }

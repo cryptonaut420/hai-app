@@ -6,7 +6,7 @@ import { useContract } from './useContract'
 import { useAccount } from 'wagmi'
 import { getAddress } from 'viem'
 
-import { CL50_HAI_LUSD_ADDRESS, HAI_ADDRESS, KITE_ADDRESS, VELO_SUGAR_ADDRESS } from '~/utils'
+import { CL50_PARYS_LUSD_ADDRESS, PARYS_ADDRESS, AGREE_ADDRESS, VELO_SUGAR_ADDRESS } from '~/utils'
 
 export type VelodromeLpData = {
     tokenPair: [string, string]
@@ -41,20 +41,20 @@ export function useVelodrome() {
             try {
                 setLoading(true)
                 const lps = (await velodromeSugarContract.all(BigNumber.from(500), BigNumber.from(650))) as any[]
-                const targetTokens = [getAddress(HAI_ADDRESS), getAddress(KITE_ADDRESS)]
+                const targetTokens = [getAddress(PARYS_ADDRESS), getAddress(AGREE_ADDRESS)]
 
                 const flteredLps = lps.filter((lp) => targetTokens.includes(lp[7]) || targetTokens.includes(lp[10]))
 
                 if (isStale) return
                 const lpData = flteredLps.map((lp) => ({
                     tokenPair:
-                        lp[0] == CL50_HAI_LUSD_ADDRESS
-                            ? ['HAI', 'LUSD']
+                        lp[0] == CL50_PARYS_LUSD_ADDRESS
+                            ? ['PARYS', 'LUSD']
                             : lp[1]
                                   .split('/')
                                   .map((token: string) => token.replace(/^[v|s]AMMV2-/gi, '').toUpperCase()),
                     address: lp.lp,
-                    // symbol: lp[0] == CL50_HAI_LUSD_ADDRESS ? CL50_HAI_LUSD_SYMBOL : lp[1],
+                    // symbol: lp[0] == CL50_PARYS_LUSD_ADDRESS ? CL50_PARYS_LUSD_SYMBOL : lp[1],
                     symbol: lp.symbol,
                     decimals: lp.decimals,
                     liquidity: lp.liquidity,

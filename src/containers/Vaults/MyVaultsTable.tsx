@@ -48,7 +48,7 @@ export function MyVaultsTable({ headers, rows, sorting, setSorting, onCreate }: 
                 } = vault
 
                 const hasFreeCollateral = freeCollateral !== '0.0'
-                const hasNoRewards = ['SNX', 'LUSD-A', 'LINK', 'VELO', 'WBTC', 'MOO-VELO-V2-OP-VELO', 'HAIVELO']
+                const hasNoRewards = ['SNX', 'LUSD-A', 'LINK', 'VELO', 'WBTC', 'MOO-VELO-V2-OP-VELO', 'PARYSVELO']
                 const collateralLabel = formatCollateralLabel(collateralName)
                 return (
                     <Table.Row
@@ -68,13 +68,13 @@ export function MyVaultsTable({ headers, rows, sorting, setSorting, onCreate }: 
                                             <RewardsTokenArray
                                                 tokens={
                                                     collateralName === 'APXETH'
-                                                        ? ['OP', 'KITE', 'DINERO']
-                                                        : ['OP', 'KITE']
+                                                        ? ['OP', 'AGREE', 'DINERO']
+                                                        : ['OP', 'AGREE']
                                                 }
                                                 label="EARN"
-                                                tooltip={`Earn OP/KITE${
+                                                tooltip={`Earn OP/AGREE${
                                                     collateralName === 'APXETH' ? '/DINERO' : ''
-                                                } tokens by minting HAI and providing liquidity`}
+                                                } tokens by minting PARYS and providing liquidity`}
                                             />
                                         )}
                                         {hasFreeCollateral && <ClaimableFreeCollateral vault={vault} />}
@@ -116,7 +116,7 @@ export function MyVaultsTable({ headers, rows, sorting, setSorting, onCreate }: 
                                 content: (
                                     <Table.ItemGrid $compactQuery="upToMedium">
                                         <Text $textAlign="right">{formatNumberWithStyle(totalDebt)}</Text>
-                                        <Text>HAI</Text>
+                                        <Text>PARYS</Text>
                                     </Table.ItemGrid>
                                 ),
                             },

@@ -93,7 +93,7 @@ export function MobileMenu({ active, setActive, showWrapEth }: MobileMenuProps) 
                                         !location.pathname.includes('explore')
                                     }
                                 >
-                                    Get HAI
+                                    Get PARYS
                                 </BrandedDropdown.Item>
                                 <BrandedDropdown.Item
                                     href="/earn"

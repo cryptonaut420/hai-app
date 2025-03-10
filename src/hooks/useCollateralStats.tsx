@@ -81,7 +81,7 @@ const collateralStatHeaders: SortableHeader[] = [
     },
     {
         label: 'Debt Issued',
-        tooltip: `Debt Issued - value of all HAI debt issued in vaults of a given collateral asset`,
+        tooltip: `Debt Issued - value of all PARYS debt issued in vaults of a given collateral asset`,
     },
     {
         label: 'Debt Ceiling %',

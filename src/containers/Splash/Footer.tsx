@@ -29,13 +29,13 @@ export function Footer() {
             </ScrollButton>
             <Inner>
                 <Description>
-                    <Logo src={haiLogo} width={701} height={264} alt="HAI" />
+                    <Logo src={haiLogo} width={701} height={264} alt="PARYS" />
                     <Text $fontSize="0.8em" $fontWeight={700}>
-                        HAI is a multi-collateral, over-collateralized CDP-minted stablecoin, using a PID controller to
+                        PARYS is a multi-collateral, over-collateralized CDP-minted stablecoin, using a PID controller to
                         induce stability.
                     </Text>
                     <Text $fontSize="0.8em">
-                        {`HAI adopts a mechanism familiar to stablecoin protocols; it is minted from over-collateralized debt positions (CDPs). In essence, every HAI token in circulation corresponds to a greater amount of collateral locked by individual protocol users, also known as minters. These minters can generate or annihilate HAI, depending on their collateral's value. This approach aligns with systems employed by other cryptocurrencies like DAI, RAI, and many others.`}
+                        {`PARYS adopts a mechanism familiar to stablecoin protocols; it is minted from over-collateralized debt positions (CDPs). In essence, every PARYS token in circulation corresponds to a greater amount of collateral locked by individual protocol users, also known as minters. These minters can generate or annihilate PARYS, depending on their collateral's value. This approach aligns with systems employed by other cryptocurrencies like DAI, RAI, and many others.`}
                     </Text>
                 </Description>
                 <LinksContainer>
@@ -73,9 +73,9 @@ export function Footer() {
                 <ElfContainer $shrink={0}>
                     <Elf variant={5} width="100%" animated />
                 </ElfContainer>
-                {isUpToMedium && <Bottom>© 2024 HAI</Bottom>}
+                {isUpToMedium && <Bottom>© 2024 PARYS</Bottom>}
             </Inner>
-            {!isUpToMedium && <Bottom>© 2024 HAI</Bottom>}
+            {!isUpToMedium && <Bottom>© 2024 PARYS</Bottom>}
         </Container>
     )
 }

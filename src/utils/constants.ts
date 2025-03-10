@@ -38,7 +38,7 @@ export const getNetworkName = (chainId: ChainId | number) => {
 
 export const NETWORK_NAME = getNetworkName(NETWORK_ID)
 
-export const COIN_TICKER = 'HAI'
+export const COIN_TICKER = 'PARYS'
 export const EMPTY_ADDRESS = zeroAddress
 export const SYSTEM_STATUS = VITE_SYSTEM_STATUS || ''
 
@@ -117,6 +117,6 @@ export const SURPLUS_BATCH_SIZE = 5_000_000 // blocks
 export const DEBT_BATCH_SIZE = 5_000_000 // blocks
 export const COLLATERAL_BATCH_SIZE = 5_000_000 // blocks
 
-export const HARDCODED_KITE = 8
+export const HARDCODED_AGREE = 8
 
 export const DEPRECATED_COLLATERALS = ['WBTC']

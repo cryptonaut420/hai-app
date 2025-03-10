@@ -52,21 +52,21 @@ export function Confirm({ previousStep }: ConfirmProps) {
             case 'DEBT': {
                 switch (actionType) {
                     case ActionType.SETTLE:
-                        return 'Claiming KITE'
+                        return 'Claiming AGREE'
                     case ActionType.CLAIM:
                         return 'Claiming Tokens'
                     default:
-                        return `Bid ${COIN_TICKER} and Receive KITE`
+                        return `Bid ${COIN_TICKER} and Receive AGREE`
                 }
             }
             case 'SURPLUS': {
                 switch (actionType) {
                     case ActionType.SETTLE:
-                        return 'Claiming HAI'
+                        return 'Claiming PARYS'
                     case ActionType.CLAIM:
                         return 'Claiming Tokens'
                     default:
-                        return `Bid KITE and Receive ${COIN_TICKER}`
+                        return `Bid AGREE and Receive ${COIN_TICKER}`
                 }
             }
             case 'COLLATERAL':
@@ -86,8 +86,8 @@ export function Confirm({ previousStep }: ConfirmProps) {
                 return {
                     Claim:
                         Number(auctionState.internalBalance) > 0
-                            ? `${formatNumberWithStyle(auctionState.internalBalance)} KITE`
-                            : `${formatNumberWithStyle(auctionState.protInternalBalance)} HAI`,
+                            ? `${formatNumberWithStyle(auctionState.internalBalance)} AGREE`
+                            : `${formatNumberWithStyle(auctionState.protInternalBalance)} PARYS`,
                 }
             default: {
                 const {

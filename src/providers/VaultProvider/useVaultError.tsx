@@ -70,7 +70,7 @@ export function useVaultError({ action, formState, collateral, debt, collateralR
                 return { error: VaultInfoError.REPAY_EXCEEDS_OWED }
             }
             if (!repayBN.isZero() && repayBN.gt(haiBalanceBN)) {
-                return { error: VaultInfoError.INSUFFICIENT_HAI }
+                return { error: VaultInfoError.INSUFFICIENT_PARYS }
             }
             break
         }
@@ -102,7 +102,7 @@ export function useVaultError({ action, formState, collateral, debt, collateralR
                 return { error: VaultInfoError.REPAY_EXCEEDS_OWED }
             }
             if (!repayBN.isZero() && repayBN.gt(haiBalanceBN)) {
-                return { error: VaultInfoError.INSUFFICIENT_HAI }
+                return { error: VaultInfoError.INSUFFICIENT_PARYS }
             }
             break
         }
@@ -112,7 +112,7 @@ export function useVaultError({ action, formState, collateral, debt, collateralR
         const debtFloorFormatted = Math.ceil(Number(formatNumber(debtFloor)))
         return {
             error: VaultInfoError.DEBT_TOTAL,
-            errorMessage: `The minimum amount of debt per vault is ${debtFloorFormatted} HAI`,
+            errorMessage: `The minimum amount of debt per vault is ${debtFloorFormatted} PARYS`,
         }
     }
     if (!isSafe && Number(collateralRatio) >= 0) {
@@ -131,8 +131,8 @@ export function useVaultError({ action, formState, collateral, debt, collateralR
     }
     if (numeral(debt).value() > numeral(perVaultDebtCeiling).value()) {
         return {
-            error: VaultInfoError.HAI_DEBT_CEILING,
-            errorMessage: `Cannot exceed per vault $HAI debt ceiling (${perVaultDebtCeiling})`,
+            error: VaultInfoError.PARYS_DEBT_CEILING,
+            errorMessage: `Cannot exceed per vault $PARYS debt ceiling (${perVaultDebtCeiling})`,
         }
     }
     if (action === VaultAction.CREATE) {
@@ -147,7 +147,7 @@ export function useVaultError({ action, formState, collateral, debt, collateralR
         if (totalDebtBN.gte(perVaultDebtCeilingBN)) {
             return {
                 error: VaultInfoError.INDIVIDUAL_DEBT_CEILING,
-                errorMessage: `Individual safe can't have more than ${perVaultDebtCeiling} HAI of debt`,
+                errorMessage: `Individual safe can't have more than ${perVaultDebtCeiling} PARYS of debt`,
             }
         }
     }

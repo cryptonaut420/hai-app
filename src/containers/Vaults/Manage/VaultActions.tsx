@@ -221,9 +221,9 @@ export function VaultActions() {
                                 <Text>Borrow</Text>
                             </CenteredFlex>
                         }
-                        subLabel={`Max ${debt.available.formatted} HAI`}
+                        subLabel={`Max ${debt.available.formatted} PARYS`}
                         placeholder="Borrow Amount"
-                        unitLabel="HAI"
+                        unitLabel="PARYS"
                         onChange={(value: string) => updateForm({ borrow: value || undefined })}
                         value={formState.borrow}
                         onMax={() => updateForm({ borrow: debt.available.raw })}
@@ -262,9 +262,9 @@ export function VaultActions() {
                                 <Text>Pay Back</Text>
                             </CenteredFlex>
                         }
-                        subLabel={`Max ${maxRepay?.formatted || '0'} HAI`}
+                        subLabel={`Max ${maxRepay?.formatted || '0'} PARYS`}
                         placeholder="Pay Back Amount"
-                        unitLabel="HAI"
+                        unitLabel="PARYS"
                         onChange={(value: string) => updateForm({ repay: value || undefined })}
                         value={formState.repay}
                         disabled={action === VaultAction.CREATE}

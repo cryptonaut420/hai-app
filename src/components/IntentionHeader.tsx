@@ -39,7 +39,7 @@ const copy: Record<
         ctaLink: `${LINK_TO_DOCS}detailed/auctions/index.html`,
     },
     [Intention.BORROW]: {
-        subtitle: 'Mint & borrow HAI against your preferred collateral. ',
+        subtitle: 'Mint & borrow PARYS against your preferred collateral. ',
         cta: 'Read more about borrowing →',
         ctaLink: `${LINK_TO_DOCS}detailed/intro/hai.html`,
     },
@@ -52,22 +52,22 @@ const copy: Record<
 
 const typeOptions: BrandedSelectOption[] = [
     {
-        label: 'Get $HAI',
+        label: 'Get $PARYS',
         value: Intention.BORROW,
-        icon: ['HAI'],
-        description: 'Mint & borrow $HAI stablecoin against your preferred collateral',
+        icon: ['PARYS'],
+        description: 'Mint & borrow $PARYS stablecoin against your preferred collateral',
     },
     {
-        label: 'Buy $HAI',
+        label: 'Buy $PARYS',
         value: '',
         icon: <img src={uniswapLogo} alt="" />,
-        description: 'Market buy $HAI from various pairs on Uniswap',
+        description: 'Market buy $PARYS from various pairs on Uniswap',
         href: 'https://app.uniswap.org/swap',
     },
     {
         label: 'Earn Rewards',
         value: Intention.EARN,
-        icon: ['OP', 'KITE'],
+        icon: ['OP', 'AGREE'],
         description: 'Earn long term yields by staking a growing list of crypto assets',
     },
     {
@@ -85,7 +85,7 @@ const wrappers: WrapperAdProps[] = [
         description: 'Convert your VELO into haiVELO to use as collateral while earning veVELO rewards.',
         cta: 'Mint haiVELO',
         ctaLink: '/earn',
-        tokenImages: ['HAIVELO'],
+        tokenImages: ['PARYSVELO'],
     },
 ]
 

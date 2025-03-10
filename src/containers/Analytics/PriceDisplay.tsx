@@ -8,7 +8,7 @@ type PriceDisplayProps = {
     label: string
     tooltip: string
 }
-export function PriceDisplay({ token = 'HAI', price, label, tooltip }: PriceDisplayProps) {
+export function PriceDisplay({ token = 'PARYS', price, label, tooltip }: PriceDisplayProps) {
     return (
         <CenteredFlex $gap={12}>
             <TokenArray size={48} tokens={[token as any]} hideLabel />

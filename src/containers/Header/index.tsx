@@ -74,8 +74,8 @@ export function Header({ tickerActive = false }: HeaderProps) {
 
     const tickerText = useMemo(() => {
         const arr = [
-            ['HAI (MP)', haiMarketPrice.formatted, '\u2022'],
-            ['HAI (RP)', redemptionPrice.formatted, '\u2022'],
+            ['PARYS (MP)', haiMarketPrice.formatted, '\u2022'],
+            ['PARYS (RP)', redemptionPrice.formatted, '\u2022'],
         ]
         tokenAnalyticsData.forEach(({ symbol, currentPrice }) => {
             const price = formatDataNumber(currentPrice.toString() || '0', 18, 2, true)
@@ -86,7 +86,7 @@ export function Header({ tickerActive = false }: HeaderProps) {
 
     const logoEl = useMemo(
         () =>
-            isUpToExtraSmall ? <HaiFace filled size={56} /> : <Logo src={haiLogo} alt="HAI" width={701} height={264} />,
+            isUpToExtraSmall ? <HaiFace filled size={56} /> : <Logo src={haiLogo} alt="PARYS" width={701} height={264} />,
         [isUpToExtraSmall]
     )
 
@@ -176,7 +176,7 @@ export function Header({ tickerActive = false }: HeaderProps) {
                                                     !location.pathname.includes('explore')
                                                 }
                                             >
-                                                GET HAI
+                                                GET PARYS
                                             </HeaderLink>
                                         </Link>
                                         <Link href="/earn" $textDecoration="none">

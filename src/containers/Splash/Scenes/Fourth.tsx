@@ -57,11 +57,11 @@ const clouds: SplashImage[] = [
 
 const cardTitles = [
     {
-        title: 'BORROW HAI TO MULTIPLY YOUR CRYPTO EXPOSURE',
+        title: 'BORROW PARYS TO MULTIPLY YOUR CRYPTO EXPOSURE',
         link: `${LINK_TO_DOCS}detailed/modules/safe_engine.html`,
     },
     {
-        title: 'EARN KITE AND OP WHILE GETTING HAI',
+        title: 'EARN AGREE AND OP WHILE GETTING PARYS',
         link: `${LINK_TO_DOCS}detailed/proxies/actions/rewarded_actions.html`,
     },
     {

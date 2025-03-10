@@ -158,8 +158,8 @@ export function VaultsByOwner() {
                                                             maxDecimals: 4,
                                                         })}
                                                     </Text>
-                                                    <TokenArray tokens={['HAI']} hideLabel size={24} />
-                                                    <Text>HAI</Text>
+                                                    <TokenArray tokens={['PARYS']} hideLabel size={24} />
+                                                    <Text>PARYS</Text>
                                                 </Flex>
                                             ) : (
                                                 <Grid $columns="1fr 24px 48px" $align="center" $gap={8}>
@@ -168,8 +168,8 @@ export function VaultsByOwner() {
                                                             maxDecimals: 4,
                                                         })}
                                                     </Text>
-                                                    <TokenArray tokens={['HAI']} hideLabel size={24} />
-                                                    <Text>HAI</Text>
+                                                    <TokenArray tokens={['PARYS']} hideLabel size={24} />
+                                                    <Text>PARYS</Text>
                                                 </Grid>
                                             ),
                                         },

@@ -45,8 +45,8 @@ export interface VaultModel {
 
     // totalEth: string
     // setTotalEth: Action<VaultModel, string>
-    // totalHAI: string
-    // setTotalHAI: Action<VaultModel, string>
+    // totalPARYS: string
+    // setTotalPARYS: Action<VaultModel, string>
 
     // isMaxWithdraw: boolean
     // setIsMaxWithdraw: Action<VaultModel, boolean>
@@ -128,10 +128,10 @@ export const vaultModel: VaultModel = {
             }
             actions.setLiquidationData(fetched.liquidationData)
 
-            if (fetched.availableHAI && chainId) {
+            if (fetched.availablePARYS && chainId) {
                 storeActions.connectWalletModel.updateHaiBalance({
                     chainId,
-                    balance: fetched.availableHAI,
+                    balance: fetched.availablePARYS,
                 })
             }
             await timeout(200)
@@ -168,9 +168,9 @@ export const vaultModel: VaultModel = {
     // setTotalEth: action((state, payload) => {
     //     state.totalEth = payload
     // }),
-    // totalHAI: '0.00',
-    // setTotalHAI: action((state, payload) => {
-    //     state.totalHAI = payload
+    // totalPARYS: '0.00',
+    // setTotalPARYS: action((state, payload) => {
+    //     state.totalPARYS = payload
     // }),
 
     // isMaxWithdraw: false,

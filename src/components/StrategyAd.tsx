@@ -19,7 +19,7 @@ export function StrategyAd({
     heading,
     status = 'NOW LIVE',
     description,
-    cta = 'Get HAI to Earn',
+    cta = 'Get PARYS to Earn',
     ctaLink,
     tokenImages,
     bgVariant = 0,

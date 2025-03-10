@@ -6,7 +6,7 @@ import { EMPTY_ADDRESS, getNetworkName, formatNumber, NETWORK_ID } from '~/utils
 import { useStoreActions, useStoreState } from '~/store'
 import { useEthersSigner, usePublicProvider } from './useEthersAdapters'
 
-type TokenType = 'ETH' | 'HAI' | 'WETH'
+type TokenType = 'ETH' | 'PARYS' | 'WETH'
 
 // Geb with signer
 export function useGeb(): Geb {

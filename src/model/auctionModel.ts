@@ -64,11 +64,11 @@ export interface AuctionModel {
         CollateralAuctionsData[]
     >
 
-    // protInternalBalance = user's KITE balance in the protocol
+    // protInternalBalance = user's AGREE balance in the protocol
     protInternalBalance: string
     setProtInternalBalance: Action<AuctionModel, string>
 
-    // internalbalance = user's HAI balance in the protocol
+    // internalbalance = user's PARYS balance in the protocol
     internalBalance: string
     setInternalBalance: Action<AuctionModel, string>
 

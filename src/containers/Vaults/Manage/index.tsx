@@ -41,7 +41,7 @@ export function ManageVault({ headerContent }: ManageVaultProps) {
                 <Header $removePadding={action === VaultAction.CREATE}>
                     {headerContent}
                     <CenteredFlex $gap={12}>
-                        <RewardsTokenArray tokens={['OP', 'KITE']} hideLabel={isUpToExtraSmall} />
+                        <RewardsTokenArray tokens={['OP', 'AGREE']} hideLabel={isUpToExtraSmall} />
                         <ManageDropdown $width={isUpToSmall ? '100%' : undefined} />
                     </CenteredFlex>
                 </Header>

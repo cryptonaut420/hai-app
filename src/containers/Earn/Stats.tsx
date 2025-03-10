@@ -53,7 +53,7 @@ export function EarnStats() {
         {
             // header: '$0',
             header: <Loader speed={0.5} icon={<RefreshCw />} />,
-            headerStatus: <RewardsTokenArray tokens={['OP', 'KITE']} hideLabel />,
+            headerStatus: <RewardsTokenArray tokens={['OP', 'AGREE']} hideLabel />,
             label: 'My Campaign Rewards',
             tooltip: 'Rewards currently voted upon and distributed by DAO approximately once per month.',
             button: (
@@ -67,7 +67,7 @@ export function EarnStats() {
         },
         // {
         //     header: '$7,000',
-        //     headerStatus: <RewardsTokenArray tokens={['OP', 'KITE']} hideLabel />,
+        //     headerStatus: <RewardsTokenArray tokens={['OP', 'AGREE']} hideLabel />,
         //     label: 'My Farm Rewards',
         //     tooltip: 'Hello World',
         //     button: (

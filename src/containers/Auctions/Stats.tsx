@@ -27,7 +27,7 @@ export function AuctionStats() {
         },
         {
             header: totalUSD?.formatted || '$0',
-            headerStatus: <RewardsTokenArray tokens={['HAI', 'KITE', 'Collateral']} size={24} hideLabel />,
+            headerStatus: <RewardsTokenArray tokens={['PARYS', 'AGREE', 'Collateral']} size={24} hideLabel />,
             label: 'My Claimable Assets',
             tooltip: 'Claim assets purchased in auctions',
             button: (

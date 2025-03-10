@@ -43,7 +43,7 @@ export function FloatingElements({ elves, clouds, coins }: FloatingElementsProps
             {(coins || []).map(({ index, width, style, rotation = 0, zIndex = 0, thickness }, i) => (
                 <HaiCoin
                     key={i}
-                    variant={typeof index === 'string' ? index : index === 0 ? 'HAI' : 'KITE'}
+                    variant={typeof index === 'string' ? index : index === 0 ? 'PARYS' : 'AGREE'}
                     width={width}
                     animated
                     style={{

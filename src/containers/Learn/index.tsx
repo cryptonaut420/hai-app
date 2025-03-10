@@ -13,8 +13,8 @@ export function Learn() {
         <Container>
             <CenteredFlex>
                 <LearnCard
-                    title="HAI DOCS"
-                    description="Documentation on all aspects of the HAI Protocol"
+                    title="PARYS DOCS"
+                    description="Documentation on all aspects of the PARYS Protocol"
                     link={`${LINK_TO_DOCS}detailed/intro/hai.html`}
                 />
             </CenteredFlex>
@@ -22,7 +22,7 @@ export function Learn() {
                 <LearnCard
                     title="ELI5 VIDEOS"
                     titleColorOffset={1}
-                    description="Quick, informative videos designed to educate the viewer on the main concepts of the HAI Protocol"
+                    description="Quick, informative videos designed to educate the viewer on the main concepts of the PARYS Protocol"
                     // TODO: update link
                     link={'https://youtube.com'}
                     comingSoon
@@ -30,17 +30,17 @@ export function Learn() {
             </CenteredFlex>
             <CenteredFlex>
                 <LearnCard
-                    title="HAI MEDIUM"
+                    title="PARYS MEDIUM"
                     titleColorOffset={2}
-                    description="Blog posts on various topics written by the HAI team and contributors"
+                    description="Blog posts on various topics written by the PARYS team and contributors"
                     link={LINK_TO_MEDIUM}
                 />
             </CenteredFlex>
             <CenteredFlex>
                 <LearnCard
-                    title="HAI SOCIALS"
+                    title="PARYS SOCIALS"
                     titleColorOffset={3}
-                    description="Links to the official HAI Twitter, Telegram & Discord"
+                    description="Links to the official PARYS Twitter, Telegram & Discord"
                     link={
                         <SocialGrid>
                             <Link href={LINK_TO_TWITTER}>

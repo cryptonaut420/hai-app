@@ -76,7 +76,7 @@ const clouds: FloatingElementsProps['clouds'] = [
 
 const coins: FloatingElementsProps['coins'] = [
     {
-        index: 'HAI',
+        index: 'PARYS',
         width: 'min(150px, 25vw)',
         style: {
             right: '12vw',
@@ -86,7 +86,7 @@ const coins: FloatingElementsProps['coins'] = [
         zIndex: 1,
     },
     {
-        index: 'HAI',
+        index: 'PARYS',
         width: '130px',
         style: {
             right: '-40px',
@@ -96,7 +96,7 @@ const coins: FloatingElementsProps['coins'] = [
         zIndex: -2,
     },
     {
-        index: 'HAI',
+        index: 'PARYS',
         width: '100px',
         thickness: 9,
         style: {
@@ -116,7 +116,7 @@ export function Intro({ zIndex }: ZoomSceneProps) {
         <ZoomScene $zIndex={zIndex} style={{ width: '100%', height: '100%' }}>
             <Container>
                 <BrandedTitle
-                    textContent="GET $HAI ON YOUR OWN SUPPLY."
+                    textContent="GET $PARYS ON YOUR OWN SUPPLY."
                     $fontSize={isUpToExtraSmall ? '3rem' : isUpToSmall ? '3.6rem' : '6rem'}
                     $letterSpacing={isUpToExtraSmall ? '0.5rem' : isUpToSmall ? '0.8rem' : '1.2rem'}
                 />

@@ -1,10 +1,10 @@
 import { ChainId, isFormattedAddress } from '~/utils'
 
-const tokens = ['KITE', 'OP', 'DINERO']
+const tokens = ['AGREE', 'OP', 'DINERO']
 
 export const fetchIncentivesData = async (geb: any, account: string, chainId: ChainId) => {
     const factories: { [key: string]: any } = {
-        KITE: geb?.contracts?.merkleDistributorFactoryKite,
+        AGREE: geb?.contracts?.merkleDistributorFactoryKite,
         OP: geb?.contracts?.merkleDistributorFactoryOp,
         DINERO: geb?.contracts?.merkleDistributorFactoryDinero,
     }

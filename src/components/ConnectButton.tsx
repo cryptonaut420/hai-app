@@ -17,7 +17,7 @@ export function ConnectButton({ showBalance, ...props }: ConnectButtonProps) {
         connectWalletModel: { ethBalance },
     } = useStoreState((state) => state)
 
-    const [haiBalance, kiteBalance] = useBalances(['HAI', 'KITE'])
+    const [haiBalance, kiteBalance] = useBalances(['PARYS', 'AGREE'])
 
     const { addTokens } = useAddTokens()
 
@@ -41,22 +41,22 @@ export function ConnectButton({ showBalance, ...props }: ConnectButtonProps) {
                     <Container {...props} $vertical={showBalance === 'vertical'}>
                         {showBalance && (
                             <Grid $columns="repeat(3, min-content)">
-                                <BalanceContainer as="button" title="Add HAI & KITE to Wallet" onClick={addTokens}>
+                                <BalanceContainer as="button" title="Add PARYS & AGREE to Wallet" onClick={addTokens}>
                                     <PlusCircle size={18} />
                                     <Text>
                                         {formatNumberWithStyle(kiteBalance.raw, {
                                             maxDecimals: 0,
                                         })}{' '}
-                                        KITE
+                                        AGREE
                                     </Text>
                                 </BalanceContainer>
-                                <BalanceContainer as="button" title="Add HAI & KITE to Wallet" onClick={addTokens}>
+                                <BalanceContainer as="button" title="Add PARYS & AGREE to Wallet" onClick={addTokens}>
                                     <PlusCircle size={18} />
                                     <Text>
                                         {formatNumberWithStyle(haiBalance.raw, {
                                             maxDecimals: 0,
                                         })}{' '}
-                                        HAI
+                                        PARYS
                                     </Text>
                                 </BalanceContainer>
                                 <BalanceContainer>

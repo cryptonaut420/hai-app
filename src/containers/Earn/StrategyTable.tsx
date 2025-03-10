@@ -11,7 +11,7 @@ import { StrategyTableButton } from './StrategyTableButton'
 import { Table } from '~/components/Table'
 import { Link } from '~/components/Link'
 import { ComingSoon } from '~/components/ComingSoon'
-import { CL50_HAI_LUSD_ADDRESS } from '~/utils/rewards'
+import { CL50_PARYS_LUSD_ADDRESS } from '~/utils/rewards'
 
 type StrategyTableProps = {
     headers: SortableHeader[]
@@ -86,12 +86,12 @@ export function StrategyTable({
                                                 <TokenArray tokens={pair} hideLabel />
                                                 <Text $fontWeight={700}>
                                                     {`${
-                                                        earnAddress == CL50_HAI_LUSD_ADDRESS ? 'CL-50' : ''
+                                                        earnAddress == CL50_PARYS_LUSD_ADDRESS ? 'CL-50' : ''
                                                     }  ${pair.join('/')}`}
                                                 </Text>
                                             </Flex>
                                             <RewardsTokenArray
-                                                tokens={strategyType == 'hold' ? ['HAI'] : tokens}
+                                                tokens={strategyType == 'hold' ? ['PARYS'] : tokens}
                                                 tooltip={
                                                     <EarnEmissionTooltip
                                                         rewards={rewards}
@@ -177,17 +177,17 @@ export function StrategyTable({
                                                             alt={'kite'}
                                                             width={48}
                                                             height={48}
-                                                            className={`token-KITE`}
+                                                            className={`token-AGREE`}
                                                         />
                                                     </IconContainer>
                                                     <Text
                                                         $fontSize="0.8em"
                                                         style={{ marginLeft: '-7px', display: 'flex' }}
                                                     >
-                                                        2x KITE Boost&nbsp;
+                                                        2x AGREE Boost&nbsp;
                                                         <Tooltip width="200px">
-                                                            HAI DAO is adding <br />
-                                                            2x KITE Boost for 2 months
+                                                            PARYS DAO is adding <br />
+                                                            2x AGREE Boost for 2 months
                                                             <br />
                                                             1/15/25 - 3/15/25
                                                         </Tooltip>
@@ -283,7 +283,7 @@ function EarnEmissionTooltip({ rewards, earnPlatform, earnLink, strategyType }: 
         return (
             <Flex $width="140px" $column $justify="flex-end" $align="flex-start" $gap={4}>
                 <Text $fontWeight={700}>
-                    Market participants can buy and hold HAI in order to speculate on the redemption rate. The
+                    Market participants can buy and hold PARYS in order to speculate on the redemption rate. The
                     redemption rate is expressed here as rewards APY.
                     <br />
                     <br />

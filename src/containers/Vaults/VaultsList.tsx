@@ -19,7 +19,7 @@ const strategies: StrategyAdProps[] = [
     {
         heading: 'DINERO REWARDS',
         status: 'NOW LIVE',
-        description: 'Earn DINERO tokens by borrowing HAI & providing liquidity',
+        description: 'Earn DINERO tokens by borrowing PARYS & providing liquidity',
         cta: 'Learn More',
         ctaLink: '/earn',
         tokenImages: ['DINERO'],

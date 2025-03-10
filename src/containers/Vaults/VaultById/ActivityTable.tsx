@@ -64,7 +64,7 @@ const getActionLabelAndIcon = (
             'Confiscation',
             [
                 <ActionIconContainer key={1}>
-                    <TokenArray tokens={['HAI', collateralToken as any]} hideLabel size={28} />
+                    <TokenArray tokens={['PARYS', collateralToken as any]} hideLabel size={28} />
                     <CenteredFlex>
                         <X />
                     </CenteredFlex>
@@ -75,10 +75,10 @@ const getActionLabelAndIcon = (
     const icons: ReactChildren[] = []
     switch (Math.sign(debt)) {
         case 1:
-            label.push('Mint HAI')
+            label.push('Mint PARYS')
             icons.push(
                 <ActionIconContainer key={icons.length + 1} $topLeft>
-                    <TokenArray tokens={['HAI']} hideLabel size={28} />
+                    <TokenArray tokens={['PARYS']} hideLabel size={28} />
                     <CenteredFlex>
                         <ArrowUp />
                     </CenteredFlex>
@@ -86,10 +86,10 @@ const getActionLabelAndIcon = (
             )
             break
         case -1:
-            label.push('Burn HAI')
+            label.push('Burn PARYS')
             icons.push(
                 <ActionIconContainer key={icons.length + 1} $topLeft>
-                    <TokenArray tokens={['HAI']} hideLabel size={28} />
+                    <TokenArray tokens={['PARYS']} hideLabel size={28} />
                     <CenteredFlex>
                         <ArrowDown />
                     </CenteredFlex>
@@ -250,7 +250,7 @@ export function ActivityTable({ vault }: ActivityTableProps) {
                                                 <Flex $column $justify="center" $align="flex-start" $gap={4}>
                                                     <Text>
                                                         {debt > 0 ? '+' : ''}
-                                                        {formatNumberWithStyle(debt)} HAI
+                                                        {formatNumberWithStyle(debt)} PARYS
                                                     </Text>
                                                     <Text $fontSize="0.8em">
                                                         {formatNumberWithStyle(Math.abs(debt) * haiPrice, {

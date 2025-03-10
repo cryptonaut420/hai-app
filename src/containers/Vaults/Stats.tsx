@@ -103,7 +103,7 @@ export function BorrowStats() {
             {
                 // header: '$0',
                 header: <Loader speed={0.5} icon={<RefreshCw />} />,
-                headerStatus: <RewardsTokenArray tokens={['OP', 'KITE']} hideLabel />,
+                headerStatus: <RewardsTokenArray tokens={['OP', 'AGREE']} hideLabel />,
                 label: 'My Vault Rewards',
                 tooltip: 'Rewards currently voted upon and distributed by DAO approximately once per month.',
                 button: (

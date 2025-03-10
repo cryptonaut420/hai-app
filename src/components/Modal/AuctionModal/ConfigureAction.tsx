@@ -192,12 +192,12 @@ export function ConfigureAction({ auction, action, nextStep }: ConfigureActionPr
         switch (auction.englishAuctionType) {
             case 'SURPLUS': {
                 if (buyAmountBN.gt(totalKiteBalance) || valueBN.gt(kiteBalanceBN)) {
-                    setError(`Insufficient KITE balance.`)
+                    setError(`Insufficient AGREE balance.`)
                     return false
                 }
                 if (auction.biddersList.length && valueBN.lt(maxBidAmountBN)) {
                     setError(
-                        `You need to bid ${((Number(bidIncrease) - 1) * 100).toFixed(0)}% more KITE vs the highest bid`
+                        `You need to bid ${((Number(bidIncrease) - 1) * 100).toFixed(0)}% more AGREE vs the highest bid`
                     )
                     return false
                 }
@@ -205,7 +205,7 @@ export function ConfigureAction({ auction, action, nextStep }: ConfigureActionPr
             }
             case 'DEBT': {
                 if (buyAmountBN.gt(haiBalanceBN)) {
-                    setError(`Insufficient HAI balance.`)
+                    setError(`Insufficient PARYS balance.`)
                     return false
                 }
                 if (valueBN.gt(maxBidAmountBN)) {
@@ -215,7 +215,7 @@ export function ConfigureAction({ auction, action, nextStep }: ConfigureActionPr
                         setError(
                             `You need to bid to receive ${((Number(bidDecrease) - 1) * 100).toFixed(
                                 0
-                            )}% less KITE vs the lowest bid`
+                            )}% less AGREE vs the lowest bid`
                         )
                     }
                     return false
@@ -226,7 +226,7 @@ export function ConfigureAction({ auction, action, nextStep }: ConfigureActionPr
                 // Collateral Error when you dont have enough balance
                 // console.log(buyAmountBN.toString(), totalHaiBalance.toString())
                 if (buyAmountBN.gt(totalHaiBalance) || valueBN.gt(haiBalanceBN)) {
-                    setError(`Insufficient HAI balance.`)
+                    setError(`Insufficient PARYS balance.`)
                     return false
                 }
                 if (valueBN.gt(maxAmountBN)) {
@@ -292,11 +292,11 @@ export function ConfigureAction({ auction, action, nextStep }: ConfigureActionPr
         return Number(protInternalBalance) > Number(internalBalance)
             ? {
                   amount: Number(protInternalBalance),
-                  symbol: 'KITE',
+                  symbol: 'AGREE',
               }
             : {
                   amount: Number(internalBalance),
-                  symbol: 'HAI',
+                  symbol: 'PARYS',
               }
     }, [internalBalance, protInternalBalance])
 

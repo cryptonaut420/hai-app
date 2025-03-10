@@ -145,7 +145,7 @@ export function Approvals({ onNext }: ApprovalsProps) {
                                     disabled={!buttonActive || debtApproval === ApprovalState.PENDING}
                                     onClick={approveDebtUnlock}
                                 >
-                                    {debtApproval === ApprovalState.PENDING ? 'Pending Approval..' : `Approve HAI`}
+                                    {debtApproval === ApprovalState.PENDING ? 'Pending Approval..' : `Approve PARYS`}
                                 </HaiButton>
                             ),
                         }
@@ -196,7 +196,7 @@ export function Approvals({ onNext }: ApprovalsProps) {
                                         >
                                             {debtApproval === ApprovalState.PENDING
                                                 ? 'Pending Approval..'
-                                                : `Approve HAI`}
+                                                : `Approve PARYS`}
                                         </HaiButton>
                                     ),
                                 }

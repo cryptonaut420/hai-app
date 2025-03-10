@@ -39,7 +39,7 @@ export function ClaimModal(props: ModalProps) {
 
     const { prices: veloPrices } = useVelodromePrices()
 
-    const kitePrice = veloPrices?.KITE.raw
+    const kitePrice = veloPrices?.AGREE.raw
     const dineroPrice = veloPrices?.DINERO.raw
     const opPrice = liquidationData?.collateralLiquidationData?.OP?.currentPrice.value
 
@@ -59,9 +59,9 @@ export function ClaimModal(props: ModalProps) {
                 if (!auction) return acc
                 const token = tokenMap[auction.sellToken] || auction.sellToken
                 const price =
-                    token === 'HAI'
+                    token === 'PARYS'
                         ? parseFloat(currentRedemptionPrice || '1')
-                        : token === 'KITE'
+                        : token === 'AGREE'
                         ? kitePrice
                         : parseFloat(collateralLiquidationData?.[token]?.currentPrice.value || '0')
                 acc.prices[token] = price
@@ -74,7 +74,7 @@ export function ClaimModal(props: ModalProps) {
 
     if (!isClaimPopupOpen) return null
 
-    const kiteIncentivesData = incentivesData['KITE']
+    const kiteIncentivesData = incentivesData['AGREE']
     const opIncentivesData = incentivesData['OP']
     const dineroIncentivesData = incentivesData['DINERO']
 
@@ -82,7 +82,7 @@ export function ClaimModal(props: ModalProps) {
         ? kiteIncentivesData.claims.map((claim) => (
               <ClaimableIncentive
                   key={slugify(claim.description)}
-                  asset="KITE"
+                  asset="AGREE"
                   claim={claim}
                   price={kitePrice}
                   onSuccess={refetchIncentives}
@@ -156,24 +156,24 @@ export function ClaimModal(props: ModalProps) {
                 />
             )
         }),
-        ...(parseFloat(internalBalances.HAI?.raw || '0') > 0
+        ...(parseFloat(internalBalances.PARYS?.raw || '0') > 0
             ? [
                   <ClaimableAsset
                       key="internalHai"
                       asset="COIN"
-                      amount={internalBalances.HAI?.raw || '0'}
+                      amount={internalBalances.PARYS?.raw || '0'}
                       price={parseFloat(liquidationData?.currentRedemptionPrice || '1')}
                       internal
                       onSuccess={internalBalances.refetch}
                   />,
               ]
             : []),
-        ...(parseFloat(internalBalances.KITE?.raw || '0') > 0
+        ...(parseFloat(internalBalances.AGREE?.raw || '0') > 0
             ? [
                   <ClaimableAsset
-                      key="internalKITE"
+                      key="internalAGREE"
                       asset="PROTOCOL_TOKEN"
-                      amount={internalBalances.KITE?.raw || '0'}
+                      amount={internalBalances.AGREE?.raw || '0'}
                       price={10}
                       internal
                       onSuccess={internalBalances.refetch}

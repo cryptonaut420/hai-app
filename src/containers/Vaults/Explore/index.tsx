@@ -143,7 +143,7 @@ export function VaultExplorer() {
                                                             maxSigFigs: 4,
                                                         })}
                                                     </Text>
-                                                    <Text>HAI</Text>
+                                                    <Text>PARYS</Text>
                                                 </Table.ItemGrid>
                                             ),
                                         },

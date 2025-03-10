@@ -38,8 +38,8 @@ export type Tokens = {
 
 export const TOKEN_LOGOS = {
     ETH: ethImg,
-    HAI: haiImg,
-    KITE: kiteImg,
+    PARYS: haiImg,
+    AGREE: kiteImg,
     OP: opImg,
     SNX: snxImg,
     STN: stnImg,
@@ -64,13 +64,13 @@ export const TOKEN_LOGOS = {
     MOO: beefyImg,
     DINERO: dineroImg,
     PXETH: pxethImg,
-    HAIVELO: haiVeloImg,
+    PARYSVELO: haiVeloImg,
 }
 
 export const tokenMap: Record<string, string> = {
-    PROTOCOL_TOKEN: 'KITE',
-    COIN: 'HAI',
-    PROTOCOL_TOKEN_LP: 'KITE/ETH LP',
+    PROTOCOL_TOKEN: 'AGREE',
+    COIN: 'PARYS',
+    PROTOCOL_TOKEN_LP: 'AGREE/ETH LP',
 }
 
 export type Token = {
@@ -84,13 +84,13 @@ export const tokenAssets: Record<string, Token> = {
         name: 'Ethereum',
         icon: ethImg,
     },
-    HAI: {
-        symbol: 'HAI',
+    PARYS: {
+        symbol: 'PARYS',
         name: 'Hai',
         icon: haiImg,
     },
-    KITE: {
-        symbol: 'KITE',
+    AGREE: {
+        symbol: 'AGREE',
         name: 'Kite',
         icon: kiteImg,
     },
@@ -129,9 +129,9 @@ export const tokenAssets: Record<string, Token> = {
         name: 'VELO',
         icon: velodromeImg,
     },
-    HAIVELO: {
-        symbol: 'HAIVELO',
-        name: 'HAIVELO',
+    PARYSVELO: {
+        symbol: 'PARYSVELO',
+        name: 'PARYSVELO',
         icon: haiVeloImg,
     },
     APXETH: {

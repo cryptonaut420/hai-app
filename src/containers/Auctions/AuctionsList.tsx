@@ -25,11 +25,11 @@ const auctionFilters: AuctionTypeFilter[] = [
     },
     {
         type: 'DEBT',
-        icon: 'HAI',
+        icon: 'PARYS',
     },
     {
         type: 'SURPLUS',
-        icon: 'KITE',
+        icon: 'AGREE',
     },
 ]
 

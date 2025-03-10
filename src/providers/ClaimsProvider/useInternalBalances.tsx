@@ -21,12 +21,12 @@ export function useInternalBalances() {
         const haiBalance = parseFloat(internalBalance) < 0.1 ? '0' : internalBalance
         const kiteBalance = parseFloat(protInternalBalance) < 0.01 ? '0' : protInternalBalance
         const balances = {
-            HAI: formatSummaryCurrency(haiBalance, liquidationData?.currentRedemptionPrice || '1'),
-            KITE: formatSummaryCurrency(kiteBalance, prices?.KITE.raw || '0'),
+            PARYS: formatSummaryCurrency(haiBalance, liquidationData?.currentRedemptionPrice || '1'),
+            AGREE: formatSummaryCurrency(kiteBalance, prices?.AGREE.raw || '0'),
         }
         return {
             ...balances,
             refetch: geb && proxyAddress ? () => auctionActions.fetchAuctionsData({ geb, proxyAddress }) : undefined,
         }
-    }, [geb, proxyAddress, prices?.KITE.raw, liquidationData, internalBalance, protInternalBalance])
+    }, [geb, proxyAddress, prices?.AGREE.raw, liquidationData, internalBalance, protInternalBalance])
 }

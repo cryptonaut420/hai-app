@@ -11,12 +11,12 @@ import { fetchIncentivesData } from './useMyIncentives'
 
 type ClaimsContext = {
     internalBalances: {
-        HAI?: SummaryItemValue<SummaryCurrency>
-        KITE?: SummaryItemValue<SummaryCurrency>
+        PARYS?: SummaryItemValue<SummaryCurrency>
+        AGREE?: SummaryItemValue<SummaryCurrency>
         refetch?: () => void
     }
     incentivesData: {
-        KITE?: SummaryItemValue<SummaryCurrency>
+        AGREE?: SummaryItemValue<SummaryCurrency>
         OP?: SummaryItemValue<SummaryCurrency>
         refetch?: () => void
     }
@@ -42,11 +42,11 @@ const defaultTokenMetadata = {
 
 const defaultState: ClaimsContext = {
     internalBalances: {
-        HAI: defaultTokenMetadata,
-        KITE: defaultTokenMetadata,
+        PARYS: defaultTokenMetadata,
+        AGREE: defaultTokenMetadata,
     },
     incentivesData: {
-        KITE: defaultTokenMetadata,
+        AGREE: defaultTokenMetadata,
         OP: defaultTokenMetadata,
     },
     refetchIncentives: () => undefined,
@@ -101,8 +101,8 @@ export function ClaimsProvider({ children }: Props) {
     }, [geb])
     const totalUSD = formatSummaryValue(
         (
-            parseFloat(internalBalances.HAI?.usdRaw || '0') +
-            parseFloat(internalBalances.KITE?.usdRaw || '0') +
+            parseFloat(internalBalances.PARYS?.usdRaw || '0') +
+            parseFloat(internalBalances.AGREE?.usdRaw || '0') +
             parseFloat(activeAuctions.claimableAssetValue.raw)
         ).toString(),
         { style: 'currency', minDecimals: 2, maxDecimals: 2 }

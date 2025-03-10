@@ -46,7 +46,7 @@ const clouds: FloatingElementsProps['clouds'] = [
 
 const coins: FloatingElementsProps['coins'] = [
     {
-        index: 'HAI',
+        index: 'PARYS',
         width: 'min(180px, 25vw)',
         style: {
             right: '24%',
@@ -56,7 +56,7 @@ const coins: FloatingElementsProps['coins'] = [
         zIndex: 1,
     },
     {
-        index: 'KITE',
+        index: 'AGREE',
         width: 'min(100px, 20vw)',
         thickness: 9,
         style: {
@@ -90,16 +90,16 @@ export function Second({ zIndex }: ZoomSceneProps) {
                     />
                     <Subtitle>
                         <Text as="span" $fontWeight={700}>
-                            {`$HAI stablecoin reserves are fully on-chain, `}
+                            {`$PARYS stablecoin reserves are fully on-chain, `}
                         </Text>
                         <span>{`no bank buzzkills here. `}</span>
                         <Text as="span" $fontWeight={700}>
-                            {`Collateral choices are voted in by $KITE holders.`}
+                            {`Collateral choices are voted in by $AGREE holders.`}
                         </Text>
                     </Subtitle>
                 </Flex>
                 <PairContainer>
-                    <TokenArray tokens={['WETH', 'HAI']} />
+                    <TokenArray tokens={['WETH', 'PARYS']} />
                     <Grid $width="100%" $columns="110px 1fr" $align="center" $gap={12}>
                         <Text>
                             Ratio&nbsp;<strong>{Math.round(progress * 10_000) / 100}%</strong>
@@ -119,7 +119,7 @@ export function Second({ zIndex }: ZoomSceneProps) {
                         <HaiButton $variant="yellowish" $grow={0}>
                             Deposit
                         </HaiButton>
-                        <HaiButton $grow={0}>Get HAI</HaiButton>
+                        <HaiButton $grow={0}>Get PARYS</HaiButton>
                     </Flex>
                 </PairContainer>
             </Container>

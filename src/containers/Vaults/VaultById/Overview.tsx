@@ -122,8 +122,8 @@ export function Overview({ vault }: OverviewProps) {
                 />
                 <OverviewStat
                     value={vault ? formatNumberWithStyle(vault.totalDebt) : '--'}
-                    token="HAI"
-                    label="Minted HAI Debt"
+                    token="PARYS"
+                    label="Minted PARYS Debt"
                     convertedValue={
                         vault
                             ? formatNumberWithStyle(parseFloat(vault.totalDebt) * haiPrice, { style: 'currency' })

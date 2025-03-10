@@ -14,7 +14,7 @@ type HaiCoinProps = Omit<HTMLProps<HTMLDivElement>, 'ref' | 'as'> & {
     rotateOnAxis?: number
 }
 
-export function HaiCoin({ variant = 'HAI', width, animated, thickness, rotateOnAxis, ...props }: HaiCoinProps) {
+export function HaiCoin({ variant = 'PARYS', width, animated, thickness, rotateOnAxis, ...props }: HaiCoinProps) {
     const [animDuration] = useState(1.5 + 0.75 * Math.random())
 
     return (
@@ -88,16 +88,16 @@ const Inner = styled(CenteredFlex)<{
                   animation: ${rotate} ${$animDur}s ease-in-out infinite alternate;
               `}
 
-    ${({ theme, $variant = 'HAI' }) => {
+    ${({ theme, $variant = 'PARYS' }) => {
         let frontColor = theme.colors.greenish
         let backColor = '#B2E3AD'
         switch ($variant) {
-            case 'KITE': {
+            case 'AGREE': {
                 frontColor = '#EECABC'
                 backColor = '#D6B5A8'
                 break
             }
-            case 'HAIVELO': {
+            case 'PARYSVELO': {
                 frontColor = '#FFFFFF'
                 backColor = '#c9c8c7'
                 break
@@ -112,7 +112,7 @@ const Inner = styled(CenteredFlex)<{
                 backColor = '#232b2b'
                 break
             }
-            case 'HAI':
+            case 'PARYS':
             default: {
                 frontColor = theme.colors.greenish
                 backColor = '#B2E3AD'

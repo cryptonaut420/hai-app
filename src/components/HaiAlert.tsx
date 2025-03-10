@@ -35,7 +35,7 @@ export function HaiAlert({ active, setActive }: HaiAlertProps) {
                 <ChevronLeft />
                 <StatusLabel status={Status.UNKNOWN} unpadded $padding="2px 8px 2px 4px">
                     <HaiFace size={18} filled />
-                    <Text $fontWeight={700}>HAI</Text>
+                    <Text $fontWeight={700}>PARYS</Text>
                 </StatusLabel>
                 <Text $fontWeight={700}>PRICE ALERT</Text>
             </HaiIconContainer>

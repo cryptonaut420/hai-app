@@ -113,10 +113,10 @@ export function useDebt(
     }, [collateralLiquidationData, accumulatedRate, singleVault, action, formState.deposit])
 
     return {
-        data: tokensData?.HAI,
+        data: tokensData?.PARYS,
         total: total,
         available,
-        balance: useBalance('HAI'),
+        balance: useBalance('PARYS'),
         priceInUSD: liquidationData?.currentRedemptionPrice || '1',
     }
 }

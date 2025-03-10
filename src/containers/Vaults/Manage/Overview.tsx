@@ -164,7 +164,7 @@ export function Overview() {
                         </strong>
                     </Text>
                     <Text>
-                        HAI (RP):&nbsp;
+                        PARYS (RP):&nbsp;
                         <strong>
                             {liquidationData?.currentRedemptionPrice
                                 ? formatNumberWithStyle(liquidationData.currentRedemptionPrice, {
@@ -189,8 +189,8 @@ export function Overview() {
                 />
                 <OverviewStat
                     value={summary.debt.current?.formatted || summary.debt.after.formatted}
-                    token="HAI"
-                    label="Minted HAI Debt"
+                    token="PARYS"
+                    label="Minted PARYS Debt"
                     convertedValue={summary.debt.current?.usdFormatted || summary.debt.after.usdFormatted}
                     simulatedValue={vault && simulation?.debt ? summary.debt.after.formatted : ''}
                     labelOnTop

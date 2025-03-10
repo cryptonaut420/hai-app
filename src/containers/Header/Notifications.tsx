@@ -22,7 +22,7 @@ const dummyNotifications = [
         unread: false,
     },
     {
-        message: 'WBTC/KITE farm now available',
+        message: 'WBTC/AGREE farm now available',
         timestamp: Date.now() / 1000 - 3 * 24 * 60 * 60,
         unread: false,
     },

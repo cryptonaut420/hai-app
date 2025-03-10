@@ -49,7 +49,7 @@ export function convertCollateralAuction(auction: SDKCollateralAuction, tokenSym
         })),
         buyAmount: '0',
         buyInitialAmount: formatEther(auction.amountToRaise || '0'),
-        buyToken: 'HAI',
+        buyToken: 'PARYS',
         englishAuctionBids: [],
         englishAuctionConfiguration: {
             bidDuration: '',
