@@ -1,5 +1,5 @@
 import ethImg from '~/assets/eth-img.svg'
-import haiImg from '~/assets/hai-logo.svg'
+import haiImg from '~/assets/parisii-logo.webp'
 import kiteImg from '~/assets/kite-img.svg'
 import opImg from '~/assets/op-img.svg'
 import snxImg from '~/assets/snx-img.png'

@@ -3,8 +3,8 @@ import popout from '~/assets/popout.svg'
 import border from '~/assets/border-image.png'
 import uniswapIcon from '~/assets/uniswap-icon.svg'
 import velodromeIcon from '~/assets/velodrome-img.svg'
-import haiLogo from '~/assets/logo.png'
-import logo192 from '~/assets/logo192.png'
+import haiLogo from '~/assets/parisii-logo.webp'
+import logo192 from '~/assets/parisii-logo.webp'
 
 const INITIAL_STATE = [logoIcon, popout, border, uniswapIcon, velodromeIcon, haiLogo, logo192]
 

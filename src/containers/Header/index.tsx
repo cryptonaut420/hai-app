@@ -30,7 +30,7 @@ import { HaiFace } from '~/components/Icons/HaiFace'
 import { MobileMenu } from './MobileMenu'
 import { MusicButton } from './MusicButton'
 
-import haiLogo from '~/assets/logo.png'
+import haiLogo from '~/assets/parisii-logo.webp'
 
 type HeaderProps = {
     tickerActive?: boolean

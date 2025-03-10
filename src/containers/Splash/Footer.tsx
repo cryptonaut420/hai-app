@@ -10,7 +10,7 @@ import { Discord } from '~/components/Icons/Discord'
 import { Link } from '~/components/Link'
 import { ArrowUp } from 'react-feather'
 
-import haiLogo from '~/assets/logo.png'
+import haiLogo from '~/assets/parisii-logo.webp'
 
 export function Footer() {
     const isUpToMedium = useMediaQuery('upToMedium')

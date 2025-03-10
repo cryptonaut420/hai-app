@@ -240,19 +240,6 @@ export function Shared({ children }: Props) {
         <Container>
             <TransactionUpdater />
 
-            <Background aria-hidden="true">
-                {isSplash && (
-                    <video
-                        src="/assets/tie-dye-reduced.mov"
-                        width={1920}
-                        height={1072}
-                        muted
-                        autoPlay
-                        playsInline
-                        loop
-                    />
-                )}
-            </Background>
             {!isSplash && <ParallaxBackground />}
             <Header tickerActive={!isSplash} />
             <ClaimModal />
