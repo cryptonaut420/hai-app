@@ -56,7 +56,6 @@ export function ParallaxBackground() {
 
     return (
         <Container ref={setContainer}>
-            <FloatingElements {...els} />
         </Container>
     )
 }
