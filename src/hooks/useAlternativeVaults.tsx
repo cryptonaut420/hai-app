@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
 import { useStoreState, useStoreActions } from '~/store'
@@ -11,6 +11,7 @@ export function useAlternativeVaults() {
     const geb = useGeb() // This returns the Geb instance directly, not an object with a geb property
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const hasLoaded = useRef(false)
     
     const actions = useStoreActions(state => state.vaultModel)
     const {
@@ -20,7 +21,7 @@ export function useAlternativeVaults() {
     // Load vaults directly
     useEffect(() => {
         // Make sure geb is defined before proceeding
-        if (!address || !geb) {
+        if (!address || !geb || hasLoaded.current) {
             return
         }
         
@@ -41,16 +42,26 @@ export function useAlternativeVaults() {
                 // Get safes directly owned by user
                 const userSafes = await safeManager.getSafes(address)
                 
-                // If no user safes or the safes are already in the list, don't continue
-                if (userSafes.length === 0 || 
-                    (currentList.length > 0 && currentList.some(v => userSafes.includes(v.id)))) {
+                // If no user safes, don't continue
+                if (userSafes.length === 0) {
                     setIsLoading(false)
+                    hasLoaded.current = true
+                    return
+                }
+                
+                // Check if these safes are already in the list
+                const currentIds = currentList.map(v => v.id)
+                const newSafeIds = userSafes.map((id: ethers.BigNumber) => id.toString()).filter((id: string) => !currentIds.includes(id))
+                
+                if (newSafeIds.length === 0) {
+                    setIsLoading(false)
+                    hasLoaded.current = true
                     return
                 }
                 
                 // Get safe details and format them
                 const directVaults = []
-                for (const safeId of userSafes) {
+                for (const safeId of newSafeIds) {
                     // Get the safe's data
                     const [owner, pendingOwner, handler, collateralType] = await safeManager.safeData(safeId)
                     
@@ -104,16 +115,18 @@ export function useAlternativeVaults() {
                     actions.setList([...currentList, ...directVaults])
                 }
                 
+                hasLoaded.current = true
                 setIsLoading(false)
             } catch (err: any) {
                 console.error('Error loading direct vaults:', err)
                 setError(err.message || 'Failed to load directly owned vaults')
+                hasLoaded.current = true
                 setIsLoading(false)
             }
         }
         
         loadDirectVaults()
-    }, [address, geb, currentList.length])
+    }, [address, geb])
     
     return { isLoading, error }
 } 
