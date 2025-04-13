@@ -49,9 +49,23 @@ export function useVaultsByOwner(address?: string) {
         const { collateralLiquidationData, currentRedemptionPrice } = vaultState.liquidationData || {}
         if (!data?.safes?.length || !collateralLiquidationData || !currentRedemptionPrice) return []
 
-        return data.safes.map((safe) => {
-            return formatQuerySafeToVault(safe, collateralLiquidationData, currentRedemptionPrice)
-        })
+        // Filter out duplicate safes - keep only the latest version of each safeId
+        const latestSafes = new Map();
+        
+        data.safes.forEach(safe => {
+            if (!safe || !safe.safeId) return;
+            
+            // If we don't have this safeId yet, or this version is newer
+            if (!latestSafes.has(safe.safeId) || 
+                (safe.modifiedAt && latestSafes.get(safe.safeId).modifiedAt && 
+                 parseInt(safe.modifiedAt) > parseInt(latestSafes.get(safe.safeId).modifiedAt))) {
+                latestSafes.set(safe.safeId, safe);
+            }
+        });
+        
+        // Convert Map to Array and format each safe
+        return Array.from(latestSafes.values())
+            .map((safe) => formatQuerySafeToVault(safe, collateralLiquidationData, currentRedemptionPrice));
     }, [data?.safes, vaultState.liquidationData])
 
     const filteredVaults = useMemo(() => {
