@@ -71,6 +71,7 @@ export function MyVaultsTable({ headers, rows, sorting, setSorting, onCreate, is
                                             <TokenArray tokens={[collateralName as any]} />
                                             <Text>#{id}</Text>
                                         </CenteredFlex>
+                                        {/* Rewards are temporarily disabled
                                         {hasNoRewards.includes(collateralName) ? null : (
                                             <RewardsTokenArray
                                                 tokens={['PEUA', 'PBJO']}
@@ -78,6 +79,7 @@ export function MyVaultsTable({ headers, rows, sorting, setSorting, onCreate, is
                                                 tooltip={`Earn AGREE tokens by minting PARYS and providing liquidity`}
                                             />
                                         )}
+                                        */}
                                         {hasFreeCollateral && <ClaimableFreeCollateral vault={vault} />}
                                     </Grid>
                                 ),

@@ -54,7 +54,7 @@ export function BorrowStats() {
                     ? formatNumberWithStyle(totalCollateralInUSD.toString(), {
                           style: 'currency',
                           minDecimals: 1,
-                          maxDecimals: 1,
+                          maxDecimals: 2,
                           suffixed: true,
                       })
                     : '$0',
@@ -67,7 +67,7 @@ export function BorrowStats() {
                     ? formatNumberWithStyle(totalDebtInUSD.toString(), {
                           style: 'currency',
                           minDecimals: 1,
-                          maxDecimals: 1,
+                          maxDecimals: 2,
                           suffixed: true,
                       })
                     : '$0',
@@ -79,12 +79,13 @@ export function BorrowStats() {
                     style: 'percent',
                     scalingFactor: 100,
                     minDecimals: 1,
-                    maxDecimals: 1,
+                    maxDecimals: 2,
                     suffixed: true,
                 }),
                 label: 'My Net Stability Fee',
                 tooltip: 'Weighted average stability fee of My Total Debt',
             },
+            /*
             {
                 header: formatNumberWithStyle(value ? apy / value : 0, {
                     maxDecimals: 1,
@@ -115,8 +116,9 @@ export function BorrowStats() {
                     // </HaiButton>
                 ),
             },
+            */
         ]
     }, [list, liquidationData, value, apy, popupsActions])
 
-    return <Stats stats={stats} columns="repeat(4, 1fr) 1.6fr" fun />
+    return <Stats stats={stats} columns="repeat(3, 1fr)" fun />
 }

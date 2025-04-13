@@ -138,6 +138,7 @@ export function Overview() {
                         </StatusLabel>
                     )}
                 </Flex>
+                {/* Rewards are temporarily disabled
                 <StatusLabel status={Status.NEGATIVE}>
                     {apy
                         ? formatNumberWithStyle(apy, {
@@ -150,6 +151,7 @@ export function Overview() {
                         : '--%'}{' '}
                     Rewards APY
                 </StatusLabel>
+                */}
                 <Flex $justify="flex-end" $align="center" $gap={12} $fontSize="0.8em">
                     <Text>
                         {formatCollateralLabel(collateral.name)}:&nbsp;

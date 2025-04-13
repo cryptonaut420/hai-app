@@ -65,13 +65,11 @@ export function AvailableVaultsTable({ rows, headers, sorting, setSorting }: Ava
                                                     <RewardsTokenArray
                                                         tokens={
                                                             collateralName === 'APXETH'
-                                                                ? ['OP', 'AGREE', 'DINERO']
+                                                                ? ['OP', 'AGREE']
                                                                 : ['OP', 'AGREE']
                                                         }
                                                         label="EARN"
-                                                        tooltip={`Earn OP/AGREE${
-                                                            collateralName === 'APXETH' ? '/DINERO' : ''
-                                                        } tokens by minting PARYS and providing liquidity`}
+                                                        tooltip={`Earn OP/AGREE tokens by minting PARYS and providing liquidity`}
                                                     />
                                                 )}
                                             </Grid>
