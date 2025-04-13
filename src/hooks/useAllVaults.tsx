@@ -117,7 +117,22 @@ export function useAllVaults() {
         }
 
         try {
-            return data.safes
+            // Filter out duplicate safes - keep only the latest version of each safeId
+            const latestSafes = new Map();
+            
+            data.safes.forEach(safe => {
+                if (!safe || !safe.safeId) return;
+                
+                // If we don't have this safeId yet, or this version is newer
+                if (!latestSafes.has(safe.safeId) || 
+                    (safe.modifiedAt && latestSafes.get(safe.safeId).modifiedAt && 
+                     parseInt(safe.modifiedAt) > parseInt(latestSafes.get(safe.safeId).modifiedAt))) {
+                    latestSafes.set(safe.safeId, safe);
+                }
+            });
+            
+            // Convert Map to Array and filter out incomplete data
+            return Array.from(latestSafes.values())
                 .filter(safe => safe && safe.collateralType) // Filter out safes with incomplete data
                 .map((safe) => {
                     try {
@@ -128,9 +143,9 @@ export function useAllVaults() {
                         return {
                             ...safe,
                             totalDebt: safe.debt || '0',
-                            collateralRatio: Infinity.toString(),
+                            collateralRatio: Number(safe.debt) > 0 ? '0' : Infinity.toString(),
                             collateralToken: safe.collateralType?.id?.toUpperCase() || 'UNKNOWN',
-                            status: Status.UNKNOWN,
+                            status: Number(safe.debt) > 0 ? Status.UNKNOWN : Status.NO_DEBT,
                             liquidationData: {
                                 liquidationCRatio: '0',
                                 safetyCRatio: '0',

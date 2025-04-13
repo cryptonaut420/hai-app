@@ -156,7 +156,7 @@ export function VaultExplorer() {
                                                 <Table.ItemGrid $columns="1fr 1fr" $gap={12} $compactQuery="upToMedium">
                                                     <Flex $justify="flex-end" $align="center">
                                                         <Text>
-                                                            {collateralRatio === Infinity.toString()
+                                                            {collateralRatio === Infinity.toString() || collateralRatio === '∞'
                                                                 ? '--'
                                                                 : formatNumberWithStyle(collateralRatio, {
                                                                       style: 'percent',
@@ -175,7 +175,9 @@ export function VaultExplorer() {
                                                 <TableButton
                                                     disabled={
                                                         !liquidationCRatio ||
-                                                        100 * Number(liquidationCRatio) < Number(collateralRatio)
+                                                        collateralRatio === Infinity.toString() ||
+                                                        collateralRatio === '∞' ||
+                                                        parseFloat(collateralRatio) >= parseFloat(liquidationCRatio) * 100
                                                     }
                                                     onClick={() =>
                                                         setLiquidateVault({
