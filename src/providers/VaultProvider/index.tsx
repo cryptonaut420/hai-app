@@ -62,7 +62,7 @@ const defaultState: VaultContext = {
     formState: {},
     updateForm: () => {},
     collateral: {
-        name: 'WETH',
+        name: 'PEUA',
         total: {
             after: {
                 raw: '',

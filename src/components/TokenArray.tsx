@@ -18,18 +18,6 @@ type TokenArrayProps = {
 export function TokenArray({ tokens, size = 32, label, hideLabel = false }: TokenArrayProps) {
     const tokenBg = (token: string) => {
         switch (token) {
-            case 'MOO-VELO-V2-OP-VELO':
-                return 'white'
-            case 'VELO':
-                return 'white'
-            case 'APXETH':
-                return 'black'
-            case 'PXETH':
-                return 'black'
-            case 'TBTC':
-                return 'black'
-            case 'LINK':
-                return '#335DD2'
             default:
                 return 'greenish'
         }
@@ -50,26 +38,6 @@ export function TokenArray({ tokens, size = 32, label, hideLabel = false }: Toke
                 {tokens.map((token, i) => {
                     switch (token) {
                         case 'All':
-                        case 'MOO-VELO-V2-OP-VELO':
-                            return (
-                                <>
-                                    <img
-                                        key={i}
-                                        src={TOKEN_LOGOS['MOO']}
-                                        alt={token}
-                                        className={`token-${token}`}
-                                        style={{ backgroundColor: 'white' }}
-                                    />
-                                    <img
-                                        key={i}
-                                        src={TOKEN_LOGOS['VELO']}
-                                        alt={token}
-                                        className={`token-${token}`}
-                                        style={{ backgroundColor: 'white' }}
-                                    />
-                                    <img key={i} src={TOKEN_LOGOS['OP']} alt={token} className={`token-${token}`} />
-                                </>
-                            )
                         case 'Collateral':
                             return <CyclingTokenArray key={i} size={size} includeProtocolTokens={token === 'All'} />
                         default:

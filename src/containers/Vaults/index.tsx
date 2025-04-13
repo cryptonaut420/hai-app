@@ -5,6 +5,7 @@ import { VaultAction } from '~/utils'
 import { useStoreState } from '~/store'
 import { VaultProvider } from '~/providers/VaultProvider'
 import { useVaultRouting } from '~/hooks'
+import { useAlternativeVaults } from '~/hooks/useAlternativeVaults'
 
 import styled from 'styled-components'
 import { CenteredFlex, HaiButton } from '~/styles'
@@ -23,6 +24,14 @@ export function Vaults() {
     } = useStoreState((state) => state)
 
     const { location, params, action, setAction } = useVaultRouting()
+    
+    const { isLoading: isLoadingDirectVaults, error: directVaultsError } = useAlternativeVaults()
+    
+    useEffect(() => {
+        if (directVaultsError) {
+            console.error('Error loading directly owned vaults:', directVaultsError)
+        }
+    }, [directVaultsError])
 
     const [navIndex, setNavIndex] = useState(params.get('tab') === 'user' ? 1 : 0)
 
@@ -51,7 +60,11 @@ export function Vaults() {
                     }
                 />
             ) : (
-                <VaultsList navIndex={navIndex} setNavIndex={setNavIndex} />
+                <VaultsList 
+                    navIndex={navIndex} 
+                    setNavIndex={setNavIndex}
+                    isLoadingDirectVaults={isLoadingDirectVaults}
+                />
             )}
         </VaultProvider>
     )

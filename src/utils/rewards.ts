@@ -1,99 +1,18 @@
 export const REWARDS = {
     vaults: {
-        WETH: {
-            AGREE: 10,
-            OP: 0,
-        },
-        WSTETH: {
-            AGREE: 20,
-            OP: 10,
-        },
-        APXETH: {
-            AGREE: 50,
-            OP: 50,
-        },
-        RETH: {
-            AGREE: 20,
-            OP: 10,
-        },
-        OP: {
-            AGREE: 10,
-            OP: 0,
-        },
-        TBTC: {
-            AGREE: 10,
-            OP: 0,
-        },
-        SNX: {
+        PEUA: {
             AGREE: 0,
             OP: 0,
-        },
-        PARYSVELO: {
-            AGREE: 10,
-            OP: 0,
-        },
-
-        // Testnet
-        WBTC: {
-            AGREE: 0,
-            OP: 0,
-        },
-        STN: {
-            AGREE: 20,
-            OP: 20,
-        },
-        TTM: {
-            AGREE: 30,
-            OP: 30,
         },
     },
     uniswap: {
         ['0x146b020399769339509c98b7b353d19130c150ec'.toLowerCase()]: {
-            AGREE: 25,
-            OP: 75,
-        },
-    },
-    velodrome: {
-        // sAMMV2-PARYS/sUSD
-        ['0xbdED651C03E2bC332AA49C1ffCa391eAA3ea6B86'.toLowerCase()]: {
-            AGREE: 15,
-            OP: 35,
-        },
-        // sAMMV2-PARYS/LUSD
-        ['0x588f26d5BefE74dC61694a7B36227C0e0C52C0f9'.toLowerCase()]: {
-            AGREE: 15,
-            OP: 50,
-        },
-        // CL50-PARYS/LUSD
-        ['0xA61FBA486e2d04C4D865183A47fc1C9F6F4Cec1f'.toLowerCase()]: {
-            AGREE: 15,
-            OP: 50,
-        },
-        // vAMMV2-AGREE/PARYS
-        ['0xf2d3941b6E1cbD3616061E556Eb06986147715d1'.toLowerCase()]: {
-            AGREE: 25,
-            OP: 25,
-        },
-        // vAMMV2-AGREE/OP
-        ['0xf4638dC488F9C826DC40250515592E678E447238'.toLowerCase()]: {
-            AGREE: 25,
-            OP: 0,
-        },
-        // vAMMV2-pxETH/PARYS
-        ['0xD5fE49a4c0Fc482Ee757DF703A3a332DB209aC2e'.toLowerCase()]: {
-            AGREE: 25,
-            OP: 75,
-        },
-        // vAMM-PARYS/rETH
-        ['0x4cE1d27d824062B159D000e3212B2F5106792C34'.toLowerCase()]: {
-            AGREE: 35,
-            OP: 0,
-        },
-        // vAMMV2-SAIL/AGREE
-        ['0xB5cD4bD4bdB5C97020FBE192258e6F08333990E2'.toLowerCase()]: {
             AGREE: 0,
             OP: 0,
         },
+    },
+    velodrome: {
+
     },
     default: {
         OP: 0,

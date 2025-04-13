@@ -40,7 +40,7 @@ export function useVaultRouting(address?: string) {
                 vaultActions.setSingleVault(vault)
                 vaultActions.setVaultData({
                     ...DEFAULT_VAULT_DATA,
-                    collateral: vault?.collateralName || 'WETH',
+                    collateral: vault?.collateralName || 'PEUA',
                 })
                 break
             }
@@ -48,12 +48,12 @@ export function useVaultRouting(address?: string) {
                 const symbols = Object.values(tokensData || {})
                     .filter(({ isCollateral }) => isCollateral)
                     .map(({ symbol }) => symbol)
-                const collateral = params.get('collateral') || 'WETH'
+                const collateral = params.get('collateral') || 'PEUA'
                 setAction(VaultAction.CREATE)
                 vaultActions.setSingleVault(undefined)
                 vaultActions.setVaultData({
                     ...DEFAULT_VAULT_DATA,
-                    collateral: symbols.includes(collateral) ? collateral : 'WETH',
+                    collateral: symbols.includes(collateral) ? collateral : 'PEUA',
                 })
                 break
             }

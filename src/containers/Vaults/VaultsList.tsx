@@ -30,8 +30,9 @@ const strategies: StrategyAdProps[] = [
 type VaultsListProps = {
     navIndex: number
     setNavIndex: SetState<number>
+    isLoadingDirectVaults?: boolean
 }
-export function VaultsList({ navIndex, setNavIndex }: VaultsListProps) {
+export function VaultsList({ navIndex, setNavIndex, isLoadingDirectVaults = false }: VaultsListProps) {
     const { setActiveVault } = useVault()
 
     const isUpToSmall = useMediaQuery('upToSmall')
@@ -47,6 +48,8 @@ export function VaultsList({ navIndex, setNavIndex }: VaultsListProps) {
         eligibleOnly,
         setEligibleOnly,
     } = useAvailableVaults()
+
+    console.log('availableVaults', availableVaults)
 
     const {
         headers: myVaultsHeaders,
@@ -123,7 +126,7 @@ export function VaultsList({ navIndex, setNavIndex }: VaultsListProps) {
                             ? () =>
                                   setActiveVault({
                                       create: true,
-                                      collateralName: 'WETH',
+                                      collateralName: 'PEUA',
                                   })
                             : undefined
                     }
@@ -136,9 +139,10 @@ export function VaultsList({ navIndex, setNavIndex }: VaultsListProps) {
                         onCreate={() =>
                             setActiveVault({
                                 create: true,
-                                collateralName: assetsFilter || 'WETH',
+                                collateralName: assetsFilter || 'PEUA',
                             })
                         }
+                        isLoadingDirectVaults={isLoadingDirectVaults}
                     />
                 </ProxyPrompt>
             )}

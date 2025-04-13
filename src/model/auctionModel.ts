@@ -174,7 +174,7 @@ export const auctionModel: AuctionModel = {
             } else if (type === 'COLLATERAL') {
                 const { auctions, endBlock } = await getCollateralAuctions(
                     geb,
-                    tokenSymbol || 'WETH',
+                    tokenSymbol || 'PEUA',
                     latestBlock - COLLATERAL_BATCH_SIZE,
                     latestBlock
                 )

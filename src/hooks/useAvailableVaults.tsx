@@ -32,6 +32,8 @@ export function useAvailableVaults() {
         [tokensData]
     )
 
+    console.log('tokensData', tokensData)
+
     const collaterals = useMemo(
         () =>
             Object.values(tokensData || {})
@@ -40,7 +42,7 @@ export function useAvailableVaults() {
         [tokensData]
     )
 
-    const HAS_REWARDS = ['APXETH', 'WETH', 'WSTETH', 'RETH', 'OP', 'TBTC']
+    const HAS_REWARDS = []
 
     const availableVaults: AvailableVaultPair[] = useMemo(() => {
         return collaterals

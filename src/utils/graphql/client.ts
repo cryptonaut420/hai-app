@@ -1,10 +1,11 @@
 import { NETWORK_ID, VITE_GRAPH_API_KEY } from '../constants'
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 
+// Updated to use PARYS protocol's dedicated subgraph instead of HAI
 const uri =
     NETWORK_ID === 10
-        ? 'https://subgraph.satsuma-prod.com/ea4569e42b10/duuvf2ayrz8e0yxg0udnic--151680/hai-mainnet/api'
-        : 'https://subgraph.satsuma-prod.com/ea4569e42b10/duuvf2ayrz8e0yxg0udnic--151680/hai-sepolia-redeploy/api'
+        ? 'https://api.studio.thegraph.com/query/109073/parys-protocol/v0.0.1'
+        : 'https://api.studio.thegraph.com/query/109073/parys-protocol/v0.0.1' // Use same for both until a testnet version is deployed
 
 export const client = new ApolloClient({
     uri,

@@ -8,19 +8,8 @@ import { CenteredFlex, Flex, Text } from '~/styles'
 const PAIR_WIDTH = 180
 
 const pairs: [string, string][] = [
-    ['OP', TOKEN_LOGOS.OP],
-    ['WETH', TOKEN_LOGOS.WETH],
-    ['WSTETH', TOKEN_LOGOS.WSTETH],
-    ['SNX', TOKEN_LOGOS.SNX],
-    ['RETH', TOKEN_LOGOS.RETH],
-    ['LUSD', TOKEN_LOGOS['LUSD-A']],
-    ['LINK', TOKEN_LOGOS['LINK']],
-    ['TBTC', TOKEN_LOGOS['TBTC']],
-    ['VELO', TOKEN_LOGOS['VELO']],
-    ['PARYSVELO', TOKEN_LOGOS['PARYSVELO']],
-    // ['WBTC', TOKEN_LOGOS['WBTC']],
-    ['APXETH', TOKEN_LOGOS['APXETH']],
-    ['Beefy Vaults', TOKEN_LOGOS['MOO']],
+    ['PEUA', TOKEN_LOGOS.PEUA],
+    ['PBJO', TOKEN_LOGOS.PBJO],
 ]
 
 export function PairsBanner() {

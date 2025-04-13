@@ -15,9 +15,23 @@ type MyVaultsTableProps = {
     sorting: Sorting
     setSorting: SetState<Sorting>
     onCreate: () => void
+    isLoadingDirectVaults?: boolean
 }
-export function MyVaultsTable({ headers, rows, sorting, setSorting, onCreate }: MyVaultsTableProps) {
+export function MyVaultsTable({ headers, rows, sorting, setSorting, onCreate, isLoadingDirectVaults = false }: MyVaultsTableProps) {
     const { setActiveVault } = useVault()
+
+    const emptyContent = (
+        <>
+            <Text>
+                {isLoadingDirectVaults 
+                    ? "Loading vaults... If you have directly owned vaults, they will appear shortly." 
+                    : "No vaults were found or matched your search. Would you like to open a new one?"}
+            </Text>
+            <HaiButton $variant="yellowish" onClick={onCreate}>
+                Open New Vault
+            </HaiButton>
+        </>
+    )
 
     return (
         <Table
@@ -26,14 +40,7 @@ export function MyVaultsTable({ headers, rows, sorting, setSorting, onCreate }: 
             sorting={sorting}
             setSorting={setSorting}
             isEmpty={!rows.length}
-            emptyContent={
-                <>
-                    <Text>No vaults were found or matched your search. Would you like to open a new one?</Text>
-                    <HaiButton $variant="yellowish" onClick={onCreate}>
-                        Open New Vault
-                    </HaiButton>
-                </>
-            }
+            emptyContent={emptyContent}
             compactQuery="upToMedium"
             rows={rows.map((vault) => {
                 const {
@@ -48,7 +55,7 @@ export function MyVaultsTable({ headers, rows, sorting, setSorting, onCreate }: 
                 } = vault
 
                 const hasFreeCollateral = freeCollateral !== '0.0'
-                const hasNoRewards = ['SNX', 'LUSD-A', 'LINK', 'VELO', 'WBTC', 'MOO-VELO-V2-OP-VELO', 'PARYSVELO']
+                const hasNoRewards = ['PEUA', 'PBJO']
                 const collateralLabel = formatCollateralLabel(collateralName)
                 return (
                     <Table.Row
@@ -66,15 +73,9 @@ export function MyVaultsTable({ headers, rows, sorting, setSorting, onCreate }: 
                                         </CenteredFlex>
                                         {hasNoRewards.includes(collateralName) ? null : (
                                             <RewardsTokenArray
-                                                tokens={
-                                                    collateralName === 'APXETH'
-                                                        ? ['OP', 'AGREE', 'DINERO']
-                                                        : ['OP', 'AGREE']
-                                                }
+                                                tokens={['PEUA', 'PBJO']}
                                                 label="EARN"
-                                                tooltip={`Earn OP/AGREE${
-                                                    collateralName === 'APXETH' ? '/DINERO' : ''
-                                                } tokens by minting PARYS and providing liquidity`}
+                                                tooltip={`Earn AGREE tokens by minting PARYS and providing liquidity`}
                                             />
                                         )}
                                         {hasFreeCollateral && <ClaimableFreeCollateral vault={vault} />}

@@ -16,7 +16,7 @@ export const returnWalletAddress = (walletAddress: string, options?: FormatAddre
     return `${walletAddress.slice(0, startLength)}...${walletAddress.slice(-endLength)}`
 }
 
-export const formatCollateralLabel = (collateralName: string) => (collateralName === 'LUSD-A' ? 'LUSD' : collateralName)
+export const formatCollateralLabel = (collateralName: string) => collateralName
 
 export const capitalizeName = (name: string) => name.charAt(0).toUpperCase() + name.slice(1)
 
