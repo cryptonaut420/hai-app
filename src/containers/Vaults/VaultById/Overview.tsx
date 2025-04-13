@@ -166,6 +166,18 @@ export function Overview({ vault }: OverviewProps) {
                     label="Liq. Price"
                     tooltip={t('liquidation_price_tip')}
                 />
+                <OverviewStat
+                    value={
+                        vault && vault.liquidationData?.safetyCRatio
+                            ? formatNumberWithStyle(vault.liquidationData.safetyCRatio, {
+                                style: 'percent',
+                                maxDecimals: 1,
+                            })
+                            : '--'
+                    }
+                    label="Min. Coll. Ratio"
+                    tooltip={`Minimum collateral ratio required for opening a new vault (120%). Vaults with ratios below 100% will be liquidated.`}
+                />
             </Inner>
         </Container>
     )

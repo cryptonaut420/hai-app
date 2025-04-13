@@ -217,20 +217,20 @@ export function Overview() {
                                 : '--'
                         }
                         label="Min. Coll. Ratio"
-                        tooltip={`Minimum collateral ratio required for opening a new vault. Vaults opened at this ratio will likely be at high risk of liquidation.`}
+                        tooltip={`Minimum collateral ratio required for opening a new vault (120%). Vaults with ratios below 100% will be liquidated.`}
                     />
                 ) : (
                     <OverviewStat
                         value={
-                            collateral.liquidationData?.liquidationCRatio
-                                ? formatNumberWithStyle(collateral.liquidationData.liquidationCRatio, {
+                            collateral.liquidationData?.safetyCRatio
+                                ? formatNumberWithStyle(collateral.liquidationData.safetyCRatio, {
                                       style: 'percent',
                                       maxDecimals: 1,
                                   })
                                 : '--'
                         }
-                        label="Liq. Coll. Ratio"
-                        tooltip={`Minimum collateral ratio below which, this vault is at risk of being liquidated`}
+                        label="Min. Coll. Ratio"
+                        tooltip={`Minimum collateral ratio required for opening a new vault (120%). Vaults with ratios below 100% will be liquidated.`}
                     />
                 )}
                 <OverviewStat
