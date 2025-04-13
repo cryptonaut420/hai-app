@@ -179,7 +179,7 @@ export function ActivityTable({ vault }: ActivityTableProps) {
     const { vaultModel: vaultState } = useStoreState((state) => state)
 
     const haiPrice = parseFloat(vaultState.liquidationData?.currentRedemptionPrice || '1')
-    const collateralPrice = parseFloat(vault?.collateralType.currentPrice.value || '0')
+    const collateralPrice = parseFloat(vault?.collateralType?.currentPrice?.value || '0')
 
     const [offset, setOffset] = useState(0)
 
@@ -210,7 +210,7 @@ export function ActivityTable({ vault }: ActivityTableProps) {
                         const debt = parseFloat(accumulatedRate) * parseFloat(deltaDebt)
                         const collateral = parseFloat(deltaCollateral)
                         const action = type === 'confiscate' ? ActivityAction.CONFISCATE : getAction(debt, collateral)
-                        const [label, icons] = getActionLabelAndIcon(action, debt, collateral, vault!.collateralToken)
+                        const [label, icons] = getActionLabelAndIcon(action, debt, collateral, vault?.collateralToken || '')
                         return (
                             <Table.Row
                                 key={id}
@@ -229,7 +229,7 @@ export function ActivityTable({ vault }: ActivityTableProps) {
                                                         {collateral > 0 ? '+' : ''}
                                                         {formatNumberWithStyle(deltaCollateral)}
                                                         &nbsp;
-                                                        {formatCollateralLabel(vault!.collateralToken)}
+                                                        {formatCollateralLabel(vault?.collateralToken || '')}
                                                     </Text>
                                                     <Text $fontSize="0.8em">
                                                         {collateralPrice
@@ -275,7 +275,7 @@ export function ActivityTable({ vault }: ActivityTableProps) {
                     })}
             />
             <Pagination
-                totalItems={vault?.modifySAFECollateralization?.length || 0}
+                totalItems={vault?.activity?.length || 0}
                 handlePagingMargin={setOffset}
                 perPage={MAX_RECORDS_PER_PAGE}
             />

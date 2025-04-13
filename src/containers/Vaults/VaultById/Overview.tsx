@@ -18,7 +18,7 @@ export function Overview({ vault }: OverviewProps) {
     const { vaultModel: vaultState } = useStoreState((state) => state)
 
     const haiPrice = parseFloat(vaultState.liquidationData?.currentRedemptionPrice || '1')
-    const collateralPrice = parseFloat(vault?.collateralType.currentPrice.value || '0')
+    const collateralPrice = parseFloat(vault?.collateralType?.currentPrice?.value || '0')
 
     const progressProps = useMemo(() => {
         if (!vault)
@@ -30,7 +30,7 @@ export function Overview({ vault }: OverviewProps) {
                 colorLimits: [0, 0.5, 1] as [number, number, number],
             }
 
-        const { safetyCRatio, liquidationCRatio } = vault.liquidationData
+        const { safetyCRatio, liquidationCRatio } = vault.liquidationData || {}
         const safetyRatio = safetyCRatio ? 100 * parseFloat(safetyCRatio.toString()) : undefined
         if (!vault.collateralRatio || !safetyRatio || !liquidationCRatio)
             return {
@@ -150,7 +150,7 @@ export function Overview({ vault }: OverviewProps) {
                         vault
                             ? formatNumberWithStyle(
                                   getRatePercentage(
-                                      vault.liquidationData.totalAnnualizedStabilityFee || '0',
+                                      vault.liquidationData?.totalAnnualizedStabilityFee || '0',
                                       4,
                                       true
                                   ).toString(),

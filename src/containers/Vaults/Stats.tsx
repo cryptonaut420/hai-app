@@ -35,7 +35,7 @@ export function BorrowStats() {
         const { totalCollateralInUSD, totalHai, weightedStabilityFee } = list.reduce(
             (obj, { collateral, collateralName, debt, totalAnnualizedStabilityFee }) => {
                 const collateralPriceInUSD =
-                    liquidationData?.collateralLiquidationData[collateralName]?.currentPrice.value || '0'
+                    liquidationData?.collateralLiquidationData[collateralName]?.currentPrice?.value || '0'
                 obj.totalCollateralInUSD += parseFloat(collateral) * parseFloat(collateralPriceInUSD)
                 obj.totalHai += parseFloat(debt)
                 obj.weightedStabilityFee += (parseFloat(totalAnnualizedStabilityFee) - 1) * parseFloat(debt)

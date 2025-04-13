@@ -376,7 +376,8 @@ export const formatQuerySafeToVault = (
     safe: QuerySafe,
     collateralLiquidationData: Record<string, CollateralLiquidationData>,
     currentRedemptionPrice: string,
-    confiscateSAFECollateralAndDebts: QueryConfiscateSAFECollateralAndDebt[] = []
+    confiscateSAFECollateralAndDebts: QueryConfiscateSAFECollateralAndDebt[] = [],
+    modifySAFECollateralization: QueryModifySAFECollateralization[] = []
 ): QueriedVault => {
     // Check if safe has necessary properties
     if (!safe) {
@@ -511,7 +512,7 @@ export const formatQuerySafeToVault = (
             liquidationData: collateralLiquidationData[collateralToken],
             liquidationPrice: liquidationPriceValue,
             activity: [
-                ...(safe.modifySAFECollateralization || []),
+                ...(modifySAFECollateralization || []),
                 ...confiscateSAFECollateralAndDebts.map((obj) => ({ ...obj, type: 'confiscate' })),
             ].sort(({ createdAt: a }, { createdAt: b }) => parseInt(b) - parseInt(a)) as any,
         };

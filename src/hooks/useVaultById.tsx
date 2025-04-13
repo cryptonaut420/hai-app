@@ -9,6 +9,15 @@ export function useVaultById(id: string) {
 
     const { data, loading, error, refetch } = useQuery<{
         safes: QuerySafe[]
+        modifySAFECollateralizations: {
+            id: string
+            deltaDebt: string
+            deltaCollateral: string
+            createdAt: string
+            createdAtTransaction: string
+            accumulatedRate: string
+            safe: { safeId: string }
+        }[]
         confiscateSAFECollateralAndDebts: QueryConfiscateSAFECollateralAndDebt[]
     }>(SAFE_QUERY, {
         variables: { id },
@@ -19,11 +28,16 @@ export function useVaultById(id: string) {
         if (!data?.safes[0] || !vaultState.liquidationData) return undefined
 
         const dataSafe = data.safes[0]
+        
+        // Extract the modification activity data
+        const modifyActivity = data.modifySAFECollateralizations || []
+        
         return formatQuerySafeToVault(
             dataSafe,
             vaultState.liquidationData.collateralLiquidationData,
             vaultState.liquidationData.currentRedemptionPrice,
-            data.confiscateSAFECollateralAndDebts
+            data.confiscateSAFECollateralAndDebts,
+            modifyActivity
         )
     }, [data, vaultState])
 

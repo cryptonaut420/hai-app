@@ -41,7 +41,7 @@ export function ClaimModal(props: ModalProps) {
 
     const kitePrice = veloPrices?.AGREE.raw
     const dineroPrice = veloPrices?.DINERO.raw
-    const opPrice = liquidationData?.collateralLiquidationData?.OP?.currentPrice.value
+    const opPrice = liquidationData?.collateralLiquidationData?.OP?.currentPrice?.value
 
     const geb = useGeb()
 
@@ -62,10 +62,10 @@ export function ClaimModal(props: ModalProps) {
                     token === 'PARYS'
                         ? parseFloat(currentRedemptionPrice || '1')
                         : token === 'AGREE'
-                        ? kitePrice
-                        : parseFloat(collateralLiquidationData?.[token]?.currentPrice.value || '0')
-                acc.prices[token] = price
-                acc.total += parseFloat(sellAmount) * price
+                        ? kitePrice || 0
+                        : parseFloat(collateralLiquidationData?.[token]?.currentPrice?.value || '0')
+                acc.prices[token] = price || 0
+                acc.total += parseFloat(sellAmount) * (price || 0)
                 return acc
             },
             { prices: {} as Record<string, number>, total: 0 }

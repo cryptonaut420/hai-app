@@ -64,6 +64,7 @@ export const SafeFragment = gql`
             address
         }
         createdAt
+        modifiedAt
         collateralType {
             id
             safetyCRatio
@@ -77,6 +78,7 @@ export const SafeFragment = gql`
         }
         saviour {
             allowed
+            id
         }
     }
 `
