@@ -125,7 +125,7 @@ export function MyVaultsTable({ headers, rows, sorting, setSorting, onCreate, is
                                 content: (
                                     <Text>
                                         {formatNumberWithStyle(getRatePercentage(totalAnnualizedStabilityFee, 4), {
-                                            scalingFactor: -0.01,
+                                            scalingFactor: 0.01,
                                             style: 'percent',
                                         })}
                                     </Text>

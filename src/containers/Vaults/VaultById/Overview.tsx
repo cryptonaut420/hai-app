@@ -154,7 +154,7 @@ export function Overview({ vault }: OverviewProps) {
                                       4,
                                       true
                                   ).toString(),
-                                  { scalingFactor: -1, style: 'percent' }
+                                  { scalingFactor: 1, style: 'percent' }
                               )
                             : '--%'
                     }

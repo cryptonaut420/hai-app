@@ -77,7 +77,7 @@ export function BorrowStats() {
             {
                 header: formatNumberWithStyle(weightedStabilityFeeAverage, {
                     style: 'percent',
-                    scalingFactor: -100,
+                    scalingFactor: 100,
                     minDecimals: 1,
                     maxDecimals: 1,
                     suffixed: true,

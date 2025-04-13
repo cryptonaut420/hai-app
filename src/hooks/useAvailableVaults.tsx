@@ -42,7 +42,8 @@ export function useAvailableVaults() {
         [tokensData]
     )
 
-    const HAS_REWARDS = []
+    const DEPRECATED_COLLATERALS: string[] = []
+    const HAS_REWARDS: string[] = []
 
     const availableVaults: AvailableVaultPair[] = useMemo(() => {
         return collaterals
@@ -57,7 +58,7 @@ export function useAvailableVaults() {
                     // hasRewards: collateral.hasRewards,
                     hasRewards: HAS_REWARDS.includes(symbol),
                     collateralizationFactor: liquidationCRatio || '',
-                    stabilityFee: (1 - parseFloat(totalAnnualizedStabilityFee || '1')).toString(),
+                    stabilityFee: (parseFloat(totalAnnualizedStabilityFee || '1') - 1).toString(),
                     apy: totalAnnualizedStabilityFee || '',
                     eligibleBalance: tokensFetchedData[symbol]?.balanceE18,
                     myVaults: vaultState.list.filter(({ collateralName }) => collateralName === symbol),

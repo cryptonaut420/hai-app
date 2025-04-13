@@ -140,6 +140,7 @@ export const toPercentage = (value: number, decimals: number) => {
 
 export const getRatePercentage = (value: string, digits = 4, returnRate = false) => {
     const rate = Number(value)
+    // For stability fee, we want to show positive rates for values > 1
     const ratePercentage = rate < 1 ? numeral(1).subtract(rate).value() * -1 : numeral(rate).subtract(1).value()
 
     if (returnRate) return ratePercentage
