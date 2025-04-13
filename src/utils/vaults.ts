@@ -176,12 +176,21 @@ export const getLiquidationPrice = (
         return '0'
     }
 
-    const numerator = numeral(totalDebt)
-        .multiply(liquidationCRatio)
-        .multiply(currentRedemptionPrice)
-        .divide(totalCollateral)
-
-    return formatNumber(numerator.value().toString())
+    // Convert to numbers to avoid string manipulation issues
+    const collateralNum = parseFloat(totalCollateral);
+    const debtNum = parseFloat(totalDebt);
+    const liquidationCRatioNum = parseFloat(liquidationCRatio);
+    const redemptionPriceNum = parseFloat(currentRedemptionPrice);
+    
+    if (isNaN(collateralNum) || isNaN(debtNum) || isNaN(liquidationCRatioNum) || isNaN(redemptionPriceNum)) {
+        console.warn('getLiquidationPrice received invalid inputs:', { totalCollateral, totalDebt, liquidationCRatio, currentRedemptionPrice });
+        return '0';
+    }
+    
+    // Calculate liquidation price: (debt * liquidationCRatio * redemptionPrice) / collateral
+    const price = (debtNum * liquidationCRatioNum * redemptionPriceNum) / collateralNum;
+    
+    return formatNumber(price.toString());
 }
 
 export const vaultIsSafe = (totalCollateral: string, totalDebt: string, safetyPrice: string) => {

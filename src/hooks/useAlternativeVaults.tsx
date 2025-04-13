@@ -3,6 +3,7 @@ import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
 import { useStoreState, useStoreActions } from '~/store'
 import { useGeb } from './useGeb'
+import { getLiquidationPrice, ratioChecker, riskStateToStatus } from '~/utils/vaults'
 
 // This hook is used to load vaults directly from the contract
 // It's a workaround for the SDK's limitation of only checking proxy-owned safes
@@ -15,7 +16,7 @@ export function useAlternativeVaults() {
     
     const actions = useStoreActions(state => state.vaultModel)
     const {
-        vaultModel: { list: currentList },
+        vaultModel: { list: currentList, liquidationData },
     } = useStoreState((state) => state)
     
     // Load vaults directly
@@ -70,7 +71,28 @@ export function useAlternativeVaults() {
                         geb.contracts.safeEngine.address,
                         [
                             'function safes(bytes32,address) view returns (uint256,uint256)',
-                            'function tokenCollateral(bytes32,address) view returns (uint256)'
+                            'function tokenCollateral(bytes32,address) view returns (uint256)',
+                            'function cData(bytes32) view returns (uint256,uint256,uint256,uint256)',
+                            'function cParams(bytes32) view returns (uint256,uint256)'
+                        ],
+                        geb.provider
+                    )
+                    
+                    // Create oracle relayer interface
+                    const oracleRelayer = new ethers.Contract(
+                        geb.contracts.oracleRelayer.address,
+                        [
+                            'function redemptionPrice() view returns (uint256)',
+                            'function cParams(bytes32) view returns (uint256,uint256)'
+                        ],
+                        geb.provider
+                    )
+                    
+                    // Create tax collector interface
+                    const taxCollector = new ethers.Contract(
+                        geb.contracts.taxCollector.address,
+                        [
+                            'function cData(bytes32) view returns (uint256)'
                         ],
                         geb.provider
                     )
@@ -79,30 +101,87 @@ export function useAlternativeVaults() {
                     const [lockedCollateral, generatedDebt] = await safeEngine.safes(collateralType, handler)
                     const freeCollateral = await safeEngine.tokenCollateral(collateralType, handler)
                     
+                    // Get collateral type data
+                    const [accumulatedRate, safetyPrice, liquidationPrice, debtAmount] = await safeEngine.cData(collateralType)
+                    
+                    // Get oracle relayer params
+                    const [safetyCRatio, liquidationCRatio] = await oracleRelayer.cParams(collateralType)
+                    
+                    // Get redemption price
+                    const redemptionPrice = await oracleRelayer.redemptionPrice()
+                    
+                    // Get stability fee
+                    const stabilityFee = await taxCollector.cData(collateralType)
+                    
                     // Convert collateral type to string
                     const collateralName = ethers.utils.parseBytes32String(collateralType)
+                    
+                    // Format values
+                    const formattedCollateral = ethers.utils.formatEther(lockedCollateral)
+                    const formattedDebt = ethers.utils.formatEther(generatedDebt)
+                    const formattedFreeCollateral = ethers.utils.formatEther(freeCollateral)
+                    const formattedAccumulatedRate = ethers.utils.formatUnits(accumulatedRate, 27)
+                    const formattedSafetyCRatio = ethers.utils.formatUnits(safetyCRatio, 27)
+                    const formattedLiquidationCRatio = ethers.utils.formatUnits(liquidationCRatio, 27)
+                    const formattedRedemptionPrice = ethers.utils.formatUnits(redemptionPrice, 27)
+                    
+                    // Calculate annual stability fee (similar to InfoCommand.js)
+                    const formattedStabilityFee = ethers.utils.formatUnits(stabilityFee, 27)
+                    const stabilityFeeNumber = parseFloat(formattedStabilityFee)
+                    
+                    // Use the same approach as the protocol does (annual compounding)
+                    // For a 2% fee, the stabilityFee would be 1.02 in RAY precision
+                    const annualizedStabilityFee = Math.pow(stabilityFeeNumber, 3600 * 24 * 365).toString()
+                    
+                    // Calculate liquidation price
+                    const calculatedLiquidationPrice = getLiquidationPrice(
+                        formattedCollateral,
+                        formattedDebt,
+                        formattedLiquidationCRatio,
+                        formattedRedemptionPrice
+                    )
+                    
+                    // Calculate collateralization ratio
+                    let collateralRatio = '0'
+                    if (Number(formattedDebt) === 0) {
+                        collateralRatio = 'Infinity'
+                    } else {
+                        const collateralValue = Number(formattedCollateral) * parseFloat(ethers.utils.formatUnits(liquidationPrice, 27))
+                        const debtValue = Number(formattedDebt) * parseFloat(formattedAccumulatedRate)
+                        if (debtValue > 0) {
+                            collateralRatio = ((collateralValue / debtValue) * 100).toString()
+                        }
+                    }
+                    
+                    // Determine risk state
+                    const riskState = ratioChecker(
+                        Number(collateralRatio) === Infinity ? Infinity : Number(collateralRatio), 
+                        Number(formattedSafetyCRatio) * 100
+                    )
+                    const status = riskStateToStatus[riskState]
                     
                     // Create vault object
                     const vault = {
                         id: safeId.toString(),
                         vaultHandler: handler,
                         date: new Date().toISOString(),
-                        riskState: 2, // Default risk state
-                        collateral: ethers.utils.formatEther(lockedCollateral),
-                        debt: ethers.utils.formatEther(generatedDebt),
-                        totalDebt: ethers.utils.formatEther(generatedDebt),
-                        availableDebt: '0',
-                        accumulatedRate: '1',
-                        collateralRatio: '150', // Default value
-                        freeCollateral: ethers.utils.formatEther(freeCollateral),
-                        currentRedemptionPrice: '1',
-                        currentLiquidationPrice: '0',
-                        internalCollateralBalance: '0',
-                        liquidationCRatio: '1.5',
-                        liquidationPenalty: '1',
-                        liquidationPrice: '0',
-                        totalAnnualizedStabilityFee: '0',
-                        currentRedemptionRate: '0',
+                        riskState,
+                        status,
+                        collateral: formattedCollateral,
+                        debt: formattedDebt,
+                        totalDebt: formattedDebt,
+                        availableDebt: '0', // Calculate this if needed
+                        accumulatedRate: formattedAccumulatedRate,
+                        collateralRatio,
+                        freeCollateral: formattedFreeCollateral,
+                        currentRedemptionPrice: formattedRedemptionPrice,
+                        currentLiquidationPrice: ethers.utils.formatUnits(liquidationPrice, 27),
+                        internalCollateralBalance: ethers.utils.formatEther(freeCollateral),
+                        liquidationCRatio: formattedLiquidationCRatio,
+                        liquidationPenalty: '1.1', // Default, can fetch from liquidation engine if needed
+                        liquidationPrice: calculatedLiquidationPrice,
+                        totalAnnualizedStabilityFee: annualizedStabilityFee,
+                        currentRedemptionRate: '1', // Default, can fetch if needed
                         collateralType: collateralType.toString(),
                         collateralName
                     }
@@ -126,7 +205,7 @@ export function useAlternativeVaults() {
         }
         
         loadDirectVaults()
-    }, [address, geb])
+    }, [address, geb, liquidationData])
     
     return { isLoading, error }
 } 
