@@ -1,13 +1,10 @@
-import { createContext, useContext, useEffect, useState } from 'react'
-import { useAccount, useNetwork } from 'wagmi'
+import { createContext, useContext } from 'react'
 import { ApolloError } from '@apollo/client'
-import { useGeb } from '~/hooks'
 
 import { ReactChildren, SummaryCurrency, SummaryItemValue } from '~/types'
 import { formatSummaryValue } from '~/utils'
 import { useInternalBalances } from './useInternalBalances'
 import { type FormattedQueryAuctionBid, useMyActiveAuctions } from './useMyActiveAuctions'
-import { fetchIncentivesData } from './useMyIncentives'
 
 type ClaimsContext = {
     internalBalances: {
@@ -20,6 +17,7 @@ type ClaimsContext = {
         OP?: SummaryItemValue<SummaryCurrency>
         refetch?: () => void
     }
+    refetchIncentives: () => void
     activeAuctions: {
         bids: FormattedQueryAuctionBid[]
         activeBids: FormattedQueryAuctionBid[]
@@ -79,26 +77,15 @@ type Props = {
     children: ReactChildren
 }
 export function ClaimsProvider({ children }: Props) {
-    const geb = useGeb()
-
-    const { address: account } = useAccount()
-    const { chain } = useNetwork()
-    const chainId = chain?.id
-
     const internalBalances = useInternalBalances()
-
     const activeAuctions = useMyActiveAuctions()
 
-    const [incentivesData, setIncentivesData] = useState({})
-
-    useEffect(() => {
-        const fetchIncentives = async () => {
-            if (!account || !chainId || !geb) return
-            const incentives = await fetchIncentivesData(geb, account, chainId)
-            setIncentivesData(incentives)
-        }
-        fetchIncentives()
-    }, [geb])
+    // Use empty incentives data to avoid errors
+    const incentivesData = {
+        AGREE: defaultTokenMetadata,
+        OP: defaultTokenMetadata,
+    }
+    
     const totalUSD = formatSummaryValue(
         (
             parseFloat(internalBalances.PARYS?.usdRaw || '0') +
@@ -113,10 +100,7 @@ export function ClaimsProvider({ children }: Props) {
             value={{
                 internalBalances,
                 incentivesData,
-                refetchIncentives: async () => {
-                    const updatedData = await fetchIncentivesData(geb, account, chainId)
-                    setIncentivesData(updatedData)
-                },
+                refetchIncentives: () => {}, // Empty function 
                 activeAuctions,
                 totalUSD,
             }}

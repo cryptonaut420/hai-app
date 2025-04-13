@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 
 import { formatSummaryCurrency } from '~/utils'
 import { useStoreActions, useStoreState } from '~/store'
-import { useVelodromePrices } from '../VelodromePriceProvider'
 import { usePublicGeb } from '~/hooks'
 
 export function useInternalBalances() {
@@ -13,7 +12,6 @@ export function useInternalBalances() {
     } = useStoreState((state) => state)
     const { auctionModel: auctionActions } = useStoreActions((actions) => actions)
 
-    const { prices } = useVelodromePrices()
     const geb = usePublicGeb()
 
     return useMemo(() => {
@@ -22,11 +20,11 @@ export function useInternalBalances() {
         const kiteBalance = parseFloat(protInternalBalance) < 0.01 ? '0' : protInternalBalance
         const balances = {
             PARYS: formatSummaryCurrency(haiBalance, liquidationData?.currentRedemptionPrice || '1'),
-            AGREE: formatSummaryCurrency(kiteBalance, prices?.AGREE.raw || '0'),
+            AGREE: formatSummaryCurrency(kiteBalance, '0'),
         }
         return {
             ...balances,
             refetch: geb && proxyAddress ? () => auctionActions.fetchAuctionsData({ geb, proxyAddress }) : undefined,
         }
-    }, [geb, proxyAddress, prices?.AGREE.raw, liquidationData, internalBalance, protInternalBalance])
+    }, [geb, proxyAddress, liquidationData, internalBalance, protInternalBalance])
 }

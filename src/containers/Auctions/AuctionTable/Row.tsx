@@ -44,7 +44,7 @@ export function AuctionTableRow({ headers, auction, container, expanded, onSelec
         remainingToSell,
         initialToRaise,
         remainingToRaise,
-    } = useAuction(auction, timeEl)
+    } = useAuction(auction.auctionId)
 
     const { canRestart, restartDebtOrSurplusAuction } = useRestartAuction(auction)
 

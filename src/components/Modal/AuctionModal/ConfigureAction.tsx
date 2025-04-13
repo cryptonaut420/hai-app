@@ -46,7 +46,7 @@ export function ConfigureAction({ auction, action, nextStep }: ConfigureActionPr
     } = useStoreState((state) => state)
     const { auctionModel: auctionActions } = useStoreActions((actions) => actions)
 
-    const { buyToken, sellToken, remainingToSell } = useAuction(auction)
+    const { buyToken, sellToken, remainingToSell } = useAuction(auction.auctionId)
 
     const [error, setError] = useState('')
     // const [value, setValue] = useState('')

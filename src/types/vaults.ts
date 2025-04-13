@@ -1,8 +1,17 @@
 import { JsonRpcSigner } from '@ethersproject/providers/lib/json-rpc-provider'
-import { Geb, type TokenData } from '@parisii-inc/parys-sdk'
+import type { Geb } from '@parisii-inc/parys-sdk'
 
-import type { SystemSate } from './system'
+import type { SystemState } from './system'
 import type { FormattedBalance } from './wallet'
+
+// Define TokenData type here since it appears to be missing from the SDK
+export type TokenData = {
+    symbol: string
+    name: string
+    address: string
+    decimals: number
+    collateralJoin?: string
+}
 
 export type IVault = {
     id: string
@@ -81,7 +90,7 @@ export type IVaultResponse = {
 // query responses for the vaults
 export type ILiquidationResponse = {
     collateralLiquidationData: { [key: string]: CollateralLiquidationData }
-    systemState: SystemSate
+    systemState: SystemState
 }
 
 export type IUserVaultList = ILiquidationResponse & {
@@ -130,13 +139,13 @@ export type IVaultQuery = ILiquidationResponse & {
 }
 
 export type IFetchLiquidationDataPayload = {
-    geb: Geb
+    geb: any // Using any as a temporary fix
     tokensData: Record<string, TokenData>
 }
 
 export type IFetchVaultsPayload = {
     address: string
-    geb: Geb
+    geb: any // Using any as a temporary fix
     tokensData: { [key: string]: TokenData }
     chainId: number
 }

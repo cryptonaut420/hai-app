@@ -1,15 +1,52 @@
 import { NETWORK_ID, VITE_GRAPH_API_KEY } from '../constants'
-import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { ApolloClient, InMemoryCache, ApolloLink } from '@apollo/client'
+import { HttpLink } from '@apollo/client/link/http'
 
 // Updated to use PARYS protocol's dedicated subgraph instead of HAI
-const uri =
-    NETWORK_ID === 10
-        ? 'https://api.studio.thegraph.com/query/109073/parys-protocol/v0.0.1'
-        : 'https://api.studio.thegraph.com/query/109073/parys-protocol/v0.0.1' // Use same for both until a testnet version is deployed
+const uri = NETWORK_ID === 42161
+        ? 'https://api.studio.thegraph.com/query/109073/parys-geb/version/latest' // Arbitrum
+        : 'https://api.studio.thegraph.com/query/109073/parys-geb/version/latest' // Use same for both until a testnet version is deployed
 
-export const client = new ApolloClient({
+const httpLink = new HttpLink({
     uri,
-    cache: new InMemoryCache(),
+})
+
+// Configure the cache to handle time-series entities
+export const client = new ApolloClient({
+    link: httpLink,
+    cache: new InMemoryCache({
+        typePolicies: {
+            Query: {
+                fields: {
+                    // Configure merged fields for time-series entities
+                    safes: {
+                        // Safes are now time-series - we need to make sure queries get the latest version
+                        // This is handled in the query itself with orderBy and first: 1
+                    },
+                    internalCoinBalances: {
+                        // InternalCoinBalances are now time-series
+                        // This is handled in the query itself with orderBy and first: 1
+                    },
+                    collateralTypes: {
+                        // CollateralTypes are now time-series
+                        // This is handled in the query itself with orderBy and first: 1
+                    },
+                    systemStates: {
+                        // SystemStates are now time-series
+                        // This is handled in the query itself with orderBy and first: 1
+                    },
+                    internalCollateralBalances: {
+                        // InternalCollateralBalances are now time-series
+                        // This is handled in the query itself with orderBy and first: 1
+                    },
+                    internalDebtBalances: {
+                        // InternalDebtBalances are now time-series
+                        // This is handled in the query itself with orderBy and first: 1
+                    }
+                }
+            }
+        }
+    }),
 })
 
 export const uniClient = new ApolloClient({

@@ -75,6 +75,10 @@ export const SafeFragment = gql`
                 value
             }
         }
+        coinBalances(first: 1, orderBy: createdAt, orderDirection: desc) {
+            balance
+            accountHandler
+        }
         saviour {
             allowed
         }
@@ -159,6 +163,8 @@ export const SystemStateFragment = gql`
         erc20CoinTotalSupply
         systemSurplus
         debtAvailableToSettle
+        coinAddress
+        wethAddress
     }
     ${RedemptionRateFragment}
     ${RedemptionPriceFragment}

@@ -8,6 +8,7 @@ import {
     type QuerySafe,
     arrayToSorted,
     formatQuerySafeToVault,
+    Status
 } from '~/utils'
 import { useStoreState } from '~/store'
 
@@ -64,11 +65,48 @@ export function useAllVaults() {
 
     const vaultsWithCRatioAndToken = useMemo(() => {
         const { collateralLiquidationData, currentRedemptionPrice } = vaultState.liquidationData || {}
-        if (!data?.safes?.length || !collateralLiquidationData || !currentRedemptionPrice) return []
+        if (!data?.safes?.length) {
+            console.log('No safes data available')
+            return []
+        }
+        
+        if (!collateralLiquidationData || !currentRedemptionPrice) {
+            console.log('Missing liquidation data or redemption price')
+            return []
+        }
 
-        return data.safes.map((safe) => {
-            return formatQuerySafeToVault(safe, collateralLiquidationData, currentRedemptionPrice)
-        })
+        try {
+            return data.safes
+                .filter(safe => safe && safe.collateralType) // Filter out safes with incomplete data
+                .map((safe) => {
+                    try {
+                        return formatQuerySafeToVault(safe, collateralLiquidationData, currentRedemptionPrice)
+                    } catch (err) {
+                        console.error('Error formatting safe:', safe, err)
+                        // Return a placeholder vault with minimal data
+                        return {
+                            ...safe,
+                            totalDebt: safe.debt || '0',
+                            collateralRatio: Infinity.toString(),
+                            collateralToken: safe.collateralType?.id?.toUpperCase() || 'UNKNOWN',
+                            status: Status.UNKNOWN,
+                            liquidationData: {
+                                liquidationCRatio: '0',
+                                safetyCRatio: '0',
+                                accumulatedRate: '1',
+                                currentPrice: '0',
+                                debtCeiling: '0',
+                                debtFloor: '0'
+                            },
+                            liquidationPrice: '0',
+                            activity: [],
+                        }
+                    }
+                })
+        } catch (err) {
+            console.error('Error processing safes data:', err)
+            return []
+        }
     }, [data?.safes, vaultState.liquidationData])
 
     const sortedRows = useMemo(() => {

@@ -13,9 +13,9 @@ export type QuerySystemState = {
     globalStabilityFee: string // Base per second stability fee applied to all collateral types
     savingsRate: string // Savings rate
     collateralAuctionCount: string // Number of collateral auctions started
-    currentRedemptionRate: QueryRedemptionRate // Latest redemption rate
-    currentRedemptionPrice: QueryRedemptionPrice // Latest redemption price
-    currentCoinMedianizerUpdate: QueryMedianizerUpdate // Latest Coin medianizer update
+    currentRedemptionRate?: QueryRedemptionRate // Latest redemption rate
+    currentRedemptionPrice?: QueryRedemptionPrice // Latest redemption price
+    currentCoinMedianizerUpdate?: QueryMedianizerUpdate // Latest Coin medianizer update
     erc20CoinTotalSupply: string // Total supply of COIN outside of the system, equals to ERC20.totalSupply() of Coin
     lastPeriodicUpdate?: string // Last time the periodic update function was called
     createdAt?: string // Timestamp of the block at which the system was created [seconds]

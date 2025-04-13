@@ -37,7 +37,6 @@ const defaultState: AnalyticsContext = {
     },
     pools: {
         uniPools: [],
-        veloPools: [],
         loading: false,
         error: '',
     },

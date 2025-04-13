@@ -90,9 +90,13 @@ export function VaultExplorer() {
                     sorting={sorting}
                     setSorting={setSorting}
                     loading={loading}
-                    error={error?.message}
+                    error={error ? `Error loading vaults: ${error.message}. Please try again later.` : undefined}
                     isEmpty={!rows.length}
-                    emptyContent="No vaults matched your search"
+                    emptyContent={
+                        error 
+                            ? "Failed to load vaults. Please try refreshing the page."
+                            : "No vaults matched your search"
+                    }
                     compactQuery="upToMedium"
                     rows={rows
                         .slice(RECORDS_PER_PAGE * offset, RECORDS_PER_PAGE * (offset + 1))

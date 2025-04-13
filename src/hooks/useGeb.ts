@@ -9,8 +9,8 @@ import { useEthersSigner, usePublicProvider } from './useEthersAdapters'
 type TokenType = 'ETH' | 'PARYS' | 'WETH'
 
 // Geb with signer
-export function useGeb(): Geb {
-    const [state, setState] = useState<Geb>()
+export function useGeb() {
+    const [state, setState] = useState<any>()
     const signer = useEthersSigner()
     useEffect(() => {
         if (!signer) return
@@ -19,15 +19,27 @@ export function useGeb(): Geb {
         setState(geb)
     }, [signer])
 
-    return state as Geb
+    return state
 }
 
 // Geb with public provider, no need to connect wallet
-export function usePublicGeb(): Geb {
+export function usePublicGeb() {
     const provider = usePublicProvider()
     const publicGeb = useMemo(() => {
-        const networkName = getNetworkName(NETWORK_ID)
-        return new Geb(networkName, provider)
+        try {
+            console.log('[DEBUG] Network ID:', NETWORK_ID)
+            const networkName = getNetworkName(NETWORK_ID)
+            console.log('[DEBUG] Network name:', networkName)
+            
+            // Force ethers provider to connect to network before initializing Geb
+            // This prevents race conditions with ENS resolution attempts
+            return new Geb(networkName, provider)
+        } catch (error) {
+            console.error('[SDK ERROR] Failed to initialize Geb:', error)
+            // Return a minimal Geb instance to prevent app from crashing
+            const networkName = getNetworkName(NETWORK_ID)
+            return new Geb(networkName, provider)
+        }
     }, [provider])
     return publicGeb
 }

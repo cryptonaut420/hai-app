@@ -326,29 +326,89 @@ export const formatQuerySafeToVault = (
     currentRedemptionPrice: string,
     confiscateSAFECollateralAndDebts: QueryConfiscateSAFECollateralAndDebt[] = []
 ): QueriedVault => {
+    // Check if safe has necessary properties
+    if (!safe || !safe.collateralType) {
+        console.error('Invalid safe data in formatQuerySafeToVault:', safe);
+        // Return a safe default object
+        return {
+            ...safe,
+            totalDebt: '0',
+            collateralRatio: Infinity.toString(),
+            collateralToken: 'UNKNOWN',
+            status: Status.UNKNOWN,
+            liquidationData: {
+                liquidationCRatio: '0',
+                safetyCRatio: '0',
+                accumulatedRate: '1',
+                currentPrice: '0',
+                debtCeiling: '0',
+                debtFloor: '0'
+            },
+            liquidationPrice: '0',
+            activity: [],
+        };
+    }
+
+    const collateralTypeId = safe.collateralType?.id || '';
     const collateralToken =
         Object.values(tokenAssets).find(
-            ({ name, symbol }) => safe.collateralType.id === name || safe.collateralType.id === symbol
-        )?.symbol || safe.collateralType.id.toUpperCase()
+            ({ name, symbol }) => collateralTypeId === name || collateralTypeId === symbol
+        )?.symbol || collateralTypeId.toUpperCase();
 
-    const totalDebt = returnTotalDebt(safe.debt, collateralLiquidationData[collateralToken].accumulatedRate) as string
+    // Check if collateralLiquidationData has the collateralToken
+    if (!collateralLiquidationData || !collateralLiquidationData[collateralToken]) {
+        console.error('Missing collateralLiquidationData for token:', collateralToken);
+        return {
+            ...safe,
+            totalDebt: safe.debt || '0',
+            collateralRatio: Infinity.toString(),
+            collateralToken,
+            status: Status.UNKNOWN,
+            liquidationData: {
+                liquidationCRatio: '0',
+                safetyCRatio: '0',
+                accumulatedRate: '1',
+                currentPrice: '0',
+                debtCeiling: '0',
+                debtFloor: '0'
+            },
+            liquidationPrice: '0',
+            activity: [],
+        };
+    }
+
+    // Safety check for accumulated rate
+    const accumulatedRate = collateralLiquidationData[collateralToken]?.accumulatedRate || '1';
+    
+    const totalDebt = returnTotalDebt(safe.debt || '0', accumulatedRate) as string;
+    
+    // Safety check for liquidation price
+    const liquidationPrice = safe.collateralType?.currentPrice?.liquidationPrice || '0';
+    const liquidationCRatio = safe.collateralType?.liquidationCRatio || '1';
+    
     const collateralRatio =
         !safe.debt || safe.debt === '0'
             ? Infinity.toString()
             : getCollateralRatio(
-                  safe.collateral,
+                  safe.collateral || '0',
                   totalDebt,
-                  safe.collateralType.currentPrice.liquidationPrice,
-                  safe.collateralType.liquidationCRatio
-              )
+                  liquidationPrice,
+                  liquidationCRatio
+              );
+    
+    // Safety check for safety ratio
+    const safetyCRatio = safe.collateralType?.safetyCRatio || '0';
+    
     const status =
-        riskStateToStatus[ratioChecker(parseFloat(collateralRatio), parseFloat(safe.collateralType.safetyCRatio))]
-    const liquidationPrice = getLiquidationPrice(
-        safe.collateral,
+        riskStateToStatus[ratioChecker(parseFloat(collateralRatio), parseFloat(safetyCRatio))];
+    
+    const liquidationPriceValue = getLiquidationPrice(
+        safe.collateral || '0',
         totalDebt,
-        collateralLiquidationData[collateralToken].liquidationCRatio,
-        currentRedemptionPrice
-    )
+        collateralLiquidationData[collateralToken]?.liquidationCRatio || '0',
+        currentRedemptionPrice || '1'
+    );
+    
     return {
         ...safe,
         totalDebt,
@@ -356,10 +416,10 @@ export const formatQuerySafeToVault = (
         collateralToken,
         status,
         liquidationData: collateralLiquidationData[collateralToken],
-        liquidationPrice,
+        liquidationPrice: liquidationPriceValue,
         activity: [
             ...(safe.modifySAFECollateralization || []),
             ...confiscateSAFECollateralAndDebts.map((obj) => ({ ...obj, type: 'confiscate' })),
         ].sort(({ createdAt: a }, { createdAt: b }) => parseInt(b) - parseInt(a)) as any,
-    }
+    };
 }

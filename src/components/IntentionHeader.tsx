@@ -14,8 +14,6 @@ import { BorrowStats } from '~/containers/Vaults/Stats'
 import { EarnStats } from '~/containers/Earn/Stats'
 import { AuctionStats } from '~/containers/Auctions/Stats'
 
-import { useFlags } from 'flagsmith/react'
-
 import uniswapLogo from '~/assets/uniswap-icon.svg'
 import { WrapperAd, WrapperAdProps } from './WrapperAd'
 
@@ -93,8 +91,7 @@ type IntentionHeaderProps = {
     children?: ReactChildren
 }
 export function IntentionHeader({ children }: IntentionHeaderProps) {
-    const flags = useFlags(['hai_velo'])
-    const haiVeloEnabled = flags.hai_velo?.enabled
+    const haiVeloEnabled = false // Disable feature by default since Flagsmith is removed
 
     const location = useLocation()
     const history = useHistory()

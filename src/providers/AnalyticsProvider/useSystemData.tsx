@@ -33,40 +33,80 @@ export function useSystemData(): SystemData {
     const { data, loading, error } = useQuery<QuerySystemStateData>(SYSTEMSTATE_QUERY)
 
     const formattedData = useMemo(() => {
+        // First guard: make sure we have data
         if (!data) return undefined
 
+        // Second guard: make sure we have systemStates array and it's not empty
+        const systemStates = data.systemStates || []
+        if (systemStates.length === 0) return undefined
+
+        // Safely access collateralTypes array
+        const collateralTypes = data.collateralTypes || []
+        
+        // Safely extract the first system state with fallbacks for all fields
+        const systemState = systemStates[0] || {}
         const {
-            collateralTypes,
-            systemStates: [
-                {
-                    globalDebt,
-                    systemSurplus,
-                    totalActiveSafeCount,
-                    currentRedemptionPrice,
-                    currentRedemptionRate,
-                    erc20CoinTotalSupply,
-                    debtAvailableToSettle,
-                },
-            ],
-        } = data
+            globalDebt = '0',
+            globalDebt24hAgo = '0',
+            systemSurplus = '0',
+            totalActiveSafeCount = '0',
+            safeCount = '0',
+            unmanagedSafeCount = '0',
+            proxyCount = '0',
+            currentRedemptionPrice = null,
+            currentRedemptionRate = null,
+            erc20CoinTotalSupply = '0',
+            debtAvailableToSettle = '0',
+            coinAddress = '0x0000000000000000000000000000000000000000',
+            wethAddress = '0x0000000000000000000000000000000000000000',
+            coinUniswapPair = null,
+        } = systemState
+
+        // Handle missing nested objects with default fallbacks
+        const redemptionPrice = currentRedemptionPrice || { value: '1', timestamp: '0', redemptionRate: '0' }
+        const redemptionRate = currentRedemptionRate || { 
+            annualizedRate: '1', 
+            perSecondRate: '1', 
+            hourlyRate: '1', 
+            eightHourlyRate: '1',
+            twentyFourHourlyRate: '1'
+        }
 
         // Filtering out deprecated collaterals
         const activeCollateralTypes = collateralTypes.filter(
-            ({ id }) => !DEPRECATED_COLLATERALS.includes(id.toUpperCase())
+            ({ id }) => !DEPRECATED_COLLATERALS.includes((id || '').toUpperCase())
         )
 
         const { total, collateralStats } = activeCollateralTypes.reduce(
-            (stats, { id, totalCollateralLockedInSafes, debtAmount, debtCeiling, currentPrice }) => {
+            (stats, collateral) => {
+                // Defensive access to collateral properties
+                const id = collateral.id || ''
+                const totalCollateralLockedInSafes = collateral.totalCollateralLockedInSafes || '0'
+                const debtAmount = collateral.debtAmount || '0'
+                const debtCeiling = collateral.debtCeiling || '0'
+                const currentPrice = collateral.currentPrice || null
+
                 if (currentPrice) {
-                    const totalCollateral = formatSummaryCurrency(totalCollateralLockedInSafes, currentPrice.value)
-                    const totalDebt = formatSummaryCurrency(debtAmount, currentRedemptionPrice.value || '1')
-                    const ratioRaw = parseFloat(totalCollateral?.usdRaw || '0') / parseFloat(totalDebt?.usdRaw || '0')
+                    const priceValue = currentPrice.value || '0'
+                    
+                    const totalCollateral = formatSummaryCurrency(totalCollateralLockedInSafes, priceValue)
+                    const totalDebt = formatSummaryCurrency(debtAmount, redemptionPrice.value || '1')
+                    
+                    const totalCollateralUsd = parseFloat(totalCollateral?.usdRaw || '0')
+                    const totalDebtUsd = parseFloat(totalDebt?.usdRaw || '0')
+                    
+                    const ratioRaw = totalDebtUsd > 0 ? totalCollateralUsd / totalDebtUsd : 0
                     const ratio = formatSummaryPercentage(isNaN(ratioRaw) ? '' : ratioRaw.toString())
+                    
                     const key = tokenAssets[id]
                         ? id
                         : Object.values(tokenAssets).find(({ name }) => id === name)?.symbol || id
 
-                    const debtCeilingPercent = (parseFloat(debtAmount || '0') * 100) / parseFloat(debtCeiling || '0')
+                    const debtCeilingValue = parseFloat(debtCeiling || '100')
+                    const debtAmountValue = parseFloat(debtAmount || '0')
+                    const debtCeilingPercent = debtCeilingValue > 0 
+                        ? (debtAmountValue * 100) / debtCeilingValue 
+                        : 0
 
                     const debt = {
                         debtAmount,
@@ -80,15 +120,17 @@ export function useSystemData(): SystemData {
                         totalDebt,
                         ratio,
                     }
-                    stats.total += parseFloat(totalCollateral?.usdRaw || '0')
+                    stats.total += totalCollateralUsd
                 }
                 return stats
             },
             { total: 0, collateralStats: {} as Record<string, CollateralStat> }
         )
 
-        const cRatio = parseFloat(globalDebt)
-            ? total / (parseFloat(globalDebt) * parseFloat(currentRedemptionPrice.value || '1'))
+        const globalDebtValue = parseFloat(globalDebt || '0')
+        const redemptionPriceValue = parseFloat(redemptionPrice?.value || '1')
+        const cRatio = globalDebtValue > 0 && redemptionPriceValue > 0
+            ? total / (globalDebtValue * redemptionPriceValue)
             : 0
 
         return {
@@ -102,20 +144,20 @@ export function useSystemData(): SystemData {
                 style: 'percent',
             })!,
             totalVaults: formatSummaryValue(totalActiveSafeCount || '0', { maxDecimals: 0 })!,
-            systemSurplus: formatSummaryValue(systemSurplus, {
+            systemSurplus: formatSummaryValue(systemSurplus || '0', {
                 maxDecimals: 0,
                 // style: 'currency',
             })!,
-            erc20Supply: formatSummaryValue(erc20CoinTotalSupply, { maxDecimals: 0 })!,
-            redemptionPrice: formatSummaryValue(currentRedemptionPrice.value, {
+            erc20Supply: formatSummaryValue(erc20CoinTotalSupply || '0', { maxDecimals: 0 })!,
+            redemptionPrice: formatSummaryValue(redemptionPrice?.value || '0', {
                 maxDecimals: 3,
                 style: 'currency',
             })!,
-            redemptionRate: formatSummaryValue((Number(currentRedemptionRate.annualizedRate) - 1).toString(), {
+            redemptionRate: formatSummaryValue(((Number(redemptionRate?.annualizedRate || '1') - 1)).toString(), {
                 maxDecimals: 1,
                 style: 'percent',
             })!,
-            debtAvailableToSettle: formatSummaryValue(debtAvailableToSettle, { maxDecimals: 2 })!,
+            debtAvailableToSettle: formatSummaryValue(debtAvailableToSettle || '0', { maxDecimals: 2 })!,
         }
     }, [data])
 

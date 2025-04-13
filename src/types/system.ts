@@ -1,18 +1,43 @@
-import { type AnalyticsData } from '@parisii-inc/parys-sdk'
 import { TOKEN_LOGOS } from '~/utils/tokens'
 import { SummaryCurrency, SummaryItemValue } from './vaults'
 
-export type SystemSate = {
-    currentRedemptionPrice: {
+export type SystemState = {
+    currentRedemptionPrice?: {
         value: string
+        timestamp?: string
+        redemptionRate?: string
     }
-    currentRedemptionRate: {
+    currentRedemptionRate?: {
+        perSecondRate?: string
+        eightHourlyRate?: string
+        twentyFourHourlyRate?: string
+        hourlyRate?: string
         annualizedRate: string
     }
     globalDebt: string
     globalDebtCeiling: string
     perSafeDebtCeiling: string
+    coinAddress: string  // Required field for GraphQL schema
+    wethAddress: string  // Required field for GraphQL schema
+    systemSurplus: string
+    debtAvailableToSettle: string
+    coinUniswapPair?: string
+    safeCount?: string
+    unmanagedSafeCount?: string
+    totalActiveSafeCount?: string
+    proxyCount?: string
+    globalUnbackedDebt?: string
+    collateralCount?: string
+    globalStabilityFee?: string
+    savingsRate?: string
+    collateralAuctionCount?: string
+    erc20CoinTotalSupply?: string
+    lastPeriodicUpdate?: string
+    globalDebt24hAgo?: string
 }
+
+// Also export the old name for backwards compatibility 
+export type SystemSate = SystemState
 
 export type TokenKey = keyof typeof TOKEN_LOGOS
 
@@ -40,10 +65,13 @@ export type Strategy = {
       }
 )
 
-export type TokenAnalyticsData = AnalyticsData['tokenAnalyticsData'][string] & {
+export type TokenAnalyticsData = {
     symbol: string
     tokenContract?: string
     collateralJoin?: string
+    totalCollateral?: string
+    totalDebt?: string
+    debtCeiling?: string
 }
 
 export type CollateralDebt = {

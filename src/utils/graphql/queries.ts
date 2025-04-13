@@ -4,72 +4,17 @@ import {
     DailyStatFragment,
     HourlyStatFragment,
     SafeFragment,
+    SystemStateFragment,
 } from './fragments'
 
 // TODO: get refactored version with fragments working
 export const SYSTEMSTATE_QUERY = gql`
     query GetSystemState {
-        systemStates(
-            first: 1,
-            orderBy: createdAt,
-            orderDirection: desc
-        ) {
-            safeCount
-            unmanagedSafeCount
-            totalActiveSafeCount
-            proxyCount
-            globalDebt
-            globalDebt24hAgo
-            globalUnbackedDebt
-            globalDebtCeiling
-            perSafeDebtCeiling
-            collateralCount
-            globalStabilityFee
-            savingsRate
-            collateralAuctionCount
-            erc20CoinTotalSupply
-            systemSurplus
-            debtAvailableToSettle
-            currentRedemptionRate {
-                perSecondRate
-                eightHourlyRate
-                twentyFourHourlyRate
-                hourlyRate
-                annualizedRate
-            }
-            currentRedemptionPrice {
-                timestamp
-                redemptionRate
-                value
-            }
-        }
-        collateralTypes {
-            id
-            debtAmount
-            totalCollateral
-            totalCollateralLockedInSafes
-            accumulatedRate
-            unmanagedSafeCount
-            safeCount
-            stabilityFee
-            totalAnnualizedStabilityFee
-            debtCeiling
-            debtFloor
-            safetyCRatio
-            liquidationCRatio
-            liquidationPenalty
-            collateralAuctionHouseAddress
-            liquidationQuantity
-            liquidationsStarted
-            activeLiquidations
-            currentPrice {
-                timestamp
-                safetyPrice
-                liquidationPrice
-                value
-            }
+        systemStates(orderBy: modifiedAt, orderDirection: desc, first: 1) {
+            ...SystemStateFragment
         }
     }
+    ${SystemStateFragment}
 `
 
 export const ALLSAFES_QUERY_WITH_ZERO = gql`
@@ -99,7 +44,9 @@ export const SAFES_BY_OWNER = gql`
             where: {
                 owner: $address,
                 safeId_not: null
-            }
+            },
+            orderBy: modifiedAt,
+            orderDirection: desc
         ) {
             ...SafeFragment
         }
@@ -135,7 +82,10 @@ export const SAFE_QUERY = gql`
         safes(
             where: {
                 safeId: $id
-            }
+            },
+            orderBy: modifiedAt,
+            orderDirection: desc,
+            first: 1
         ) {
             ...SafeFragment
             modifySAFECollateralization(
@@ -219,7 +169,10 @@ export const DAILY_STATS_QUERY = gql`
 
 export const ALL_COLLATERAL_TYPES_QUERY = gql`
     query AllCollateralTypes {
-        collateralTypes(orderBy: id) {
+        collateralTypes(
+            orderBy: modifiedAt,
+            orderDirection: desc
+        ) {
             ...CollateralTypeWithCollateralPriceFragment
         }
     }

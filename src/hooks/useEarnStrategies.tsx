@@ -46,8 +46,7 @@ export function useEarnStrategies() {
     } = useStoreState((state) => state)
 
     const { address } = useAccount()
-    const { prices: veloPrices } = useVelodromePrices()
-
+    
     const { data, loading, error } = useQuery<{ collateralTypes: QueryCollateralType[] }>(ALL_COLLATERAL_TYPES_QUERY)
     const {
         data: uniData,
@@ -63,18 +62,15 @@ export function useEarnStrategies() {
             },
         }
     )
-    const { data: veloData, loading: veloLoading, error: veloError } = useVelodrome()
-    const { data: veloPositions } = useVelodromePositions()
 
     const prices = useMemo(() => {
         return {
             PARYS: parseFloat(liquidationData?.currentRedemptionPrice || '0'),
-            AGREE: parseFloat(veloPrices?.AGREE.raw || '0'),
-            VELO: parseFloat(veloPrices?.VELO.raw || '0'),
+            AGREE: 0,
             OP: parseFloat(liquidationData?.collateralLiquidationData['OP']?.currentPrice.value || '0'),
             WETH: parseFloat(liquidationData?.collateralLiquidationData['WETH']?.currentPrice.value || '0'),
         }
-    }, [liquidationData?.currentRedemptionPrice, liquidationData?.collateralLiquidationData, veloPrices])
+    }, [liquidationData?.currentRedemptionPrice, liquidationData?.collateralLiquidationData])
 
     const vaultStrategies = useMemo(() => {
         return (
@@ -142,58 +138,6 @@ export function useEarnStrategies() {
         return temp
     }, [uniData?.liquidityPools, prices])
 
-    const veloStrategies = useMemo(() => {
-        if (!veloPrices || !veloData) return []
-        const temp: Strategy[] = []
-        // Filter out SAIL
-        for (const pool of veloData.filter((p) => p.address != '0xB5cD4bD4bdB5C97020FBE192258e6F08333990E2')) {
-            const rewards = REWARDS.velodrome[pool.address.toLowerCase()]
-            if (!rewards) continue // filter out any extra pools that may be fetched
-
-            // daily_rewards = Lp. emissions * velo price * 86400
-            // tv1 =(Lp. reserve * token0 _price) + (Lp.reservel * token1 _price)
-            // staked_tvl = tvl * (Lp. gauge_total_supply / Lp.total_supply)
-            // apr = (daily_rewards / staked_tv1) * 365
-            const token0 =
-                Object.values(tokensData).find(({ address }) => stringsExistAndAreEqual(address, pool.token0))
-                    ?.symbol || pool.tokenPair[0]
-            const price0 = parseFloat((veloPrices as any)[token0]?.raw || (prices as any)[token0]?.toString() || '1')
-            const tvl0 = parseFloat(formatUnits(pool.staked0, pool.decimals)) * price0
-
-            const token1 =
-                Object.values(tokensData).find(({ address }) => stringsExistAndAreEqual(address, pool.token1))
-                    ?.symbol || pool.tokenPair[1]
-            const price1 = parseFloat((veloPrices as any)[token1]?.raw || (prices as any)[token1]?.toString() || '1')
-            const tvl1 = parseFloat(formatUnits(pool.staked1, pool.decimals)) * price1
-
-            const tvl = tvl0 + tvl1
-            const veloAPR = (365 * parseFloat(formatUnits(pool.emissions, pool.decimals)) * prices.VELO * 86400) / tvl
-            const apy = veloAPR === Infinity ? 0 : Math.pow(1 + veloAPR / 12, 12) - 1
-
-            temp.push({
-                pair: [token0, token1] as any,
-                rewards: Object.entries(rewards).map(([token, emission]) => ({ token, emission })) as any,
-                tvl: tvl.toString(),
-                apy,
-                userPosition: (veloPositions || [])
-                    .reduce((total, position) => {
-                        if (!stringsExistAndAreEqual(position.lp, pool.address)) return total
-                        return (
-                            total +
-                            parseFloat(formatUnits(position.staked0, pool.decimals)) * price0 +
-                            parseFloat(formatUnits(position.staked1, pool.decimals)) * price1
-                        )
-                    }, 0)
-                    .toString(),
-                earnPlatform: 'velodrome',
-                earnAddress: pool.address,
-                earnLink: `https://velodrome.finance/deposit?token0=${pool.token0}&token1=${pool.token1}&type=${pool.type}`,
-                strategyType: 'farm',
-            })
-        }
-        return temp
-    }, [veloData, veloPrices, veloPositions, prices, tokensData])
-
     const haiBalance = useBalance('PARYS')
     const analytics = useAnalytics()
     const {
@@ -214,8 +158,8 @@ export function useEarnStrategies() {
     ]
 
     const strategies = useMemo(() => {
-        return [...specialStrategies, ...vaultStrategies, ...uniStrategies, ...veloStrategies]
-    }, [specialStrategies, vaultStrategies, uniStrategies, veloStrategies])
+        return [...specialStrategies, ...vaultStrategies, ...uniStrategies]
+    }, [specialStrategies, vaultStrategies, uniStrategies])
 
     const [filterEmpty, setFilterEmpty] = useState(false)
 
@@ -272,10 +216,9 @@ export function useEarnStrategies() {
         headers: sortableHeaders,
         rows: sortedRows,
         rowsUnmodified: strategies,
-        loading: loading || uniLoading || veloLoading,
+        loading: loading || uniLoading,
         error: error?.message,
         uniError: uniError?.message,
-        veloError,
         sorting,
         setSorting,
         filterEmpty,

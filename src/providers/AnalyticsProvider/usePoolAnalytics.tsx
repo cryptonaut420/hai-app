@@ -13,11 +13,9 @@ import {
     type FormattedUniswapPair,
 } from '~/utils'
 import { useStoreState } from '~/store'
-import { type VelodromeLpData, useVelodrome } from '~/hooks'
 
 export type PoolAnalytics = {
     uniPools: QueryLiquidityPool[]
-    veloPools: VelodromeLpData[]
     uniPrice?: FormattedUniswapPair
     loading: boolean
     error: string
@@ -43,16 +41,13 @@ export function usePoolAnalytics() {
 
     const { data: uniPriceData } = useQuery<{ uniswapPairs: QueryUniswapPair[] }>(UNISWAP_PAIRS_QUERY)
 
-    const { data: veloData, loading: veloLoading, error: veloError } = useVelodrome()
-
     return {
         uniPools: uniData?.liquidityPools || [],
-        veloPools: veloData || [],
         uniPrice: useMemo(() => {
             if (!uniPriceData?.uniswapPairs.length || !tokensData) return undefined
             return formatUniswapPair(uniPriceData.uniswapPairs[0], tokensData)
         }, [uniPriceData, tokensData]),
-        loading: uniLoading || veloLoading,
-        error: uniError?.message || veloError,
+        loading: uniLoading,
+        error: uniError?.message,
     } as PoolAnalytics
 }
