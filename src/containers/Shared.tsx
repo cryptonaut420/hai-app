@@ -142,10 +142,19 @@ export function Shared({ children }: Props) {
     useEffect(() => {
         if (!publicGeb) return
 
+        console.log('Attempting to fetch liquidation data...');
         vaultActions.fetchLiquidationData({
             geb: publicGeb,
             tokensData: publicGeb.tokenList,
-        })
+        }).then(data => {
+            console.log('Liquidation data fetched successfully:', { 
+                hasData: !!data,
+                collateralTypes: data ? Object.keys(data.collateralLiquidationData) : [],
+                redemptionPrice: data?.currentRedemptionPrice
+            });
+        }).catch(error => {
+            console.error('Error fetching liquidation data:', error);
+        });
     }, [vaultActions, publicGeb])
 
     const accountChecker = useCallback(async () => {

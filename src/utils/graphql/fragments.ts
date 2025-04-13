@@ -75,10 +75,6 @@ export const SafeFragment = gql`
                 value
             }
         }
-        coinBalances(first: 1, orderBy: createdAt, orderDirection: desc) {
-            balance
-            accountHandler
-        }
         saviour {
             allowed
         }

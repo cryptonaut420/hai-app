@@ -51,6 +51,15 @@ export function useAllVaults() {
         }
     }, [sorting.key])
 
+    // Log the query being used for debugging
+    console.log('Query used:', filterEmpty ? 'ALLSAFES_QUERY_NOT_ZERO' : 'ALLSAFES_QUERY_WITH_ZERO');
+    console.log('Query variables:', {
+        first: MAX_VAULTS_TO_FETCH,
+        skip: 0,
+        orderBy,
+        orderDirection: sorting.dir,
+    });
+
     const { data, error, loading, refetch } = useQuery<{ safes: QuerySafe[] }>(
         filterEmpty ? ALLSAFES_QUERY_NOT_ZERO : ALLSAFES_QUERY_WITH_ZERO,
         {
@@ -60,18 +69,50 @@ export function useAllVaults() {
                 orderBy,
                 orderDirection: sorting.dir,
             },
+            onCompleted: (data) => {
+                console.log('Apollo query completed:', { 
+                    safesCount: data?.safes?.length || 0,
+                    firstFewSafes: data?.safes?.slice(0, 3) || []
+                });
+            },
+            onError: (error) => {
+                console.error('Apollo query error:', { 
+                    message: error.message,
+                    graphQLErrors: error.graphQLErrors,
+                    networkError: error.networkError,
+                    stack: error.stack
+                });
+            }
         }
     )
+
+    // Log data and error for debugging
+    console.log('Apollo query state:', { loading, error: error?.message, dataExists: !!data });
+    if (error) {
+        console.error('Detailed error info:', {
+            message: error.message,
+            name: error.name,
+            stack: error.stack,
+            graphQLErrors: error.graphQLErrors,
+            networkError: error.networkError,
+            extraInfo: error.extraInfo
+        });
+    }
 
     const vaultsWithCRatioAndToken = useMemo(() => {
         const { collateralLiquidationData, currentRedemptionPrice } = vaultState.liquidationData || {}
         if (!data?.safes?.length) {
-            console.log('No safes data available')
+            console.log('No safes data available');
             return []
         }
         
         if (!collateralLiquidationData || !currentRedemptionPrice) {
-            console.log('Missing liquidation data or redemption price')
+            console.log('Missing liquidation data or redemption price');
+            console.log('Vault state data:', { 
+                hasLiquidationData: !!vaultState.liquidationData,
+                hasCollateralLiquidationData: !!collateralLiquidationData,
+                currentRedemptionPrice
+            });
             return []
         }
 
@@ -108,6 +149,9 @@ export function useAllVaults() {
             return []
         }
     }, [data?.safes, vaultState.liquidationData])
+
+    // Log computed values for debugging
+    console.log('vaultsWithCRatioAndToken count:', vaultsWithCRatioAndToken.length);
 
     const sortedRows = useMemo(() => {
         switch (sorting.key) {
@@ -151,6 +195,8 @@ export function useAllVaults() {
 
         return sortedRows.filter(({ collateralToken }) => collateralFilter === collateralToken)
     }, [sortedRows, collateralFilter])
+
+    console.log('Final rows count:', filteredAndSortedRows.length);
 
     return {
         error,

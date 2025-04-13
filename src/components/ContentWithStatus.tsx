@@ -24,7 +24,18 @@ export function ContentWithStatus({
     children,
 }: ContentWithStatusProps) {
     if (loading) return <Message>{loadingContent || <LoadingContent />}</Message>
-    if (error) return <Message>{errorContent || 'An error occurred'}</Message>
+    if (error) {
+        console.error('Table error detail:', error);
+        return (
+            <Message>
+                {errorContent || (
+                    <Text $color="darkRed">
+                        {error !== 'Error' ? error : 'An error occurred while loading data'}
+                    </Text>
+                )}
+            </Message>
+        );
+    }
     if (isEmpty || !children) return <Message>{emptyContent || 'No items matched your search'}</Message>
 
     return <>{children}</>

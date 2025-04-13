@@ -54,7 +54,7 @@ type Props = {
     children: ReactChildren
 }
 export function AnalyticsProvider({ children }: Props) {
-    const { forceRefresh, data } = useGebAnalytics()
+    const { analyticsData, forceRefresh } = useGebAnalytics()
 
     const { data: graphData, summary: graphSummary } = useSystemData()
 
@@ -64,13 +64,16 @@ export function AnalyticsProvider({ children }: Props) {
 
     const pools = usePoolAnalytics()
 
-    const haiMarketPrice = useMemo(() => data.marketPrice, [data.marketPrice])
+    // Ensure we always have a valid marketPrice value
+    const haiMarketPrice = useMemo(() => 
+        analyticsData?.marketPrice || defaultState.haiMarketPrice
+    , [analyticsData?.marketPrice])
 
     return (
         <AnalyticsContext.Provider
             value={{
                 forceRefresh,
-                data,
+                data: analyticsData || DEFAULT_ANALYTICS_DATA,
                 graphData,
                 graphSummary,
                 haiPriceHistory,

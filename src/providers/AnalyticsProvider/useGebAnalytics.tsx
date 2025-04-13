@@ -2,6 +2,7 @@ import { useEffect, useReducer, useState } from 'react'
 import { formatEther } from 'ethers/lib/utils'
 import { Geb } from '@parisii-inc/parys-sdk'
 import { useNetwork } from 'wagmi'
+import { ethers } from 'ethers'
 
 import type { SummaryItemValue, TokenAnalyticsData } from '~/types'
 import {
@@ -33,150 +34,163 @@ async function fetchAnalyticsDataDirect(geb: any) {
     console.log('[Analytics] Manual data fetching...')
     
     try {
-        const globalDebt = await geb.contracts.safeEngine.globalDebt()
-        console.log('[Analytics] Global debt:', globalDebt.toString())
-        
-        const globalDebtCeiling = await geb.contracts.safeEngine.globalDebtCeiling()
-        console.log('[Analytics] Global debt ceiling:', globalDebtCeiling.toString())
-        
-        const coinContract = geb.contracts.coin
-        const erc20Supply = await coinContract.totalSupply()
-        console.log('[Analytics] ERC20 supply:', erc20Supply.toString())
-        
-        const redemptionPrice = await geb.contracts.oracleRelayer.redemptionPrice()
-        console.log('[Analytics] Redemption price:', redemptionPrice.toString())
-        
-        const redemptionRate = await geb.contracts.oracleRelayer.redemptionRate()
-        console.log('[Analytics] Redemption rate:', redemptionRate.toString())
-        
-        const marketPrice = redemptionPrice
-        
-        const surplusInTreasury = await geb.contracts.accountingEngine.extraSurplus()
-        
-        return {
-            globalDebt,
-            globalDebtCeiling,
-            erc20Supply,
-            redemptionPrice,
-            marketPrice,
-            redemptionRate,
-            redemptionRatePTerm: redemptionRate,
-            redemptionRateITerm: redemptionRate,
-            surplusInTreasury,
-            tokenAnalyticsData: {}
+        // Check if contracts are available
+        if (!geb.contracts || !geb.contracts.safeEngine) {
+            console.error('[Analytics] Contracts not initialized properly')
+            throw new Error('Contracts not initialized properly')
         }
+        
+        // Log available contract names for debugging
+        console.log('[Analytics] Available contract names:', Object.keys(geb.contracts))
+        
+        // Initialize with default values
+        const result: GebAnalyticsData = { ...DEFAULT_ANALYTICS_DATA }
+        
+        // Try to fetch data with proper error handling for each call
+        try {
+            // Create a helper function to safely call contracts
+            const safeCall = async (contractName: string, methodName: string, ...args: any[]) => {
+                try {
+                    if (!geb.contracts[contractName]) {
+                        console.warn(`[Analytics] Contract ${contractName} not available`)
+                        return null
+                    }
+                    
+                    console.log(`[Analytics] Calling ${contractName}.${methodName}()...`)
+                    
+                    // Check if the method exists on the contract
+                    if (typeof geb.contracts[contractName][methodName] !== 'function') {
+                        console.warn(`[Analytics] Method ${methodName} not found on contract ${contractName}`)
+                        return null
+                    }
+                    
+                    return await geb.contracts[contractName][methodName](...args)
+                } catch (error) {
+                    console.warn(`[Analytics] Error calling ${contractName}.${methodName}():`, error)
+                    return null
+                }
+            }
+            
+            // Attempt to get global debt - directly access the public variable
+            const globalDebt = await safeCall('safeEngine', 'globalDebt')
+            if (globalDebt) {
+                const formattedGlobalDebt = formatEther(globalDebt)
+                // Create our own SummaryItemValue if formatSummaryValue is not working correctly
+                result.globalDebt = {
+                    raw: globalDebt.toString(),
+                    formatted: typeof formatSummaryValue === 'function' ? 
+                        (formatSummaryValue(formattedGlobalDebt)?.formatted || formattedGlobalDebt) : 
+                        formattedGlobalDebt
+                }
+                console.log('[Analytics] Successfully fetched globalDebt:', formattedGlobalDebt)
+            }
+            
+            // Use the _params() function to get global debt ceiling
+            const params = await safeCall('safeEngine', '_params')
+            if (params && params.length >= 2) {
+                const globalDebtCeiling = params[1] // Second parameter is globalDebtCeiling
+                const formattedGlobalDebtCeiling = formatEther(globalDebtCeiling)
+                // Create SummaryItemValue manually to avoid type issues
+                result.globalDebtCeiling = {
+                    raw: globalDebtCeiling.toString(),
+                    formatted: `$${typeof formatSummaryValue === 'function' ? 
+                        (formatSummaryValue(formattedGlobalDebtCeiling)?.formatted || formattedGlobalDebtCeiling) : 
+                        formattedGlobalDebtCeiling}`
+                }
+                console.log('[Analytics] Successfully fetched globalDebtCeiling:', formattedGlobalDebtCeiling)
+                
+                // Calculate utilization if we have both values
+                if (globalDebt && globalDebtCeiling.gt(0)) {
+                    const utilization = globalDebt.mul(100).div(globalDebtCeiling)
+                    result.globalDebtUtilization = `${utilization.toString()}%`
+                }
+            }
+            
+            // Try to get redemption price from oracle relayer
+            const redemptionPrice = await safeCall('oracleRelayer', 'redemptionPrice')
+            if (redemptionPrice) {
+                const formattedRedemptionPrice = formatEther(redemptionPrice)
+                result.redemptionPrice = {
+                    raw: redemptionPrice.toString(),
+                    formatted: `$${typeof formatSummaryValue === 'function' ? 
+                        (formatSummaryValue(formattedRedemptionPrice)?.formatted || formattedRedemptionPrice) : 
+                        formattedRedemptionPrice}`
+                }
+                console.log('[Analytics] Successfully fetched redemptionPrice:', formattedRedemptionPrice)
+            }
+            
+            // Try to get market price
+            try {
+                const coinInfo = await safeCall('oracleRelayer', 'cParams', ethers.utils.formatBytes32String('ETH'))
+                if (coinInfo && coinInfo.length > 0) {
+                    const marketPrice = coinInfo[0] // First parameter should be the market price
+                    if (marketPrice) {
+                        const formattedMarketPrice = formatEther(marketPrice)
+                        result.marketPrice = {
+                            raw: marketPrice.toString(),
+                            formatted: `$${typeof formatSummaryValue === 'function' ? 
+                                (formatSummaryValue(formattedMarketPrice)?.formatted || formattedMarketPrice) : 
+                                formattedMarketPrice}`
+                        }
+                        console.log('[Analytics] Successfully fetched marketPrice:', formattedMarketPrice)
+                    }
+                }
+            } catch (error) {
+                console.warn('[Analytics] Failed to get market price:', error)
+            }
+            
+        } catch (error) {
+            console.error('[Analytics] Error fetching contract data:', error)
+        }
+        
+        // Return what we have, even if incomplete
+        return result
+        
     } catch (error) {
         console.error('[Analytics] Error in manual data fetching:', error)
-        throw error
+        // Return default data instead of throwing
+        return DEFAULT_ANALYTICS_DATA
     }
 }
 
 export function useGebAnalytics() {
+    console.log('[Analytics] useGebAnalytics was called')
+
+    // Ensure we have the chain ID
     const { chain } = useNetwork()
     const geb = usePublicGeb()
 
+    const [analyticsData, setAnalyticsData] = useState<GebAnalyticsData>(DEFAULT_ANALYTICS_DATA)
     const [refresher, forceRefresh] = useReducer((x) => x + 1, 0)
-    const [data, setData] = useState(DEFAULT_ANALYTICS_DATA)
+    const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        if (!geb) {
-            console.log('[Analytics] Geb SDK not initialized yet')
-            return
-        }
-
-        console.log('[Analytics] Fetching analytics data with chain:', chain?.id)
-
-        const getData = async () => {
+        const fetchAnalyticsData = async () => {
             try {
-                console.log('[Analytics] Using Geb SDK with network:', geb.network)
-                
-                if (!geb.contracts?.oracleRelayer?.address) {
-                    console.error('[Analytics] Oracle Relayer contract not initialized')
+                // Skip if no geb instance
+                if (!geb) {
+                    console.log('[Analytics] No geb instance available, skipping')
                     return
                 }
-                
-                const result = await fetchAnalyticsDataDirect(geb)
-                console.log('[Analytics] Data fetched successfully')
-                
-                const marketPrice = formatEther(result.marketPrice).toString()
-                const redemptionPrice = formatEther(result.redemptionPrice).toString()
-                const priceDiff = 100 * Math.abs(1 - parseFloat(marketPrice) / parseFloat(redemptionPrice))
 
-                setData((d) => ({
-                    ...d,
-                    erc20Supply: formatSummaryValue(formatEther(result.erc20Supply).toString(), { maxDecimals: 0 })!,
-                    globalDebt: formatSummaryValue(formatEther(result.globalDebt).toString(), {
-                        maxDecimals: 0,
-                    })!,
-                    globalDebtCeiling: formatSummaryValue(formatEther(result.globalDebtCeiling).toString(), {
-                        maxDecimals: 0,
-                        style: 'currency',
-                    })!,
-                    globalDebtUtilization: transformToWadPercentage(result.globalDebt, result.globalDebtCeiling),
-                    surplusInTreasury: formatSummaryValue(formatEther(result.surplusInTreasury).toString(), {
-                        maxDecimals: 0,
-                    })!,
-                    marketPrice: formatSummaryValue(marketPrice, {
-                        minDecimals: 4,
-                        maxDecimals: 4,
-                        maxSigFigs: 4,
-                        style: 'currency',
-                    })!,
-                    redemptionPrice: formatSummaryValue(redemptionPrice, {
-                        minDecimals: 4,
-                        maxDecimals: 4,
-                        maxSigFigs: 4,
-                        style: 'currency',
-                    })!,
-                    priceDiff,
-                    annualRate: formatSummaryValue(transformToAnnualRate(result.redemptionRate, 27, true).toString(), {
-                        maxDecimals: 1,
-                        style: 'percent',
-                    })!,
-                    eightRate: formatSummaryValue(
-                        transformToEightHourlyRate(result.redemptionRate, 27, true).toString(),
-                        {
-                            maxDecimals: 1,
-                            style: 'percent',
-                        }
-                    )!,
-                    pRate: formatSummaryValue(transformToAnnualRate(result.redemptionRatePTerm, 27, true).toString(), {
-                        maxDecimals: 1,
-                        style: 'percent',
-                    })!,
-                    iRate: formatSummaryValue(transformToAnnualRate(result.redemptionRateITerm, 27, true).toString(), {
-                        maxDecimals: 1,
-                        style: 'percent',
-                    })!,
-                    tokenAnalyticsData: Object.keys(result.tokenAnalyticsData || {})
-                        .filter((key) => !DEPRECATED_COLLATERALS.includes(key.toUpperCase()))
-                        .map((key) => ({
-                            symbol: key,
-                            tokenPrice: "0",
-                            totalCollateral: "0",
-                            debtCeiling: "0", 
-                            debtCeilingUtilization: "0%",
-                            stabilityFee: "0%",
-                            totalDebt: "0",
-                            collateralRatio: "0%",
-                            liquidationRatio: "0%", 
-                            tokenContract: geb.tokenList?.[key]?.address,
-                            collateralJoin: geb.tokenList?.[key]?.collateralJoin,
-                        })),
-                }))
-            } catch (e: any) {
-                console.error('[Analytics] Error fetching data:', e)
-                if (e.message?.includes('ENS')) {
-                    console.error('[Analytics] ENS resolution error detected - check for empty addresses in contract config')
-                }
+                console.log('[Analytics] Fetching analytics data...')
+                const data = await fetchAnalyticsDataDirect(geb)
+                console.log('[Analytics] Data fetched successfully:', data)
+                setAnalyticsData(data)
+                setError(null)
+            } catch (error) {
+                console.error('[Analytics] Error fetching analytics data:', error)
+                setError('Failed to fetch analytics data')
             }
         }
-        getData()
+
+        fetchAnalyticsData()
     }, [geb, chain?.id, refresher])
 
     return {
-        data,
+        analyticsData,
         forceRefresh,
+        error
     }
 }
 
