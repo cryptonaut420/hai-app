@@ -95,20 +95,13 @@ export function MobileMenu({ active, setActive, showWrapEth }: MobileMenuProps) 
                                 >
                                     Get PARYS
                                 </BrandedDropdown.Item>
-                                <BrandedDropdown.Item
+           {/*                      <BrandedDropdown.Item
                                     href="/earn"
                                     icon={<TrendingUp size={18} />}
                                     active={location.pathname === '/earn'}
                                 >
                                     Earn
-                                </BrandedDropdown.Item>
-                                <BrandedDropdown.Item
-                                    href="/learn"
-                                    icon={<Grid size={18} />}
-                                    active={location.pathname === '/learn'}
-                                >
-                                    Learn
-                                </BrandedDropdown.Item>
+                                </BrandedDropdown.Item> */}
                             </>
                         )}
                         <BrandedDropdown.Item
@@ -139,28 +132,7 @@ export function MobileMenu({ active, setActive, showWrapEth }: MobileMenuProps) 
                         >
                             Vault Explorer
                         </BrandedDropdown.Item>
-                        {NETWORK_ID === ChainId.OPTIMISM_SEPOLIA && (
-                            <BrandedDropdown.Item
-                                href="/test/claim"
-                                icon={<Download size={18} />}
-                                active={location.pathname === '/test/claim'}
-                            >
-                                Claim Test Tokens
-                            </BrandedDropdown.Item>
-                        )}
-                        {NETWORK_ID === ChainId.OPTIMISM_SEPOLIA && (
-                            <BrandedDropdown.Item
-                                href="/test/claim-velo"
-                                icon={<Download size={18} />}
-                                active={location.pathname === '/test/claim-velo'}
-                            >
-                                Claim Test Velo
-                            </BrandedDropdown.Item>
-                        )}
-                        <BrandedDropdown.Item onClick={showWrapEth} icon={<Repeat size={18} />}>
-                            Wrap ETH
-                        </BrandedDropdown.Item>
-                        <BrandedDropdown.Item
+{/*                         <BrandedDropdown.Item
                             href={`${LINK_TO_DOCS}detailed/intro/hai.html`}
                             icon={<FileText size={18} />}
                         >
@@ -174,34 +146,7 @@ export function MobileMenu({ active, setActive, showWrapEth }: MobileMenuProps) 
                         </BrandedDropdown.Item>
                         <BrandedDropdown.Item href={LINK_TO_TOS} icon={<User size={18} />}>
                             Terms of Service
-                        </BrandedDropdown.Item>
-                        <BrandedDropdown.Item
-                            href={LINK_TO_TWITTER}
-                            icon={<Twitter size={16} stroke="black" strokeWidth={2} />}
-                        >
-                            Twitter
-                        </BrandedDropdown.Item>
-                        <BrandedDropdown.Item
-                            href={LINK_TO_TELEGRAM}
-                            icon={<Telegram size={17} stroke="black" strokeWidth={2} />}
-                        >
-                            Telegram
-                        </BrandedDropdown.Item>
-                        <BrandedDropdown.Item
-                            href={LINK_TO_DISCORD}
-                            icon={<Discord size={19} stroke="black" strokeWidth={2} />}
-                        >
-                            Discord
-                        </BrandedDropdown.Item>
-                        <BrandedDropdown.Item
-                            href={LINK_TO_FORUM}
-                            icon={<HaiFace size={19} stroke="black" strokeWidth={2} />}
-                        >
-                            Forum
-                        </BrandedDropdown.Item>
-                        <BrandedDropdown.Item onClick={() => toggleScreensaver(true)} icon={<Tv size={18} />}>
-                            Screensaver
-                        </BrandedDropdown.Item>
+                        </BrandedDropdown.Item> */}
                     </Inner>
                 </Dropdown>
             )}

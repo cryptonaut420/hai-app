@@ -125,46 +125,9 @@ export function Header({ tickerActive = false }: HeaderProps) {
                                     >
                                         Learn
                                     </HeaderLink>
-                                    <Link href={`${LINK_TO_DOCS}detailed/intro/hai.html`} $textDecoration="none">
+{/*                                     <Link href={`${LINK_TO_DOCS}detailed/intro/hai.html`} $textDecoration="none">
                                         <HeaderLink>Docs</HeaderLink>
-                                    </Link>
-                                    <CommunityDropdownContainer
-                                        ref={setCommunityContainer}
-                                        onClick={() => setCommunityDropdownActive((a) => !a)}
-                                    >
-                                        <HeaderLink>Community</HeaderLink>
-                                        <CommunityDropdown
-                                            $anchor="top"
-                                            $float="left"
-                                            $width="auto"
-                                            hidden={!communityDropdownActive}
-                                        >
-                                            <BrandedDropdown.Item
-                                                href={LINK_TO_TWITTER}
-                                                icon={<Twitter size={16} stroke="black" strokeWidth={2} />}
-                                            >
-                                                Twitter
-                                            </BrandedDropdown.Item>
-                                            <BrandedDropdown.Item
-                                                href={LINK_TO_TELEGRAM}
-                                                icon={<Telegram size={17} stroke="black" strokeWidth={2} />}
-                                            >
-                                                Telegram
-                                            </BrandedDropdown.Item>
-                                            <BrandedDropdown.Item
-                                                href={LINK_TO_DISCORD}
-                                                icon={<Discord size={19} stroke="black" strokeWidth={2} />}
-                                            >
-                                                Discord
-                                            </BrandedDropdown.Item>
-                                            <BrandedDropdown.Item
-                                                href={LINK_TO_FORUM}
-                                                icon={<HaiFace size={19} stroke="black" strokeWidth={2} />}
-                                            >
-                                                Forum
-                                            </BrandedDropdown.Item>
-                                        </CommunityDropdown>
-                                    </CommunityDropdownContainer>
+                                    </Link> */}
                                 </>
                             ) : (
                                 (isConnected ? !isUpToLarge : !isUpToMedium) && (
@@ -179,12 +142,9 @@ export function Header({ tickerActive = false }: HeaderProps) {
                                                 GET PARYS
                                             </HeaderLink>
                                         </Link>
-                                        <Link href="/earn" $textDecoration="none">
+{/*                                         <Link href="/earn" $textDecoration="none">
                                             <HeaderLink $active={location.pathname === '/earn'}>EARN</HeaderLink>
-                                        </Link>
-                                        <Link href="/learn" $textDecoration="none">
-                                            <HeaderLink $active={location.pathname === '/learn'}>LEARN</HeaderLink>
-                                        </Link>
+                                        </Link> */}
                                     </>
                                 )
                             ))}

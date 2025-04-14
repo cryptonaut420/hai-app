@@ -32,19 +32,19 @@ const copy: Record<
     }
 > = {
     [Intention.AUCTION]: {
-        subtitle: 'Buy your favorite crypto assets from auctions at a potential discount. ',
-        cta: 'Read more about auctions →',
-        ctaLink: `${LINK_TO_DOCS}detailed/auctions/index.html`,
+        subtitle: 'Buy your favorite carbon assets from auctions at a potential discount. ',
+        cta: '',
+        ctaLink: ``,
     },
     [Intention.BORROW]: {
-        subtitle: 'Mint & borrow PARYS against your preferred collateral. ',
-        cta: 'Read more about borrowing →',
-        ctaLink: `${LINK_TO_DOCS}detailed/intro/hai.html`,
+        subtitle: 'Mint & borrow $PARYS Carbon RWA against your preferred carbon collateral. ',
+        cta: '',
+        ctaLink: ``,
     },
     [Intention.EARN]: {
         subtitle: 'Participate in DAO incentive campaigns to earn rewards. ',
-        cta: 'Read more about earning opportunities →',
-        ctaLink: `${LINK_TO_DOCS}detailed/intro/hai.html`,
+        cta: '',
+        ctaLink: ``,
     },
 }
 
@@ -53,7 +53,7 @@ const typeOptions: BrandedSelectOption[] = [
         label: 'Get $PARYS',
         value: Intention.BORROW,
         icon: ['PARYS'],
-        description: 'Mint & borrow $PARYS stablecoin against your preferred collateral',
+        description: 'Mint & borrow $PARYS Carbon RWA against your preferred carbon collateral',
     },
     {
         label: 'Buy $PARYS',
@@ -62,12 +62,12 @@ const typeOptions: BrandedSelectOption[] = [
         description: 'Market buy $PARYS from various pairs on Uniswap',
         href: 'https://app.uniswap.org/swap',
     },
-    {
+/*     {
         label: 'Earn Rewards',
         value: Intention.EARN,
         icon: ['OP', 'AGREE'],
         description: 'Earn long term yields by staking a growing list of crypto assets',
-    },
+    }, */
     {
         label: 'Buy Auctioned Assets',
         value: Intention.AUCTION,
