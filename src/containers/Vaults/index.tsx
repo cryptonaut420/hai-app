@@ -20,12 +20,18 @@ export function Vaults() {
     const { idOrOwner } = useParams<{ idOrOwner?: string }>()
 
     const {
-        vaultModel: { singleVault },
+        vaultModel: { singleVault, list: vaultList },
     } = useStoreState((state) => state)
 
     const { location, params, action, setAction } = useVaultRouting()
     
+    // Load direct vaults on every navigation to this page 
     const { isLoading: isLoadingDirectVaults, error: directVaultsError } = useAlternativeVaults()
+    
+    // Log current state for debugging
+    useEffect(() => {
+        console.log('Vaults container at', location.pathname, 'with', vaultList.length, 'vaults, loading:', isLoadingDirectVaults);
+    }, [location.pathname, vaultList.length, isLoadingDirectVaults]);
     
     useEffect(() => {
         if (directVaultsError) {
@@ -39,7 +45,7 @@ export function Vaults() {
         if (location.pathname === '/vaults') {
             history.replace({ pathname: '/vaults', search: `?tab=${navIndex === 0 ? 'available' : 'user'}` })
         }
-    }, [navIndex, location.pathname, history.replace])
+    }, [navIndex, location.pathname, history])
 
     if (idOrOwner) {
         if (idOrOwner.startsWith('0x')) return <VaultsByOwner />
