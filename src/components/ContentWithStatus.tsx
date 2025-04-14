@@ -25,7 +25,22 @@ export function ContentWithStatus({
 }: ContentWithStatusProps) {
     if (loading) return <Message>{loadingContent || <LoadingContent />}</Message>
     if (error) {
-        console.error('Table error detail:', error);
+        console.error('ContentWithStatus error detail:', error);
+        try {
+            // Try to clean up the error message if it contains "invalid address" with empty string
+            if (typeof error === 'string' && error.includes('invalid address') && error.includes('value=""')) {
+                return (
+                    <Message>
+                        <Text $color="darkRed">
+                            No auction data is available at this time
+                        </Text>
+                    </Message>
+                );
+            }
+        } catch (e) {
+            console.error('Error while trying to clean up error message:', e);
+        }
+        
         return (
             <Message>
                 {errorContent || (

@@ -40,29 +40,46 @@ type BidTableProps = {
     auction: IAuction
 }
 export function BidTable({ auction }: BidTableProps) {
+    if (!auction || typeof auction !== 'object') {
+        console.error('Invalid auction object provided to BidTable:', auction);
+        return null;
+    }
+
+    const biddersList = auction.biddersList || [];
+    
     const hasSettled = auction.isClaimed && auction.winner
 
     const withSell = auction.englishAuctionType !== 'SURPLUS'
 
     const buyOrBid = auction.englishAuctionType === 'COLLATERAL' ? 'Buy' : 'Bid'
 
-    const rows: (IAuctionBidder & { isRestart?: boolean })[] = auction.biddersList
+    const restarts = (auction as any)?.restarts || [];
+    
+    const rows: (IAuctionBidder & { isRestart?: boolean })[] = biddersList
         .concat(
-            (auction as any)?.restarts?.map(
+            restarts.map(
                 ({ hash, timestamp }: any) =>
                     ({
                         bidder: '',
                         buyAmount: '',
                         sellAmount: '',
-                        createdAt: timestamp,
-                        createdAtTransaction: hash,
+                        createdAt: timestamp || '0',
+                        createdAtTransaction: hash || '',
                         isRestart: true,
                     }) as IAuctionBidder & { isRestart?: boolean }
             )
         )
         .sort((a, b) => {
-            return parseInt(b.createdAt) - parseInt(a.createdAt)
+            return parseInt(b.createdAt || '0') - parseInt(a.createdAt || '0')
         })
+
+    console.log('BidTable - auction:', {
+        id: auction.auctionId,
+        type: auction.englishAuctionType,
+        biddersList: biddersList.length,
+        restarts: restarts.length,
+        rows: rows.length
+    });
 
     return (
         <Table
@@ -143,16 +160,28 @@ type BidTableRowProps = {
     withSell?: boolean
 }
 function BidTableRow({ bid, eventType, bidToken, sellToken, withSell }: BidTableRowProps) {
+    if (!bid || typeof bid !== 'object') {
+        console.error('Invalid bid object provided to BidTableRow:', bid);
+        return null;
+    }
+    
     const { chain } = useNetwork()
 
     const [timeLabel, timestamp] = useMemo(() => {
-        const timestamp = dayjs.unix(Number(bid.createdAt)).format('MMM D, h:mm A')
+        if (!bid.createdAt) return ['--', '--'];
+        
+        try {
+            const timestamp = dayjs.unix(Number(bid.createdAt)).format('MMM D, h:mm A')
 
-        const { days, hours, minutes } = parseRemainingTime(Date.now() - 1000 * parseInt(bid.createdAt))
-        if (days > 0) return [`${days} ${days > 1 ? 'days' : 'day'} ago`, timestamp]
-        if (hours > 0) return [`${hours} ${hours > 1 ? 'hours' : 'hour'} ago`, timestamp]
-        if (minutes > 0) return [`${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ago`, timestamp]
-        return ['Seconds ago', timestamp]
+            const { days, hours, minutes } = parseRemainingTime(Date.now() - 1000 * parseInt(bid.createdAt))
+            if (days > 0) return [`${days} ${days > 1 ? 'days' : 'day'} ago`, timestamp]
+            if (hours > 0) return [`${hours} ${hours > 1 ? 'hours' : 'hour'} ago`, timestamp]
+            if (minutes > 0) return [`${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ago`, timestamp]
+            return ['Seconds ago', timestamp]
+        } catch (err) {
+            console.error('Error parsing timestamp in BidTableRow:', err);
+            return ['Invalid date', '--'];
+        }
     }, [bid.createdAt])
 
     const isStartOrRestart = eventType === 'Start' || eventType === 'Restart'
@@ -168,7 +197,7 @@ function BidTableRow({ bid, eventType, bidToken, sellToken, withSell }: BidTable
                 {
                     content: (
                         <Flex>
-                            {isStartOrRestart ? (
+                            {isStartOrRestart || !(bid.owner || bid.bidder) ? (
                                 <Text>--</Text>
                             ) : (
                                 <AddressLink chainId={chain?.id as ChainId} address={bid.owner || bid.bidder} isOwner />
@@ -201,11 +230,15 @@ function BidTableRow({ bid, eventType, bidToken, sellToken, withSell }: BidTable
                 {
                     content: (
                         <Flex>
-                            <AddressLink
-                                chainId={chain?.id as ChainId}
-                                address={bid.createdAtTransaction}
-                                type="transaction"
-                            />
+                            {!bid.createdAtTransaction ? (
+                                <Text>--</Text>
+                            ) : (
+                                <AddressLink
+                                    chainId={chain?.id as ChainId}
+                                    address={bid.createdAtTransaction}
+                                    type="transaction"
+                                />
+                            )}
                         </Flex>
                     ),
                 },

@@ -23,6 +23,11 @@ export const AddressLink = ({
 }: AddressLinkProps) => {
     const { chain } = useNetwork()
 
+    // Return a non-link placeholder if address is empty or invalid
+    if (!address) {
+        return <Text>--</Text>
+    }
+
     const link = isOwner ? `/vaults/${address}` : getEtherscanLink(chainId || chain?.id || NETWORK_ID, address, type)
 
     return (
@@ -37,6 +42,8 @@ const TruncatedAddress = ({ address }: { address: string }) => {
     const {
         connectWalletModel: { proxyAddress },
     } = useStoreState((state) => state)
+
+    if (!address) return <Text>--</Text>
 
     if (stringsExistAndAreEqual(address, account)) return <Text>You</Text>
 

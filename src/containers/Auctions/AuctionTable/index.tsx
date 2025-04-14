@@ -28,19 +28,26 @@ export function AuctionTable({ headers, rows, sorting, setSorting, isLoading, er
     } = useStoreState((state) => state)
     const { auctionModel: auctionActions, popupsModel: popupsActions } = useStoreActions((actions) => actions)
 
+    // Log the rows data for debugging
+    console.log('AuctionTable - rows:', rows);
+
     const geb = useGeb()
 
     useEffect(() => {
         if (!selectedAuction) return
 
-        const { sellToken } = selectedAuction
-        auctionActions.fetchCollateralData({
-            geb,
-            collateral: tokenMap[sellToken] || sellToken,
-            // auctionIds: rows.filter(({ sellToken: token }) => token === sellToken).map(({ auctionId }) => auctionId),
-            auctionIds: [selectedAuction.auctionId],
-        })
-    }, [selectedAuction, rows])
+        try {
+            const { sellToken } = selectedAuction
+            auctionActions.fetchCollateralData({
+                geb,
+                collateral: tokenMap[sellToken] || sellToken,
+                // auctionIds: rows.filter(({ sellToken: token }) => token === sellToken).map(({ auctionId }) => auctionId),
+                auctionIds: [selectedAuction.auctionId],
+            })
+        } catch (err) {
+            console.error('Error in selectedAuction effect:', err);
+        }
+    }, [selectedAuction, rows, auctionActions, geb])
 
     useEffect(() => {
         popupsActions.toggleModal({
@@ -83,8 +90,9 @@ export function AuctionTable({ headers, rows, sorting, setSorting, isLoading, er
                 loading={isLoading}
                 error={error}
                 isEmpty={!rows.length}
+                emptyContent="No auctions available at this time"
                 compactQuery="upToMedium"
-                rows={rows.slice(paging * ITEMS_PER_PAGE, (paging + 1) * ITEMS_PER_PAGE).map((auction) => {
+                rows={rows.length === 0 ? [] : rows.slice(paging * ITEMS_PER_PAGE, (paging + 1) * ITEMS_PER_PAGE).map((auction) => {
                     const key = `${auction.englishAuctionType}-${auction.sellToken}-${auction.auctionId}`
                     return (
                         <AuctionTableRow

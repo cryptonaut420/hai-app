@@ -94,7 +94,7 @@ export function AuctionTableRow({ headers, auction, container, expanded, onSelec
                 </HaiButton>
             )
         }
-        const isWinner = stringsExistAndAreEqual(proxyAddress, auction.winner)
+        const isWinner = !!proxyAddress && !!auction.winner && stringsExistAndAreEqual(proxyAddress, auction.winner)
         if (status === Status.SETTLING && isWinner && auction.biddersList.length) {
             return (
                 <HaiButton
