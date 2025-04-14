@@ -54,7 +54,7 @@ type Props = {
     children: ReactChildren
 }
 export function AnalyticsProvider({ children }: Props) {
-    const { analyticsData, forceRefresh } = useGebAnalytics()
+    const { analyticsData, forceRefresh, error } = useGebAnalytics()
 
     const { data: graphData, summary: graphSummary } = useSystemData()
 
@@ -68,6 +68,12 @@ export function AnalyticsProvider({ children }: Props) {
     const haiMarketPrice = useMemo(() => 
         analyticsData?.marketPrice || defaultState.haiMarketPrice
     , [analyticsData?.marketPrice])
+    
+    // Make sure pools always has the expected properties
+    const enhancedPools = useMemo(() => ({
+        ...pools,
+        veloPools: [] // Add the missing property
+    }), [pools])
 
     return (
         <AnalyticsContext.Provider
@@ -78,7 +84,7 @@ export function AnalyticsProvider({ children }: Props) {
                 graphSummary,
                 haiPriceHistory,
                 redemptionRateHistory,
-                pools,
+                pools: enhancedPools,
                 haiMarketPrice,
             }}
         >

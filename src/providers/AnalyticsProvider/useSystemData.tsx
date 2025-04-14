@@ -33,18 +33,29 @@ export function useSystemData(): SystemData {
     const { data, loading, error } = useQuery<QuerySystemStateData>(SYSTEMSTATE_QUERY)
 
     const formattedData = useMemo(() => {
+        console.log('[SystemData] Processing subgraph data:', data);
+        
         // First guard: make sure we have data
-        if (!data) return undefined
+        if (!data) {
+            console.warn('[SystemData] No data received from subgraph');
+            return undefined;
+        }
 
         // Second guard: make sure we have systemStates array and it's not empty
         const systemStates = data.systemStates || []
-        if (systemStates.length === 0) return undefined
+        if (systemStates.length <= 0) {
+            console.warn('[SystemData] SystemStates array is empty');
+            return undefined;
+        }
 
         // Safely access collateralTypes array
         const collateralTypes = data.collateralTypes || []
+        console.log('[SystemData] Found collateral types:', collateralTypes.length);
         
         // Safely extract the first system state with fallbacks for all fields
         const systemState = systemStates[0] || {}
+        console.log('[SystemData] System state:', systemState);
+        
         const {
             globalDebt = '0',
             globalDebt24hAgo = '0',
@@ -65,17 +76,26 @@ export function useSystemData(): SystemData {
         // Handle missing nested objects with default fallbacks
         const redemptionPrice = currentRedemptionPrice || { value: '1', timestamp: '0', redemptionRate: '0' }
         const redemptionRate = currentRedemptionRate || { 
-            annualizedRate: '1', 
-            perSecondRate: '1', 
-            hourlyRate: '1', 
-            eightHourlyRate: '1',
-            twentyFourHourlyRate: '1'
+            annualizedRate: '1.0', 
+            perSecondRate: '1.0', 
+            hourlyRate: '1.0', 
+            eightHourlyRate: '1.0',
+            twentyFourHourlyRate: '1.0'
         }
+
+        console.log('[SystemData] Key metrics:', {
+            globalDebt,
+            redemptionPrice: redemptionPrice.value,
+            totalActiveSafeCount,
+            erc20CoinTotalSupply
+        });
 
         // Filtering out deprecated collaterals
         const activeCollateralTypes = collateralTypes.filter(
             ({ id }) => !DEPRECATED_COLLATERALS.includes((id || '').toUpperCase())
         )
+
+        console.log('[SystemData] Active collateral types:', activeCollateralTypes.length);
 
         const { total, collateralStats } = activeCollateralTypes.reduce(
             (stats, collateral) => {
@@ -121,6 +141,8 @@ export function useSystemData(): SystemData {
                         ratio,
                     }
                     stats.total += totalCollateralUsd
+                    
+                    console.log(`[SystemData] Collateral ${id}: ${totalCollateralLockedInSafes} (value: $${totalCollateralUsd})`);
                 }
                 return stats
             },
@@ -132,6 +154,13 @@ export function useSystemData(): SystemData {
         const cRatio = globalDebtValue > 0 && redemptionPriceValue > 0
             ? total / (globalDebtValue * redemptionPriceValue)
             : 0
+
+        console.log('[SystemData] Final computed values:', {
+            totalCollateralLocked: total,
+            globalDebtValue,
+            cRatio,
+            totalVaults: totalActiveSafeCount
+        });
 
         return {
             totalCollateralLocked: formatSummaryValue(total.toString(), {
