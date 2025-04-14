@@ -37,7 +37,7 @@ const copy: Record<
         ctaLink: ``,
     },
     [Intention.BORROW]: {
-        subtitle: 'Mint & borrow $PARYS Carbon RWA against your preferred carbon collateral. ',
+        subtitle: 'Mint & borrow PARYS Carbon RWA against your preferred carbon collateral. ',
         cta: '',
         ctaLink: ``,
     },
@@ -50,16 +50,16 @@ const copy: Record<
 
 const typeOptions: BrandedSelectOption[] = [
     {
-        label: 'Get $PARYS',
+        label: 'Get PARYS',
         value: Intention.BORROW,
         icon: ['PARYS'],
-        description: 'Mint & borrow $PARYS Carbon RWA against your preferred carbon collateral',
+        description: 'Mint & borrow PARYS Carbon RWA against your preferred carbon collateral',
     },
     {
-        label: 'Buy $PARYS',
+        label: 'Buy PARYS',
         value: '',
         icon: <img src={uniswapLogo} alt="" />,
-        description: 'Market buy $PARYS from various pairs on Uniswap',
+        description: 'Market buy PARYS from various pairs on Uniswap',
         href: 'https://app.uniswap.org/swap',
     },
 /*     {

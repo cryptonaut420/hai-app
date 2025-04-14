@@ -142,7 +142,7 @@ export function useSystemData(): SystemData {
                     }
                     stats.total += totalCollateralUsd
                     
-                    console.log(`[SystemData] Collateral ${id}: ${totalCollateralLockedInSafes} (value: $${totalCollateralUsd})`);
+                    console.log(`[SystemData] Collateral ${id}: ${totalCollateralLockedInSafes} (value: €${totalCollateralUsd})`);
                 }
                 return stats
             },

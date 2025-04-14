@@ -132,7 +132,7 @@ export function Overview({ vault }: OverviewProps) {
                             ? formatNumberWithStyle(parseFloat(vault.collateral) * collateralPrice, {
                                   style: 'currency',
                               })
-                            : '$--'
+                            : '€--'
                     }
                     labelOnTop
                 />
@@ -143,7 +143,7 @@ export function Overview({ vault }: OverviewProps) {
                     convertedValue={
                         vault
                             ? formatNumberWithStyle(parseFloat(vault.totalDebt) * haiPrice, { style: 'currency' })
-                            : '$--'
+                            : '€--'
                     }
                     labelOnTop
                 />

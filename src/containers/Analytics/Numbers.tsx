@@ -170,11 +170,11 @@ export function Numbers() {
             return {
                 raw: dollarValue.toString(),
                 formatted: dollarValue > 1e12 
-                    ? `$${(dollarValue / 1e12).toFixed(2)}T`
+                    ? `€${(dollarValue / 1e12).toFixed(2)}T`
                     : dollarValue > 1e9 
-                        ? `$${(dollarValue / 1e9).toFixed(2)}B`
+                        ? `€${(dollarValue / 1e9).toFixed(2)}B`
                         : dollarValue > 1e6 
-                            ? `$${(dollarValue / 1e6).toFixed(2)}M`
+                            ? `€${(dollarValue / 1e6).toFixed(2)}M`
                             : formatNumberWithStyle(dollarValue, { 
                                 maxDecimals: 0, 
                                 style: 'currency' 
@@ -182,7 +182,7 @@ export function Numbers() {
             };
         }
         
-        return { raw: '0', formatted: '$0' };
+        return { raw: '0', formatted: '€0' };
     }, [outstandingParys, currentRedemptionPrice]);
     
     // Use vault data for total collateral locked
@@ -210,11 +210,11 @@ export function Numbers() {
             return {
                 raw: estimatedValue.toString(),
                 formatted: estimatedValue > 1e12 
-                    ? `$${(estimatedValue / 1e12).toFixed(2)}T`
+                    ? `€${(estimatedValue / 1e12).toFixed(2)}T`
                     : estimatedValue > 1e9 
-                        ? `$${(estimatedValue / 1e9).toFixed(2)}B`
+                        ? `€${(estimatedValue / 1e9).toFixed(2)}B`
                         : estimatedValue > 1e6 
-                            ? `$${(estimatedValue / 1e6).toFixed(2)}M`
+                            ? `€${(estimatedValue / 1e6).toFixed(2)}M`
                             : formatNumberWithStyle(estimatedValue, { 
                                 maxDecimals: 0, 
                                 style: 'currency' 
@@ -347,7 +347,7 @@ export function Numbers() {
                     <Stat
                         stat={{
                             header: `${outstandingParys.formatted} PARYS`,
-                            label: 'Outstanding $PARYS',
+                            label: 'Outstanding PARYS',
                             tooltip: 'Total amount of PARYS issued',
                         }}
                     />
@@ -377,13 +377,13 @@ export function Numbers() {
                                 price={haiMarketPrice.formatted !== '$--' && haiMarketPrice.raw !== '0' ? 
                                     haiMarketPrice.formatted : 
                                     currentRedemptionPrice.formatted}
-                                label="$PARYS Market Price"
+                                label="PARYS Market Price"
                                 tooltip={`Time-weighted average PARYS market price derived from UniV3 PARYS/WETH pool and Chainlink WETH/USD feed.`}
                             />
                             <PriceDisplay
                                 token="PARYS"
                                 price={currentRedemptionPrice.formatted}
-                                label="$PARYS Redemption Price"
+                                label="PARYS Redemption Price"
                                 tooltip={`PARYS's "moving peg". It's the price at which PARYS is minted or repaid inside the protocol. The PARYS market price is expected to fluctuate around the redemption price.`}
                             />
                         </SectionInnerHeader>

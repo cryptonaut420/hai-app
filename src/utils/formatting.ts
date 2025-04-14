@@ -69,7 +69,7 @@ export const formatNumberWithStyle = (value: number | string, options: FormatOpt
     if (!!scaledValue && Math.abs(scaledValue) < MINIMUM_DECIMAL) {
         return `<${MINIMUM_DECIMAL.toLocaleString('en-US', {
             style,
-            currency: style === 'currency' ? 'USD' : undefined,
+            currency: style === 'currency' ? 'EUR' : undefined,
             minimumSignificantDigits: 1,
         })}`
     }
@@ -77,7 +77,7 @@ export const formatNumberWithStyle = (value: number | string, options: FormatOpt
     const isLessThanOne = Math.abs(scaledValue) < 1
     return scaledValue.toLocaleString('en-US', {
         style,
-        currency: style === 'currency' ? 'USD' : undefined,
+        currency: style === 'currency' ? 'EUR' : undefined,
         minimumFractionDigits: minDecimals,
         maximumFractionDigits: maxDecimals,
         ...(isLessThanOne && {
@@ -96,7 +96,7 @@ export const formatNumberWithSuffix = (value: number | string, options: FormatOp
     const formatted = numValue.format(format).toUpperCase()
     switch (style) {
         case 'currency':
-            return `$${formatted}`
+            return `€${formatted}`
         case 'percent':
             return `${formatted}%`
         default:

@@ -111,7 +111,7 @@ export function Third({ zIndex }: ZoomSceneProps) {
             // text
             if (priceText.current && changeText.current) {
                 const p = Math.sin(2 * Math.PI * progress)
-                priceText.current.textContent = `$${(1 + 0.03 * p).toFixed(2)}`
+                priceText.current.textContent = `€${(1 + 0.03 * p).toFixed(2)}`
                 changeText.current.textContent = `${Math.round(3 * p)}%${p > 0 ? '↑' : p < 0 ? '↓' : '-'}`
                 changeText.current.style.color = p > 0 ? '#00AC11' : p < 0 ? '#ff0000' : 'inherit'
             }
@@ -134,11 +134,11 @@ export function Third({ zIndex }: ZoomSceneProps) {
                         $lineHeight={isUpToSmall ? '1.2' : '1.4'}
                     />
                     <Text $lineHeight="1.6">
-                        $PARYS is more stable than other stables, automatically.&nbsp;
+                        PARYS is more stable than other stables, automatically.&nbsp;
                         <strong>
                             Learn more about the&nbsp;
                             <Link href={`${LINK_TO_DOCS}detailed/modules/pid_controller.html`}>
-                                $PARYS PID controller nerd stuff →
+                                PARYS PID controller nerd stuff →
                             </Link>
                         </strong>
                     </Text>

@@ -132,7 +132,7 @@ export function useVaultError({ action, formState, collateral, debt, collateralR
     if (numeral(debt).value() > numeral(perVaultDebtCeiling).value()) {
         return {
             error: VaultInfoError.PARYS_DEBT_CEILING,
-            errorMessage: `Cannot exceed per vault $PARYS debt ceiling (${perVaultDebtCeiling})`,
+            errorMessage: `Cannot exceed per vault PARYS debt ceiling (${perVaultDebtCeiling})`,
         }
     }
     if (action === VaultAction.CREATE) {

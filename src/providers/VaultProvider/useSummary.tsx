@@ -82,7 +82,7 @@ export const DEFAULT_SUMMARY: Summary = {
             raw: '',
             formatted: '',
             usdRaw: '',
-            usdFormatted: '$--',
+            usdFormatted: '€--',
         },
     },
     debt: {
@@ -91,7 +91,7 @@ export const DEFAULT_SUMMARY: Summary = {
             raw: '',
             formatted: '',
             usdRaw: '',
-            usdFormatted: '$--',
+            usdFormatted: '€--',
         },
     },
     collateralRatio: {
@@ -109,7 +109,7 @@ export const DEFAULT_SUMMARY: Summary = {
         current: undefined,
         after: {
             raw: '',
-            formatted: '$--',
+            formatted: '€--',
         },
     },
 }

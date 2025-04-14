@@ -90,7 +90,7 @@ export function Second({ zIndex }: ZoomSceneProps) {
                     />
                     <Subtitle>
                         <Text as="span" $fontWeight={700}>
-                            {`$PARYS stablecoin reserves are fully on-chain, `}
+                            {`PARYS stablecoin reserves are fully on-chain, `}
                         </Text>
                         <span>{`no bank buzzkills here. `}</span>
                         <Text as="span" $fontWeight={700}>

@@ -116,7 +116,7 @@ export function Intro({ zIndex }: ZoomSceneProps) {
         <ZoomScene $zIndex={zIndex} style={{ width: '100%', height: '100%' }}>
             <Container>
                 <BrandedTitle
-                    textContent="GET $PARYS ON YOUR OWN SUPPLY."
+                    textContent="GET PARYS ON YOUR OWN SUPPLY."
                     $fontSize={isUpToExtraSmall ? '3rem' : isUpToSmall ? '3.6rem' : '6rem'}
                     $letterSpacing={isUpToExtraSmall ? '0.5rem' : isUpToSmall ? '0.8rem' : '1.2rem'}
                 />

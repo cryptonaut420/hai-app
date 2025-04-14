@@ -35,7 +35,7 @@ const defaultTokenMetadata = {
     raw: '0',
     formatted: '0',
     usdRaw: '0',
-    usdFormatted: '$--',
+    usdFormatted: '€--',
 }
 
 const defaultState: ClaimsContext = {
@@ -53,19 +53,19 @@ const defaultState: ClaimsContext = {
         activeBids: [],
         activeBidsValue: {
             raw: '0',
-            formatted: '$--',
+            formatted: '€--',
         },
         claimableAuctions: [],
         claimableAssetValue: {
             raw: '0',
-            formatted: '$--',
+            formatted: '€--',
         },
         loading: false,
         refetch: () => undefined,
     },
     totalUSD: {
         raw: '0',
-        formatted: '$--',
+        formatted: '€--',
     },
 }
 

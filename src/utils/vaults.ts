@@ -49,13 +49,13 @@ export const vaultInfoErrors: Record<number, string> = {
     [VaultInfoError.NO_WALLET]: `Connect a valid wallet to continue`,
     [VaultInfoError.NO_PROXY]: `Create a proxy contract to continue`,
     [VaultInfoError.INSUFFICIENT_COLLATERAL]: `Insufficient collateral balance`,
-    [VaultInfoError.INSUFFICIENT_PARYS]: `Insufficient $PARYS balance`,
+    [VaultInfoError.INSUFFICIENT_PARYS]: `Insufficient PARYS balance`,
     [VaultInfoError.WITHDRAW_EXCEEDS_COLLATERAL]: `Withdraw amount cannot exceed collateral balance`,
-    [VaultInfoError.REPAY_EXCEEDS_OWED]: `Repay amount cannot exceed $PARYS debt balance`,
-    [VaultInfoError.ZERO_AMOUNT]: `Please enter a non-zero amount of collateral and/or $PARYS`,
+    [VaultInfoError.REPAY_EXCEEDS_OWED]: `Repay amount cannot exceed PARYS debt balance`,
+    [VaultInfoError.ZERO_AMOUNT]: `Please enter a non-zero amount of collateral and/or PARYS`,
     [VaultInfoError.GLOBAL_DEBT_CEILING]: `Cannot exceed global debt ceiling`,
     [VaultInfoError.PARYS_DEBT_CEILING]: `Cannot exceed PARYS debt ceiling`,
-    [VaultInfoError.MINIMUM_MINT]: `You must mint at least 1 $PARYS to create a Vault`,
+    [VaultInfoError.MINIMUM_MINT]: `You must mint at least 1 PARYS to create a Vault`,
 }
 
 export const DEFAULT_VAULT_DATA: IVaultData = {

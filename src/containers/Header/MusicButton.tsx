@@ -33,7 +33,7 @@ export function MusicButton() {
                 opts={{
                     width: '560',
                     height: '315',
-                    title: 'GET $PARYS ON YOUR OWN SUPPLY',
+                    title: 'GET PARYS ON YOUR OWN SUPPLY',
                     ...(isPlayingMusic && {
                         playerVars: {
                             autoplay: 1,

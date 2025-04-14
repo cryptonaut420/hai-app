@@ -15,7 +15,7 @@ type RowItemProps = {
 }
 
 export type TableRowProps = Omit<HTMLProps<HTMLElement>, 'ref' | 'headers'> &
-    Record<`$${string}`, any> & {
+    Record<`€${string}`, any> & {
         container: ComponentType
         headers: SortableHeader[]
         items: RowItemProps[]

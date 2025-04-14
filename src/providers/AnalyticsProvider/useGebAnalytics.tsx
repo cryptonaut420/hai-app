@@ -106,11 +106,11 @@ async function fetchAnalyticsDataDirect(geb: any) {
                     result.globalDebt = {
                         raw: scaledDebt.toString(),
                         formatted: scaledDebt > 1e12 
-                            ? `$${(scaledDebt / 1e12).toFixed(2)}T` 
+                            ? `€${(scaledDebt / 1e12).toFixed(2)}T` 
                             : scaledDebt > 1e9 
-                                ? `$${(scaledDebt / 1e9).toFixed(2)}B` 
+                                ? `€${(scaledDebt / 1e9).toFixed(2)}B` 
                                 : scaledDebt > 1e6 
-                                    ? `$${(scaledDebt / 1e6).toFixed(2)}M` 
+                                    ? `€${(scaledDebt / 1e6).toFixed(2)}M` 
                                     : formatNumberWithStyle(scaledDebt, { 
                                         maxDecimals: 2, 
                                         style: 'currency' 
