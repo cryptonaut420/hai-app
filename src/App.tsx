@@ -46,7 +46,7 @@ const App = () => {
                                                         path={'/test/claim'}
                                                     />
                                                 )}
-                                                <Route exact strict component={Splash} path={'/'} />
+                                                <Redirect exact from="/" to="/vaults" />
                                                 <Route exact strict component={Auctions} path={'/auctions'} />
                                                 <Route exact strict component={Analytics} path={'/analytics'} />
                                                 <Route exact strict component={Contracts} path={'/contracts'} />
