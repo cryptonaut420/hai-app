@@ -112,7 +112,7 @@ const getActionLabelAndIcon = (
             )
             break
         case -1:
-            label.push(`Withdraw ${collateralToken}`)
+            label.push(`Withdraw ${formatCollateralLabel(collateralToken)}`)
             icons.push(
                 <ActionIconContainer key={icons.length + 1}>
                     <TokenArray tokens={[collateralToken as any]} hideLabel size={28} />
@@ -179,7 +179,19 @@ export function ActivityTable({ vault }: ActivityTableProps) {
     const { vaultModel: vaultState } = useStoreState((state) => state)
 
     const haiPrice = parseFloat(vaultState.liquidationData?.currentRedemptionPrice || '1')
-    const collateralPrice = parseFloat(vault?.collateralType?.currentPrice?.value || '0')
+    const collateralToken = vault?.collateralToken || '';
+    const collateralPrice = vault?.liquidationData?.currentPrice?.value ? 
+        parseFloat(vault.liquidationData.currentPrice.value) : 
+        parseFloat(vault?.collateralType?.currentPrice?.value || '0');
+    
+    console.log('Activity Table Debug:', {
+        vault: vault,
+        collateralToken: collateralToken,
+        liquidationData: vault?.liquidationData,
+        priceFromLiquidationData: vault?.liquidationData?.currentPrice?.value,
+        priceFromCollateralType: vault?.collateralType?.currentPrice?.value,
+        finalPrice: collateralPrice
+    });
 
     const [offset, setOffset] = useState(0)
 
@@ -232,7 +244,7 @@ export function ActivityTable({ vault }: ActivityTableProps) {
                                                         {formatCollateralLabel(vault?.collateralToken || '')}
                                                     </Text>
                                                     <Text $fontSize="0.8em">
-                                                        {collateralPrice
+                                                        {collateralPrice > 0
                                                             ? formatNumberWithStyle(
                                                                   Math.abs(collateral) * collateralPrice,
                                                                   { style: 'currency' }

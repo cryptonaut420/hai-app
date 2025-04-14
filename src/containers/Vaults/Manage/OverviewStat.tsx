@@ -1,5 +1,5 @@
 import type { TokenKey } from '~/types'
-import { Status } from '~/utils'
+import { Status, TOKEN_LOGOS } from '~/utils'
 import { useMediaQuery } from '~/hooks'
 
 import styled, { css } from 'styled-components'
@@ -36,6 +36,8 @@ export function OverviewStat({
     simulatedValue,
     fullWidth = false,
 }: OverviewStatProps) {
+    console.log('OverviewStat props:', { token, tokenLabel, value, label, labelOnTop, convertedValue });
+    
     return (
         <StatContainer $fullWidth={fullWidth}>
             {labelOnTop && (
@@ -51,7 +53,7 @@ export function OverviewStat({
                 <Flex $column $justify="center" $align="flex-start" $gap={4}>
                     <ValueContainer>
                         <Text $fontSize="1.5em" $fontWeight={700}>
-                            {value || '--'} {tokenLabel}
+                            {value || '--'} {tokenLabel || (token && !TOKEN_LOGOS[token] ? token : '')}
                         </Text>
                         <Text $fontSize="1.2em" $color="rgba(0,0,0,0.6)">
                             {convertedValue}

@@ -454,6 +454,10 @@ export const formatQuerySafeToVault = (
             safetyPrice,
             liquidationCRatio,
             safetyCRatio,
+            collateralType: collateralTypeId,
+            resolvedToken: collateralToken,
+            currentPrice: currentPrice,
+            priceValue: currentPrice.value,
             collateralValue: parseFloat(safe.collateral || '0') * parseFloat(currentPrice.value || '0'),
             debtValue: parseFloat(totalDebt) * parseFloat(currentRedemptionPrice || '1')
         });

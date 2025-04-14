@@ -18,7 +18,22 @@ export function Overview({ vault }: OverviewProps) {
     const { vaultModel: vaultState } = useStoreState((state) => state)
 
     const haiPrice = parseFloat(vaultState.liquidationData?.currentRedemptionPrice || '1')
-    const collateralPrice = parseFloat(vault?.collateralType?.currentPrice?.value || '0')
+    const collateralToken = vault?.collateralToken || '';
+    const collateralPrice = vault?.liquidationData?.currentPrice?.value ? 
+        parseFloat(vault.liquidationData.currentPrice.value) : 
+        parseFloat(vault?.collateralType?.currentPrice?.value || '0');
+    
+    console.log('Vault Overview Debug:', {
+        vault: vault,
+        collateralToken: collateralToken,
+        collateralType: vault?.collateralType,
+        liquidationData: vault?.liquidationData,
+        currentPrice: vault?.collateralType?.currentPrice,
+        liquidationDataPrice: vault?.liquidationData?.currentPrice,
+        priceValue: vault?.collateralType?.currentPrice?.value,
+        liquidationDataPriceValue: vault?.liquidationData?.currentPrice?.value,
+        parsedPrice: collateralPrice
+    })
 
     const progressProps = useMemo(() => {
         if (!vault)
@@ -109,10 +124,11 @@ export function Overview({ vault }: OverviewProps) {
             <Inner $borderOpacity={0.2}>
                 <OverviewStat
                     value={vault ? formatNumberWithStyle(vault.collateral) : '--'}
-                    token={(vault?.collateralToken || '???') as any}
+                    token={collateralToken as any}
+                    tokenLabel={collateralToken}
                     label="Locked Collateral"
                     convertedValue={
-                        vault && collateralPrice
+                        vault && collateralPrice > 0
                             ? formatNumberWithStyle(parseFloat(vault.collateral) * collateralPrice, {
                                   style: 'currency',
                               })
