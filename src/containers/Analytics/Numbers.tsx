@@ -23,7 +23,6 @@ import { LineChart } from '~/components/Charts/Line'
 import { PriceDisplay } from './PriceDisplay'
 import { Legend } from '~/components/Charts/Legend'
 import { BlockBanner } from '~/components/BlockBanner'
-import { RefreshCw } from 'react-feather'
 
 export function Numbers() {
     const {
@@ -105,23 +104,27 @@ export function Numbers() {
         if (globalDebtData?.raw && globalDebtData.raw !== '0' && parseFloat(globalDebtData.raw) > 0) {
             const debtValue = parseFloat(globalDebtData.raw);
             
-            // Format with correct scale
+            // Format with correct scale but WITHOUT currency symbol
             return {
                 raw: debtValue.toString(),
                 formatted: debtValue > 1e9 
-                    ? `$${(debtValue / 1e9).toFixed(2)}B`
+                    ? `${(debtValue / 1e9).toFixed(2)}B`
                     : debtValue > 1e6 
-                        ? `$${(debtValue / 1e6).toFixed(2)}M`
+                        ? `${(debtValue / 1e6).toFixed(2)}M`
                         : formatNumberWithStyle(debtValue, { 
-                            maxDecimals: 2, 
-                            style: 'currency' 
+                            maxDecimals: 2
                         })
             };
         }
         
         // Then check erc20Supply from contract
         if (erc20Supply?.raw && erc20Supply.raw !== '0' && parseFloat(erc20Supply.raw) > 0) {
-            return erc20Supply;
+            return {
+                raw: erc20Supply.raw,
+                formatted: formatNumberWithStyle(erc20Supply.raw, { 
+                    maxDecimals: 0
+                })
+            };
         }
         
         // Next try to calculate from collateral types
@@ -136,14 +139,51 @@ export function Numbers() {
             if (totalDebt > 0) {
                 return {
                     raw: totalDebt.toString(),
-                    formatted: formatNumberWithStyle(totalDebt, { maxDecimals: 0 })
+                    formatted: formatNumberWithStyle(totalDebt, { 
+                        maxDecimals: 0
+                    })
                 };
             }
         }
         
         // Finally use graph data
-        return graphSummary?.erc20Supply || { raw: '0', formatted: '0' };
+        if (graphSummary?.erc20Supply) {
+            return {
+                raw: graphSummary.erc20Supply.raw,
+                formatted: formatNumberWithStyle(graphSummary.erc20Supply.raw, { 
+                    maxDecimals: 0
+                })
+            };
+        }
+        
+        return { raw: '0', formatted: '0' };
     }, [globalDebtData, erc20Supply, liquidationData, graphSummary]);
+    
+    // Calculate the dollar value of outstanding PARYS
+    const outstandingParysDollarValue = useMemo(() => {
+        const parysTotalTokens = parseFloat(outstandingParys.raw || '0');
+        const parysRedemptionPrice = parseFloat(currentRedemptionPrice.raw || '0');
+        
+        if (parysTotalTokens > 0 && parysRedemptionPrice > 0) {
+            const dollarValue = parysTotalTokens * parysRedemptionPrice;
+            
+            return {
+                raw: dollarValue.toString(),
+                formatted: dollarValue > 1e12 
+                    ? `$${(dollarValue / 1e12).toFixed(2)}T`
+                    : dollarValue > 1e9 
+                        ? `$${(dollarValue / 1e9).toFixed(2)}B`
+                        : dollarValue > 1e6 
+                            ? `$${(dollarValue / 1e6).toFixed(2)}M`
+                            : formatNumberWithStyle(dollarValue, { 
+                                maxDecimals: 0, 
+                                style: 'currency' 
+                            })
+            };
+        }
+        
+        return { raw: '0', formatted: '$0' };
+    }, [outstandingParys, currentRedemptionPrice]);
     
     // Use vault data for total collateral locked
     const totalCollateralLocked = useMemo(() => {
@@ -212,9 +252,9 @@ export function Numbers() {
     
     // Calculate global C-Ratio
     const globalCRatio = useMemo(() => {
-        // If we have total collateral and outstanding PARYS, calculate directly
+        // If we have total collateral and outstanding PARYS value, calculate directly
         const collateralValue = parseFloat(totalCollateralLocked.raw || '0');
-        const debtValue = parseFloat(outstandingParys.raw || '0') * parseFloat(currentRedemptionPrice.raw || '1');
+        const debtValue = parseFloat(outstandingParysDollarValue.raw || '0');
         
         if (debtValue > 0 && collateralValue > 0) {
             const ratio = collateralValue / debtValue;
@@ -230,7 +270,7 @@ export function Numbers() {
         
         // Use graph data as fallback
         return graphSummary?.globalCRatio || { raw: '0', formatted: '0%' };
-    }, [totalCollateralLocked, outstandingParys, currentRedemptionPrice, graphSummary]);
+    }, [totalCollateralLocked, outstandingParysDollarValue, graphSummary]);
 
     const [haiPriceData, haiPriceMin, haiPriceMax] = useMemo(() => {
         const data = haiPriceHistory.data?.dailyStats || haiPriceHistory.data?.hourlyStats || []
@@ -293,47 +333,8 @@ export function Numbers() {
             <Section>
                 <Flex $width="100%" $justify="space-between" $align="center">
                     <BrandedTitle textContent="PARYS LEVEL NUMBERS" $fontSize="3rem" />
-                    <RefreshButton onClick={forceRefresh} as="button">
-                        <RefreshCw size={16} />
-                        <span>Refresh Data</span>
-                    </RefreshButton>
                 </Flex>
                 <SectionHeader>IMPORTANT STUFF</SectionHeader>
-                
-                {/* Log data for debugging */}
-                <details style={{ marginBottom: '10px', fontSize: '0.8rem' }}>
-                    <summary>Debug Info</summary>
-                    <pre>
-                        {JSON.stringify({
-                            graphData: {
-                                totalCollateralLocked: graphSummary?.totalCollateralLocked,
-                                erc20Supply: graphSummary?.erc20Supply,
-                                globalCRatio: graphSummary?.globalCRatio,
-                                totalVaults: graphSummary?.totalVaults,
-                                redemptionPrice: graphSummary?.redemptionPrice,
-                                globalDebt: graphSummary?.globalDebt
-                            },
-                            contractData: {
-                                erc20Supply,
-                                redemptionPrice,
-                                marketPrice: haiMarketPrice,
-                                globalDebt: contractGlobalDebt
-                            },
-                            liquidationData: {
-                                currentRedemptionPrice: liquidationData?.currentRedemptionPrice,
-                                collateralTypes: liquidationData?.collateralTypes?.length,
-                                collateralTypeData: liquidationData?.collateralTypes
-                            },
-                            calculatedValues: {
-                                totalCollateralLocked,
-                                outstandingParys,
-                                globalCRatio,
-                                activeVaults,
-                                currentRedemptionPrice
-                            }
-                        }, null, 2)}
-                    </pre>
-                </details>
                 
                 <Stats fun>
                     <Stat
@@ -345,7 +346,7 @@ export function Numbers() {
                     />
                     <Stat
                         stat={{
-                            header: outstandingParys.formatted,
+                            header: `${outstandingParys.formatted} PARYS`,
                             label: 'Outstanding $PARYS',
                             tooltip: 'Total amount of PARYS issued',
                         }}
@@ -612,23 +613,4 @@ const TimeframeLabel = styled(CenteredFlex)`
     height: 36px;
     font-size: 0.8rem;
     font-weight: 700;
-`
-
-const RefreshButton = styled(Flex)`
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    background: ${({ theme }) => theme.colors.gradientCool};
-    
-    ${({ theme }) => theme.mediaWidth.upToSmall`
-        padding: 6px 12px;
-        font-size: 0.8rem;
-        
-        span {
-            display: none;
-        }
-    `}
 `
