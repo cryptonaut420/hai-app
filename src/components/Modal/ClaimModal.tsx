@@ -5,7 +5,6 @@ import { ActionState, formatNumberWithStyle, tokenMap, wait, isFormattedAddress,
 import { useStoreActions, useStoreState } from '~/store'
 import { useClaims } from '~/providers/ClaimsProvider'
 import { useAccount } from 'wagmi'
-import { useVelodromePrices } from '~/providers/VelodromePriceProvider'
 import { handleTransactionError, useEthersSigner, useGeb } from '~/hooks'
 import { BigNumberish, utils } from 'ethers'
 import { useDistributorContract } from '~/hooks/useContract'
@@ -37,11 +36,11 @@ export function ClaimModal(props: ModalProps) {
         popupsModel: { setIsClaimPopupOpen },
     } = useStoreActions((actions) => actions)
 
-    const { prices: veloPrices } = useVelodromePrices()
-
-    const kitePrice = veloPrices?.AGREE.raw
-    const dineroPrice = veloPrices?.DINERO.raw
-    const opPrice = liquidationData?.collateralLiquidationData?.OP?.currentPrice?.value
+    // Default values for prices
+    const kitePrice = 0
+    const dineroPrice = 0 
+    const opPrice = liquidationData?.collateralLiquidationData?.OP?.currentPrice?.value ? 
+        parseFloat(liquidationData.collateralLiquidationData.OP.currentPrice.value) : 0
 
     const geb = useGeb()
 

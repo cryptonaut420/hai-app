@@ -14,11 +14,8 @@ import {
     tokenAssets,
     QueryLiquidityPoolWithPositions,
     uniClient,
-    stringsExistAndAreEqual,
 } from '~/utils'
 import { useStoreState } from '~/store'
-import { useVelodromePrices } from '~/providers/VelodromePriceProvider'
-import { useVelodrome, useVelodromePositions } from './useVelodrome'
 import { useBalance } from '~/hooks'
 import { useAnalytics } from '~/providers/AnalyticsProvider'
 

@@ -1,5 +1,4 @@
-import { useMemo, useState } from 'react'
-import { formatEther, formatUnits } from 'ethers/lib/utils'
+import { useMemo } from 'react'
 
 import { formatNumberWithStyle, getRatePercentage } from '~/utils'
 import { useAnalytics } from '~/providers/AnalyticsProvider'
@@ -21,18 +20,8 @@ import { Stat, Stats } from '~/components/Stats'
 import { ToggleSlider } from '~/components/ToggleSlider'
 import { LineChart } from '~/components/Charts/Line'
 import { PriceDisplay } from './PriceDisplay'
-import { PieChart } from '~/components/Charts/Pie'
 import { Legend } from '~/components/Charts/Legend'
 import { BlockBanner } from '~/components/BlockBanner'
-
-const colors = [
-    'hsl(49, 84%, 68%)', // yellowish
-    'hsl(115, 70%, 84%)', // greenish
-    'hsl(313, 100%, 88%)', // pinkish
-    'hsl(232, 64%, 84%)', // blueish
-    'hsl(16, 100%, 84%)', // orangeish
-    'hsl(0, 100%, 74%)', // reddish
-]
 
 export function Numbers() {
     const {
@@ -40,7 +29,6 @@ export function Numbers() {
         graphSummary,
         haiPriceHistory,
         redemptionRateHistory,
-        pools,
         haiMarketPrice,
     } = useAnalytics()
 
@@ -92,49 +80,7 @@ export function Numbers() {
         ]
     }, [redemptionRateHistory])
 
-    const [convertPieToUSD, setConvertPieToUSD] = useState(true)
-
     const isUpToSmall = useMediaQuery('upToSmall')
-
-    const [poolPieData, totalHaiInPools] = useMemo(() => {
-        let total = 0
-        const data: { id: string; color: string; value: number }[] = []
-        let colorIndex = 0
-
-        const uniLabel = isUpToSmall ? 'UniV3' : 'Uniswap V3 Pool'
-        for (const pool of pools.uniPools) {
-            const indexOfToken = pool.inputTokens.findIndex(({ symbol }) => symbol === 'PARYS')
-            if (indexOfToken < 0) continue // sanity check
-            const hai = parseFloat(formatEther(pool.inputTokenBalances[indexOfToken]))
-            total += hai
-            data.push({
-                id: `${uniLabel} - ${pool.inputTokens[0].symbol}/${pool.inputTokens[1].symbol} (${pool.name.slice(
-                    pool.name.lastIndexOf(' ') + 1,
-                    pool.name.length
-                )})`,
-                color: colors[colorIndex % colors.length],
-                value: hai,
-            })
-            colorIndex++
-        }
-
-        const veloLabel = isUpToSmall ? 'Velo' : 'Velodrome Pool'
-        for (const pool of pools.veloPools) {
-            if (!pool.tokenPair.includes('PARYS')) continue
-            const hai = parseFloat(
-                formatUnits(pool.tokenPair[0] === 'PARYS' ? pool.reserve0 : pool.reserve1, pool.decimals)
-            )
-            total += hai
-            data.push({
-                id: `${veloLabel} - ${pool.tokenPair.join('/')}`,
-                color: colors[colorIndex % colors.length],
-                value: hai,
-            })
-            colorIndex++
-        }
-
-        return [data, total]
-    }, [pools.uniPools, pools.veloPools, isUpToSmall])
 
     return (
         <Container>
@@ -299,65 +245,6 @@ export function Numbers() {
                 </SectionContent>
             </Section>
             <Section>
-                <SectionHeader>PARYS LIQUIDITY</SectionHeader>
-                <SectionContent $gap={0}>
-                    <SectionContentHeader>
-                        <SectionInnerHeader>
-                            <Stat
-                                stat={{
-                                    header: convertPieToUSD
-                                        ? formatNumberWithStyle(totalHaiInPools * parseFloat(redemptionPrice.raw), {
-                                              maxDecimals: 0,
-                                              style: 'currency',
-                                          })
-                                        : formatNumberWithStyle(totalHaiInPools, { maxDecimals: 0 }),
-                                    label: 'PARYS in Liquidity Pools',
-                                    tooltip: `Amount of PARYS locked in tracked liquidity pools`,
-                                }}
-                                unbordered
-                            />
-                            <Stat
-                                stat={{
-                                    header: (
-                                        <BlockBanner text="COMING SOON" $justify="flex-start" $fontSize="1.2rem">
-                                            --
-                                        </BlockBanner>
-                                    ),
-                                    label: 'Depth to Equilibrium',
-                                    tooltip: `Amount of PARYS required to be bought (positive) or sold (negative) for the Market Price to approximately equal the Redemption Price. This is an estimate based on the tracked liquidity pools and their current locked liquidity.`,
-                                }}
-                                unbordered
-                            />
-                        </SectionInnerHeader>
-                        <ToggleSlider
-                            selectedIndex={convertPieToUSD ? 1 : 0}
-                            setSelectedIndex={(index: number) => setConvertPieToUSD(!!index)}
-                        >
-                            <TimeframeLabel>PARYS</TimeframeLabel>
-                            <TimeframeLabel>USD</TimeframeLabel>
-                        </ToggleSlider>
-                    </SectionContentHeader>
-                    <PieContainer>
-                        <PieChart
-                            data={poolPieData}
-                            valueFormat={
-                                convertPieToUSD
-                                    ? (value) => {
-                                          return formatNumberWithStyle(value * parseFloat(redemptionPrice.raw), {
-                                              maxDecimals: 2,
-                                              style: 'currency',
-                                          })
-                                      }
-                                    : (value) => {
-                                          return `${formatNumberWithStyle(value, { maxDecimals: 0 })} PARYS`
-                                      }
-                            }
-                        />
-                        <Legend $column data={poolPieData} style={{ top: 'calc(50% - 96px)' }} />
-                    </PieContainer>
-                </SectionContent>
-            </Section>
-            <Section>
                 <SectionHeader>PROTOCOL BALANCE</SectionHeader>
                 <Stats>
                     <Stat
@@ -481,30 +368,4 @@ const TimeframeLabel = styled(CenteredFlex)`
     height: 36px;
     font-size: 0.8rem;
     font-weight: 700;
-`
-
-const PieContainer = styled(CenteredFlex)`
-    position: relative;
-    width: 100%;
-    height: 400px;
-    flex-grow: 1;
-    flex-shrink: 1;
-    overflow: visible;
-
-    &::before {
-        content: '';
-        position: absolute;
-        left: 0px;
-        right: 0px;
-        height: 240px;
-        border-radius: 24px;
-        background: ${({ theme }) => theme.colors.gradientCool};
-        z-index: 0;
-    }
-
-    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        height: 240px;
-    `}
-
-    z-index: 2;
 `

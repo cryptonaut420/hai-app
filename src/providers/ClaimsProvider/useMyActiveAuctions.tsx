@@ -13,7 +13,6 @@ import {
     stringExistsAndMatchesOne,
 } from '~/utils'
 import { useStoreState } from '~/store'
-import { useVelodromePrices } from '../VelodromePriceProvider'
 
 export type FormattedQueryAuctionBid = Omit<QueryEnglishAuctionBid, 'auction'> & {
     auction?: IAuction
@@ -27,7 +26,12 @@ export function useMyActiveAuctions() {
         vaultModel: { liquidationData },
         connectWalletModel: { proxyAddress },
     } = useStoreState((state) => state)
-    const { prices } = useVelodromePrices()
+
+    // Dummy prices object to replace Velodrome prices
+    const prices = {
+        AGREE: { raw: "0" },
+        DINERO: { raw: "0" }
+    }
 
     const { data, loading, error, refetch } = useQuery<{ englishAuctionBids: QueryEnglishAuctionBid[] }>(
         MY_AUCTION_BIDS_QUERY,

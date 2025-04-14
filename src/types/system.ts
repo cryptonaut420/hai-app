@@ -59,7 +59,7 @@ export type Strategy = {
           earnLink?: undefined
       }
     | {
-          earnPlatform: 'uniswap' | 'velodrome'
+          earnPlatform: 'uniswap'
           earnAddress: string
           earnLink: string
       }

@@ -19,6 +19,7 @@ export type PoolAnalytics = {
     uniPrice?: FormattedUniswapPair
     loading: boolean
     error: string
+    veloPools: never[]
 }
 
 const uniHaiWethPool1Percent = '0x2A087fd694DeBec1ED61E0740BD0810b804da8f0'.toLowerCase()
@@ -49,5 +50,6 @@ export function usePoolAnalytics() {
         }, [uniPriceData, tokensData]),
         loading: uniLoading,
         error: uniError?.message,
+        veloPools: [],
     } as PoolAnalytics
 }
