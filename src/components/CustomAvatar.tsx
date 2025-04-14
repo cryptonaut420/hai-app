@@ -1,8 +1,8 @@
 import { AvatarComponent } from '@rainbow-me/rainbowkit'
+import haiImg from '~/assets/parisii-logo.webp'
 
 import styled from 'styled-components'
 import { CenteredFlex } from '~/styles'
-import { HaiFace } from './Icons/HaiFace'
 
 export const CustomAvatar: AvatarComponent = ({ address, ensImage, size }) => {
     if (ensImage)
@@ -10,7 +10,7 @@ export const CustomAvatar: AvatarComponent = ({ address, ensImage, size }) => {
 
     return (
         <Container $size={size}>
-            <HaiFace filled />
+            <img src={haiImg} alt="Parisii" style={{ width: '70%', height: 'auto' }} />
         </Container>
     )
 }
@@ -21,9 +21,4 @@ const Container = styled(CenteredFlex)<{ $size: number }>`
     border-radius: 999px;
     background: ${({ theme }) => theme.colors.greenish};
     border: ${({ theme }) => theme.border.medium};
-
-    & > svg {
-        width: 70%;
-        height: auto;
-    }
 `
