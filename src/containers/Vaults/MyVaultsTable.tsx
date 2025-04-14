@@ -34,134 +34,116 @@ export function MyVaultsTable({ headers, rows, sorting, setSorting, onCreate, is
             )}
         </>
     )
-    
-    // Show loading indicator if we're loading direct vaults
-    const loadingIndicator = isLoadingDirectVaults && (
-        <Text style={{ 
-            marginBottom: '12px', 
-            fontStyle: 'italic', 
-            color: '#ff9900', 
-            fontWeight: 'bold',
-            padding: '8px',
-            background: 'rgba(255, 153, 0, 0.1)',
-            borderRadius: '4px',
-        }}>
-            Loading directly owned vaults... Please wait.
-        </Text>
-    );
 
     return (
-        <>
-            {loadingIndicator}
-            <Table
-                headers={headers}
-                headerContainer={TableHeader}
-                sorting={sorting}
-                setSorting={setSorting}
-                isEmpty={!rows.length}
-                emptyContent={emptyContent}
-                compactQuery="upToMedium"
-                rows={rows.map((vault) => {
-                    const {
-                        id,
-                        collateralName,
-                        collateralRatio,
-                        riskState,
-                        freeCollateral,
-                        collateral,
-                        totalDebt,
-                        totalAnnualizedStabilityFee,
-                    } = vault
+        <Table
+            headers={headers}
+            headerContainer={TableHeader}
+            sorting={sorting}
+            setSorting={setSorting}
+            isEmpty={!rows.length}
+            emptyContent={emptyContent}
+            compactQuery="upToMedium"
+            rows={rows.map((vault) => {
+                const {
+                    id,
+                    collateralName,
+                    collateralRatio,
+                    riskState,
+                    freeCollateral,
+                    collateral,
+                    totalDebt,
+                    totalAnnualizedStabilityFee,
+                } = vault
 
-                    const hasFreeCollateral = freeCollateral !== '0.0'
-                    const hasNoRewards = ['PEUA', 'PBJO']
-                    const collateralLabel = formatCollateralLabel(collateralName)
-                    return (
-                        <Table.Row
-                            key={id}
-                            container={TableRow}
-                            headers={headers}
-                            compactQuery="upToMedium"
-                            items={[
-                                {
-                                    content: (
-                                        <Grid $columns="2fr min-content 1fr" $align="center" $gap={12}>
-                                            <CenteredFlex $width="fit-content" $gap={4}>
-                                                <TokenArray tokens={[collateralName as any]} />
-                                                <Text>#{id}</Text>
-                                            </CenteredFlex>
-                                            {/* Rewards are temporarily disabled
-                                            {hasNoRewards.includes(collateralName) ? null : (
-                                                <RewardsTokenArray
-                                                    tokens={['PEUA', 'PBJO']}
-                                                    label="EARN"
-                                                    tooltip={`Earn AGREE tokens by minting PARYS and providing liquidity`}
-                                                />
-                                            )}
-                                            */}
-                                            {hasFreeCollateral && <ClaimableFreeCollateral vault={vault} />}
-                                        </Grid>
-                                    ),
-                                    props: { $fontSize: 'inherit' },
-                                },
-                                {
-                                    content: (
-                                        <Table.ItemGrid $columns="1fr 1.25fr" $compactQuery="upToMedium">
-                                            <Text $textAlign="right">
-                                                {collateralRatio
-                                                    ? formatNumberWithStyle(collateralRatio, {
-                                                          scalingFactor: 0.01,
-                                                          style: 'percent',
-                                                      })
-                                                    : '--%'}
-                                            </Text>
-                                            <Flex $justify="flex-start" $align="center">
-                                                <StatusLabel
-                                                    status={riskStateToStatus[riskState] || Status.UNKNOWN}
-                                                    size={0.8}
-                                                />
-                                            </Flex>
-                                        </Table.ItemGrid>
-                                    ),
-                                },
-                                {
-                                    content: (
-                                        <Table.ItemGrid $compactQuery="upToMedium">
-                                            <Text $textAlign="right">
-                                                {formatNumberWithStyle(collateral, { maxDecimals: 4 })}
-                                            </Text>
-                                            <Text>{collateralLabel.toUpperCase()}</Text>
-                                        </Table.ItemGrid>
-                                    ),
-                                },
-                                {
-                                    content: (
-                                        <Table.ItemGrid $compactQuery="upToMedium">
-                                            <Text $textAlign="right">{formatNumberWithStyle(totalDebt)}</Text>
-                                            <Text>PARYS</Text>
-                                        </Table.ItemGrid>
-                                    ),
-                                },
-                                {
-                                    content: (
-                                        <Text>
-                                            {formatNumberWithStyle(getRatePercentage(totalAnnualizedStabilityFee, 4), {
-                                                scalingFactor: 0.01,
-                                                style: 'percent',
-                                            })}
+                const hasFreeCollateral = freeCollateral !== '0.0'
+                const hasNoRewards = ['PEUA', 'PBJO']
+                const collateralLabel = formatCollateralLabel(collateralName)
+                return (
+                    <Table.Row
+                        key={id}
+                        container={TableRow}
+                        headers={headers}
+                        compactQuery="upToMedium"
+                        items={[
+                            {
+                                content: (
+                                    <Grid $columns="2fr min-content 1fr" $align="center" $gap={12}>
+                                        <CenteredFlex $width="fit-content" $gap={4}>
+                                            <TokenArray tokens={[collateralName as any]} />
+                                            <Text>#{id}</Text>
+                                        </CenteredFlex>
+                                        {/* Rewards are temporarily disabled
+                                        {hasNoRewards.includes(collateralName) ? null : (
+                                            <RewardsTokenArray
+                                                tokens={['PEUA', 'PBJO']}
+                                                label="EARN"
+                                                tooltip={`Earn AGREE tokens by minting PARYS and providing liquidity`}
+                                            />
+                                        )}
+                                        */}
+                                        {hasFreeCollateral && <ClaimableFreeCollateral vault={vault} />}
+                                    </Grid>
+                                ),
+                                props: { $fontSize: 'inherit' },
+                            },
+                            {
+                                content: (
+                                    <Table.ItemGrid $columns="1fr 1.25fr" $compactQuery="upToMedium">
+                                        <Text $textAlign="right">
+                                            {collateralRatio
+                                                ? formatNumberWithStyle(collateralRatio, {
+                                                      scalingFactor: 0.01,
+                                                      style: 'percent',
+                                                  })
+                                                : '--%'}
                                         </Text>
-                                    ),
-                                },
-                                {
-                                    content: <TableButton onClick={() => setActiveVault({ vault })}>Manage</TableButton>,
-                                    unwrapped: true,
-                                },
-                            ]}
-                        />
-                    )
-                })}
-            />
-        </>
+                                        <Flex $justify="flex-start" $align="center">
+                                            <StatusLabel
+                                                status={riskStateToStatus[riskState] || Status.UNKNOWN}
+                                                size={0.8}
+                                            />
+                                        </Flex>
+                                    </Table.ItemGrid>
+                                ),
+                            },
+                            {
+                                content: (
+                                    <Table.ItemGrid $compactQuery="upToMedium">
+                                        <Text $textAlign="right">
+                                            {formatNumberWithStyle(collateral, { maxDecimals: 4 })}
+                                        </Text>
+                                        <Text>{collateralLabel.toUpperCase()}</Text>
+                                    </Table.ItemGrid>
+                                ),
+                            },
+                            {
+                                content: (
+                                    <Table.ItemGrid $compactQuery="upToMedium">
+                                        <Text $textAlign="right">{formatNumberWithStyle(totalDebt)}</Text>
+                                        <Text>PARYS</Text>
+                                    </Table.ItemGrid>
+                                ),
+                            },
+                            {
+                                content: (
+                                    <Text>
+                                        {formatNumberWithStyle(getRatePercentage(totalAnnualizedStabilityFee, 4), {
+                                            scalingFactor: 0.01,
+                                            style: 'percent',
+                                        })}
+                                    </Text>
+                                ),
+                            },
+                            {
+                                content: <TableButton onClick={() => setActiveVault({ vault })}>Manage</TableButton>,
+                                unwrapped: true,
+                            },
+                        ]}
+                    />
+                )
+            })}
+        />
     )
 }
 
