@@ -4,8 +4,8 @@ import { HttpLink } from '@apollo/client/link/http'
 
 // Updated to use PARYS protocol's dedicated subgraph instead of HAI
 const uri = NETWORK_ID === 42161
-        ? 'https://api.studio.thegraph.com/query/109073/parys-geb/version/latest' // Arbitrum
-        : 'https://api.studio.thegraph.com/query/109073/parys-geb/version/latest' // Use same for both until a testnet version is deployed
+        ? 'https://gateway.thegraph.com/api/subgraphs/id/Gp75utuE9bc8woxmTgtyfWCgB6rkzwYage85Siha2Xmg'
+        : 'https://gateway.thegraph.com/api/subgraphs/id/Gp75utuE9bc8woxmTgtyfWCgB6rkzwYage85Siha2Xmg'
 
 const httpLink = new HttpLink({
     uri,

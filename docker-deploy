@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Define the path to the docker-compose file and the container id file
+DOCKER_COMPOSE_FILE="./docker-compose.yaml"
+CONTAINER_ID_FILE="container.id"
+
+# Check if .env file exists
+if [ ! -f ".env" ]; then
+    echo "Error: .env file not found."
+    echo "Please create one with required environment variables."
+    exit 1
+fi
+
+# Check if VIRTUAL_HOST is set in .env
+if ! grep -q "VIRTUAL_HOST=" .env || grep -q "VIRTUAL_HOST=$" .env || grep -q "VIRTUAL_HOST=\s*$" .env; then
+    echo "Error: VIRTUAL_HOST is not properly set in .env file"
+    echo "Please edit .env and set VIRTUAL_HOST to your domain"
+    exit 1
+fi
+
+# Check if nginx-proxy network exists
+NETWORK_NAME=$(grep -E "^NETWORK_NAME=" .env | cut -d '=' -f2)
+NETWORK_NAME=${NETWORK_NAME:-nginx-proxy}  # Default to nginx-proxy if not set
+
+if ! sudo docker network ls | grep -q $NETWORK_NAME; then
+    echo "Error: Docker network '$NETWORK_NAME' not found"
+    echo "Please create it with: sudo docker network create $NETWORK_NAME"
+    exit 1
+fi
+
+# Run docker-compose build
+echo "Building docker images..."
+sudo docker-compose -f "$DOCKER_COMPOSE_FILE" build
+
+# Check if container.id file exists and if it does, stop and remove the container
+if [ -f "$CONTAINER_ID_FILE" ]; then
+    CONTAINER_ID=$(cat "$CONTAINER_ID_FILE")
+    echo "Stopping and removing the container with ID: $CONTAINER_ID"
+    sudo docker stop "$CONTAINER_ID" && sudo docker rm "$CONTAINER_ID"
+fi
+
+# Run docker-compose up in detached mode and get the new container ID
+echo "Starting up the new container..."
+NEW_CONTAINER_ID=$(sudo docker-compose -f "$DOCKER_COMPOSE_FILE" up -d parys_app && sudo docker-compose -f "$DOCKER_COMPOSE_FILE" ps -q parys_app)
+
+# Check if the command to start the container was successful
+if [ $? -eq 0 ]; then
+    # Save the new container ID to container.id file
+    echo "$NEW_CONTAINER_ID" > "$CONTAINER_ID_FILE"
+    echo "Deployed successfully. New container ID: $NEW_CONTAINER_ID"
+    echo "The app should be accessible at http://${NETWORK_NAME}:3125 and via ${VIRTUAL_HOST}"
+else
+    echo "Failed to start the container."
+    exit 1
+fi 

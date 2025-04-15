@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+  parys_app:
+    container_name: parys_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${VIRTUAL_HOST}
+    ports:
+      - "3125:80"
+    restart: always
+    networks:
+      - network_from_env
+
+networks:
+  network_from_env:
+    external:
+      name: ${NETWORK_NAME:-nginx-proxy} 
