@@ -135,24 +135,18 @@ export function MobileMenu({ active, setActive, showWrapEth }: MobileMenuProps) 
                         <BrandedDropdown.Item
                             href="https://index.parisii.io"
                             icon={<TrendingUp size={18} />}
-                            target="_blank"
-                            rel="noopener noreferrer"
                         >
                             Carbon Price Index
                         </BrandedDropdown.Item>
                         <BrandedDropdown.Item
                             href="https://mint.parisii.io"
                             icon={<Download size={18} />}
-                            target="_blank"
-                            rel="noopener noreferrer"
                         >
                             Get Carbon Assets
                         </BrandedDropdown.Item>
                         <BrandedDropdown.Item
                             href="https://parisii.io"
                             icon={<Grid size={18} />}
-                            target="_blank"
-                            rel="noopener noreferrer"
                         >
                             Parisii Inc.
                         </BrandedDropdown.Item>
