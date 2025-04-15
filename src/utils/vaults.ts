@@ -149,12 +149,12 @@ export const getCollateralRatio = (
     liquidationCRatio: string
 ) => {
     // Add debug logging
-    console.log('Calculating collateral ratio with:', {
+/*     console.log('Calculating collateral ratio with:', {
         totalCollateral,
         totalDebt,
         liquidationPrice,
         liquidationCRatio
-    });
+    }); */
 
     if (Number(totalCollateral) === 0) {
         return '0'

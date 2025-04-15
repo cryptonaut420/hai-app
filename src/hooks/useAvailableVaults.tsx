@@ -32,7 +32,7 @@ export function useAvailableVaults() {
         [tokensData]
     )
 
-    console.log('tokensData', tokensData)
+    //console.log('tokensData', tokensData)
 
     const collaterals = useMemo(
         () =>

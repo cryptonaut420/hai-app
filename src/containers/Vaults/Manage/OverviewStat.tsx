@@ -36,7 +36,7 @@ export function OverviewStat({
     simulatedValue,
     fullWidth = false,
 }: OverviewStatProps) {
-    console.log('OverviewStat props:', { token, tokenLabel, value, label, labelOnTop, convertedValue });
+    //console.log('OverviewStat props:', { token, tokenLabel, value, label, labelOnTop, convertedValue });
     
     return (
         <StatContainer $fullWidth={fullWidth}>

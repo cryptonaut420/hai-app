@@ -49,7 +49,7 @@ export function VaultsList({ navIndex, setNavIndex, isLoadingDirectVaults = fals
         setEligibleOnly,
     } = useAvailableVaults()
 
-    console.log('availableVaults', availableVaults)
+    //console.log('availableVaults', availableVaults)
 
     const {
         headers: myVaultsHeaders,

@@ -33,7 +33,7 @@ export type GebAnalyticsData = {
 }
 
 async function fetchAnalyticsDataDirect(geb: any) {
-    console.log('[Analytics] Manual data fetching...')
+    //console.log('[Analytics] Manual data fetching...')
     
     try {
         // Check if contracts are available
@@ -43,7 +43,7 @@ async function fetchAnalyticsDataDirect(geb: any) {
         }
         
         // Log available contracts
-        console.log('[Analytics] Available contracts:', Object.keys(geb.contracts))
+        //console.log('[Analytics] Available contracts:', Object.keys(geb.contracts))
         
         // Initialize result with default values
         const result: GebAnalyticsData = { ...DEFAULT_ANALYTICS_DATA }
@@ -52,14 +52,14 @@ async function fetchAnalyticsDataDirect(geb: any) {
         const safeCall = async (contractName: string, methodName: string, ...args: any[]) => {
             try {
                 if (!geb.contracts[contractName]) {
-                    console.warn(`[Analytics] Contract ${contractName} not available`)
+                    //console.warn(`[Analytics] Contract ${contractName} not available`)
                     return null
                 }
                 
-                console.log(`[Analytics] Calling ${contractName}.${methodName}(${args.join(', ')})...`)
+                //console.log(`[Analytics] Calling ${contractName}.${methodName}(${args.join(', ')})...`)
                 
                 if (typeof geb.contracts[contractName][methodName] !== 'function') {
-                    console.warn(`[Analytics] Method ${methodName} not found on contract ${contractName}`)
+                    //console.warn(`[Analytics] Method ${methodName} not found on contract ${contractName}`)
                     return null
                 }
                 
@@ -75,7 +75,7 @@ async function fetchAnalyticsDataDirect(geb: any) {
                     response = await contract[methodName](...args);
                 }
                 
-                console.log(`[Analytics] ${contractName}.${methodName} response:`, response)
+                //console.log(`[Analytics] ${contractName}.${methodName} response:`, response)
                 return response
             } catch (error) {
                 console.error(`[Analytics] Error calling ${contractName}.${methodName}():`, error)
@@ -89,7 +89,7 @@ async function fetchAnalyticsDataDirect(geb: any) {
             if (globalDebt) {
                 // For extremely large numbers, we need to be careful with formatting
                 const formattedGlobalDebt = formatEther(globalDebt)
-                console.log('[Analytics] Raw globalDebt:', globalDebt.toString(), 'formatted to:', formattedGlobalDebt)
+                //console.log('[Analytics] Raw globalDebt:', globalDebt.toString(), 'formatted to:', formattedGlobalDebt)
                 
                 try {
                     // Parse the formatted number
@@ -100,7 +100,7 @@ async function fetchAnalyticsDataDirect(geb: any) {
                     const scaleFactor = 1e27;
                     const scaledDebt = normalizedDebt / scaleFactor;
                     
-                    console.log('[Analytics] Normalizing debt:', normalizedDebt, 'scaled to:', scaledDebt);
+                    //console.log('[Analytics] Normalizing debt:', normalizedDebt, 'scaled to:', scaledDebt);
                     
                     // Convert to a more readable number (billions or trillions as needed)
                     result.globalDebt = {
@@ -116,9 +116,9 @@ async function fetchAnalyticsDataDirect(geb: any) {
                                         style: 'currency' 
                                     })
                     }
-                    console.log('[Analytics] Final globalDebt value:', result.globalDebt);
+                    //console.log('[Analytics] Final globalDebt value:', result.globalDebt);
                 } catch (error) {
-                    console.warn('[Analytics] Error formatting global debt:', error);
+                    //console.warn('[Analytics]Error formatting global debt:', error);
                     // Fallback in case of error
                     result.globalDebt = {
                         raw: formattedGlobalDebt,
@@ -139,7 +139,7 @@ async function fetchAnalyticsDataDirect(geb: any) {
                         style: 'currency' 
                     })
                 }
-                console.log('[Analytics] Successfully fetched globalDebtCeiling:', formattedGlobalDebtCeiling)
+                //console.log('[Analytics] Successfully fetched globalDebtCeiling:', formattedGlobalDebtCeiling)
                 
                 // Calculate debt utilization
                 if (globalDebt && globalDebtCeiling.gt(0)) {
@@ -168,7 +168,7 @@ async function fetchAnalyticsDataDirect(geb: any) {
                         raw: formattedSupply,
                         formatted: formatNumberWithStyle(formattedSupply, { maxDecimals: 0 })
                     }
-                    console.log('[Analytics] Successfully fetched ERC20 supply:', formattedSupply)
+                    //console.log('[Analytics] Successfully fetched ERC20 supply:', formattedSupply)
                 }
             }
             
@@ -190,7 +190,7 @@ async function fetchAnalyticsDataDirect(geb: any) {
                         style: 'currency' 
                     })
                 }
-                console.log('[Analytics] Raw redemptionPrice:', formattedRedemptionPrice, 'normalized to:', normalizedPrice)
+                //console.log('[Analytics] Raw redemptionPrice:', formattedRedemptionPrice, 'normalized to:', normalizedPrice)
             }
             
             // Get market price from ETH oracle
@@ -239,7 +239,7 @@ async function fetchAnalyticsDataDirect(geb: any) {
                             style: 'currency' 
                         })
                     }
-                    console.log('[Analytics] Raw marketPrice:', formattedMarketPrice, 'normalized to:', normalizedPrice)
+                    //console.log('[Analytics] Raw marketPrice:', formattedMarketPrice, 'normalized to:', normalizedPrice)
                     
                     // Calculate price diff if we have both prices
                     if (redemptionPrice) {
@@ -251,14 +251,14 @@ async function fetchAnalyticsDataDirect(geb: any) {
                     }
                 }
             } catch (error) {
-                console.warn('[Analytics] Failed to get market price:', error)
+                //console.warn('[Analytics]Failed to get market price:', error)
             }
             
             // After try/catch, we can now reference marketPrice from above
             // If market price is 0 or null, use redemption price instead (they should be close)
             if (redemptionPrice && (!result.marketPrice.raw || result.marketPrice.raw === '0' || result.marketPrice.raw === '0.0')) {
                 result.marketPrice = { ...result.redemptionPrice };
-                console.log('[Analytics] Using redemption price as market price:', result.marketPrice.raw)
+                //console.log('[Analytics] Using redemption price as market price:', result.marketPrice.raw)
             }
             
             // Get redemption rate
@@ -311,10 +311,10 @@ async function fetchAnalyticsDataDirect(geb: any) {
                             }
                         }
                     } catch (error) {
-                        console.warn('[Analytics] Failed to get pRate or iRate:', error)
+                        //console.warn('[Analytics]Failed to get pRate or iRate:', error)
                     }
                 } catch (error) {
-                    console.warn('[Analytics] Error calculating rates:', error);
+                    //console.warn('[Analytics]Error calculating rates:', error);
                 }
             }
             
@@ -329,13 +329,13 @@ async function fetchAnalyticsDataDirect(geb: any) {
                     }
                 }
             } catch (error) {
-                console.warn('[Analytics] Failed to get surplus info:', error)
+                //console.warn('[Analytics]Failed to get surplus info:', error)
             }
         } catch (error) {
             console.error('[Analytics] Error fetching contract data:', error)
         }
         
-        console.log('[Analytics] Final data:', result)
+        //console.log('[Analytics] Final data:', result)
         return result
         
     } catch (error) {
@@ -345,7 +345,7 @@ async function fetchAnalyticsDataDirect(geb: any) {
 }
 
 export function useGebAnalytics() {
-    console.log('[Analytics] useGebAnalytics was called')
+    //console.log('[Analytics] useGebAnalytics was called')
 
     // Get the liquidation data from the store, which comes from the vault model
     const { vaultModel } = useStoreState((state) => state)
@@ -364,11 +364,11 @@ export function useGebAnalytics() {
             try {
                 // Skip if no geb instance
                 if (!geb) {
-                    console.log('[Analytics] No geb instance available, skipping')
+                    //console.log('[Analytics] No geb instance available, skipping')
                     return
                 }
 
-                console.log('[Analytics] Fetching analytics data...')
+                //console.log('[Analytics] Fetching analytics data...')
                 const data = await fetchAnalyticsDataDirect(geb)
                 
                 // Get redemption price from liquidation data if available
@@ -381,10 +381,10 @@ export function useGebAnalytics() {
                             style: 'currency'
                         })
                     }
-                    console.log('[Analytics] Using redemption price from liquidation data:', currentRedemptionPrice)
+                    //console.log('[Analytics] Using redemption price from liquidation data:', currentRedemptionPrice)
                 }
                 
-                console.log('[Analytics] Data fetched successfully:', data)
+                //console.log('[Analytics] Data fetched successfully:', data)
                 setAnalyticsData(data)
                 setError(null)
             } catch (error) {

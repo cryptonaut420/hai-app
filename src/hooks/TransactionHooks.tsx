@@ -82,21 +82,57 @@ export async function handlePreTxGasEstimate(
 ): Promise<TransactionRequest> {
     let gasLimit: BigNumber
     try {
+        console.log('handlePreTxGasEstimate: Estimating gas for transaction', {
+            to: tx.to,
+            from: tx.from,
+            data: typeof tx.data === 'string' ? tx.data.substring(0, 50) + '...' : tx.data,
+            value: tx.value?.toString()
+        })
         gasLimit = await signer.estimateGas(tx)
+        console.log('handlePreTxGasEstimate: Gas estimation successful', { gasLimit: gasLimit.toString() })
     } catch (err: any) {
-        let gebError: string | null
+        console.error('handlePreTxGasEstimate: Gas estimation failed', err)
+        console.error('handlePreTxGasEstimate: Transaction details', {
+            to: tx.to,
+            from: tx.from || await signer.getAddress(),
+            data: tx.data,
+            value: tx.value?.toString()
+        })
+        
+        let gebError: string | null = null
         try {
+            console.log('handlePreTxGasEstimate: Attempting to call transaction to get more error details')
             const res = await signer.call(tx)
             gebError = gebUtils.getRequireString(res)
-        } catch (err) {
-            gebError = gebUtils.getRequireString(err)
+            console.log('handlePreTxGasEstimate: Call result', { res, gebError })
+        } catch (callErr: any) {
+            console.error('handlePreTxGasEstimate: Call also failed', callErr)
+            // Try to extract error data from the error object
+            if (callErr.error && callErr.error.data) {
+                console.error('handlePreTxGasEstimate: Error data from call', callErr.error.data)
+            }
+            
+            gebError = gebUtils.getRequireString(callErr)
+            console.log('handlePreTxGasEstimate: Extracted error from call failure', { gebError })
         }
 
         let errorMessage: string
         if (gebError) {
             errorMessage = 'Geb error: ' + gebError
+            console.error('handlePreTxGasEstimate: Geb error detected', { gebError })
         } else {
             errorMessage = 'Provider error: ' + (err?.message || err)
+            console.error('handlePreTxGasEstimate: Provider error detected', { 
+                message: err?.message,
+                code: err?.code,
+                data: err?.data,
+                error: err?.error
+            })
+            
+            // Try to extract more information if available
+            if (err.error && err.error.data) {
+                console.error('handlePreTxGasEstimate: Error data from estimation', err.error.data)
+            }
         }
         store.dispatch.popupsModel.setIsWaitingModalOpen(true)
         store.dispatch.popupsModel.setWaitingPayload({
@@ -109,12 +145,23 @@ export async function handlePreTxGasEstimate(
 
     // Add 20% slack in the gas limit
     const gasPlus20Percent = gasLimit.mul(120).div(100)
+    console.log('handlePreTxGasEstimate: Added 20% to gas limit', { 
+        original: gasLimit.toString(), 
+        with20Percent: gasPlus20Percent.toString() 
+    })
 
     if (floorGasLimit) {
         const floorGasLimitBN = BigNumber.from(floorGasLimit)
         tx.gasLimit = floorGasLimitBN.gt(gasPlus20Percent) ? floorGasLimitBN : gasPlus20Percent
+        console.log('handlePreTxGasEstimate: Applied floor gas limit', { 
+            floor: floorGasLimit,
+            final: tx.gasLimit.toString() 
+        })
     } else {
         tx.gasLimit = gasPlus20Percent
+        console.log('handlePreTxGasEstimate: Using calculated gas limit', { 
+            gasLimit: tx.gasLimit.toString() 
+        })
     }
 
     return tx
@@ -122,6 +169,24 @@ export async function handlePreTxGasEstimate(
 
 export function handleTransactionError(e: any) {
     const { popupsModel: popupsDispatch } = store.dispatch
+
+    console.error('handleTransactionError: Error details', {
+        error: e,
+        message: e?.message,
+        code: e?.code,
+        data: e?.data,
+        reason: e?.reason
+    })
+
+    // Try to extract more detailed error information
+    if (e?.error) {
+        console.error('handleTransactionError: Inner error details', {
+            innerError: e.error,
+            message: e.error?.message,
+            code: e.error?.code,
+            data: e.error?.data
+        })
+    }
 
     if (typeof e === 'string' && (e.toLowerCase().includes('join') || e.toLowerCase().includes('exit'))) {
         popupsDispatch.setWaitingPayload({
@@ -142,7 +207,17 @@ export function handleTransactionError(e: any) {
         status: ActionState.ERROR,
     })
     console.error(`Transaction failed`, e)
-    console.log('Required String', gebUtils.getRequireString(e))
+    
+    // Log more details about the require string
+    const requireString = gebUtils.getRequireString(e)
+    console.log('Required String', requireString)
+    
+    // If error data contains a hex string, try to decode it
+    if (e?.data && typeof e.data === 'string' && e.data.startsWith('0x')) {
+        console.log('Transaction error data hex:', e.data)
+        // The hex string might be an error code or a revert reason
+        console.log('This might be a contract revert code')
+    }
 }
 
 export function useHasPendingTransactions() {
