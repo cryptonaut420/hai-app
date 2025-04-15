@@ -2791,8 +2791,8 @@
     fastq "^1.6.0"
 
 "@parisii-inc/parys-sdk@github:parisii-inc/parys-sdk":
-  version "1.0.6"
-  resolved "https://codeload.github.com/parisii-inc/parys-sdk/tar.gz/2990e64eaeb7ede37335ecd32979785af1526ab2"
+  version "1.0.7"
+  resolved "https://codeload.github.com/parisii-inc/parys-sdk/tar.gz/d89e35cfd7a53f86bf8a6ef7f4dceba2200027d3"
   dependencies:
     dotenv "^16.0.3"
     ethers "5.4.7"
