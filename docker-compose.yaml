@@ -10,7 +10,7 @@ services:
       - VIRTUAL_HOST=${VIRTUAL_HOST}
       - LETSENCRYPT_HOST=${VIRTUAL_HOST}
     ports:
-      - "3125:80"
+      - "5173:5173"
     restart: always
     networks:
       - network_from_env

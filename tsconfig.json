@@ -17,9 +17,7 @@
         "jsx": "react-jsx",
         "noFallthroughCasesInSwitch": true,
         "paths": {
-            "~/*": ["./src/*"],
-            "@parisii-inc/parys-sdk": ["../parys-sdk/lib/index.js"],
-            "@parisii-inc/parys-sdk/*": ["../parys-sdk/lib/*"]
+            "~/*": ["./src/*"]
         }
     },
     "include": ["src"],

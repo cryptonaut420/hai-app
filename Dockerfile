@@ -1,31 +1,26 @@
-FROM node:18-alpine as build
+FROM node:18-alpine
+
+# Install supervisord
+RUN apk add --no-cache supervisor
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package.json yarn.lock ./
-
-# Install dependencies
-RUN yarn install
-
-# Copy app files (including .env)
+# Copy app files
 COPY . .
 
-# Build the app (will automatically read from .env)
-RUN yarn build
+# Install dependencies
+RUN yarn install --force
 
-# Production stage
-FROM nginx:alpine
+# Create supervisord config
+RUN mkdir -p /etc/supervisor/conf.d
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Copy nginx configuration
-COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy built assets from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+# Create log directories
+RUN mkdir -p /var/log/supervisor /var/run
 
 # Expose port
-EXPOSE 80
+EXPOSE 5173
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"] 
+# Start supervisord
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"] 

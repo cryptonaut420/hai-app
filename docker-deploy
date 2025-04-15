@@ -48,7 +48,7 @@ if [ $? -eq 0 ]; then
     # Save the new container ID to container.id file
     echo "$NEW_CONTAINER_ID" > "$CONTAINER_ID_FILE"
     echo "Deployed successfully. New container ID: $NEW_CONTAINER_ID"
-    echo "The app should be accessible at http://${NETWORK_NAME}:3125 and via ${VIRTUAL_HOST}"
+    echo "The app should be accessible at http://${NETWORK_NAME}:5173 and via ${VIRTUAL_HOST}"
 else
     echo "Failed to start the container."
     exit 1

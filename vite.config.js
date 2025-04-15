@@ -35,7 +35,6 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@parisii-inc/parys-sdk': path.resolve(__dirname, '../parys-sdk/lib/browser.js'),
       // Add aliases for node modules to replace them with empty modules
       'dotenv': path.resolve(__dirname, './node-polyfills/empty.js'),
       'dotenv/config': path.resolve(__dirname, './node-polyfills/empty.js'),
